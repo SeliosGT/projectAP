@@ -101,6 +101,14 @@
             margin: 16px 0;
             text-align: center;
         }
+        .record {
+            border-left: 4px solid #667eea;
+            padding-left: 16px;
+            margin-top: 12px;
+        }
+        .record:first-child {
+            margin-top: 0;
+        }
     </style>
 </head>
 <body>
@@ -191,25 +199,45 @@
             showStatus('Загрузка...', 'info');
 
             try {
-                addLog(`📡 URL запроса: ${SUPABASE_URL}/rest/v1/applications`);
+                // Проверяем подключение к интернету
+                addLog('📶 Проверка интернет-соединения...');
+                if (!navigator.onLine) {
+                    throw new Error('Нет интернет-соединения');
+                }
+
+                addLog(`📡 URL: ${SUPABASE_URL}/rest/v1/applications`);
                 
+                // Пробуем с разными заголовками
+                const headers = {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                };
+                
+                addLog(`📋 Заголовки: ${JSON.stringify(headers, null, 2)}`);
+
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc`, {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
+                    method: 'GET',
+                    headers: headers,
+                    mode: 'cors' // Явно указываем CORS
                 });
 
-                addLog(`📊 Статус ответа: ${response.status}`);
+                addLog(`📊 Статус: ${response.status} ${response.statusText}`);
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    addLog(`❌ Ошибка: ${errorText}`);
-                    throw new Error(`Ошибка ${response.status}`);
+                    addLog(`❌ Текст ошибки: ${errorText}`);
+                    throw new Error(`Ошибка ${response.status}: ${errorText || response.statusText}`);
                 }
 
                 const data = await response.json();
-                addLog(`✅ Получено записей: ${data.length}`);
+                addLog(`✅ Успешно! Получено записей: ${data.length}`);
+                
+                // Выводим первую запись для проверки
+                if (data.length > 0) {
+                    addLog(`📝 Пример записи: ID=${data[0].id}, Имя=${data[0].full_name}`);
+                }
                 
                 applications = data;
                 renderData(data);
@@ -217,8 +245,12 @@
                 showStatus(`✅ Загружено ${data.length} заявок`, 'success');
 
             } catch (error) {
-                addLog(`❌ Критическая ошибка: ${error.message}`);
+                addLog(`❌ ОШИБКА: ${error.message}`);
                 showStatus(`❌ Ошибка: ${error.message}`, 'error');
+                
+                // Показываем подробности в логе
+                addLog(`🔍 Тип ошибки: ${error.name}`);
+                addLog(`🔍 Стек: ${error.stack || 'Нет стека'}`);
             }
         }
 
@@ -235,7 +267,7 @@
                 return;
             }
 
-            let html = '';
+            let html = '<div class="card">';
             data.forEach((app, index) => {
                 const date = new Date(app.created_at);
                 const formattedDate = date.toLocaleString('ru-RU', {
@@ -247,16 +279,18 @@
                 });
 
                 html += `
-                    <div class="card">
+                    <div class="record">
                         <h3>${app.full_name}</h3>
                         <p>🆔 ID: ${app.id}</p>
                         <p>📅 ${formattedDate}</p>
-                        <button class="btn btn-danger" onclick="deleteSingle(${app.id})">
+                        <button class="btn btn-danger" onclick="deleteSingle(${app.id})" style="margin-top:8px;">
                             🗑️ Удалить
                         </button>
+                        <hr style="margin:12px 0;border:none;border-top:1px solid #edf2f7;">
                     </div>
                 `;
             });
+            html += '</div>';
 
             container.innerHTML = html;
             addLog(`📋 Отображено ${data.length} карточек`);
@@ -264,7 +298,7 @@
 
         function updateStats(data) {
             document.getElementById('totalCount').textContent = data.length;
-            addLog(`📊 Обновлена статистика: ${data.length} записей`);
+            addLog(`📊 Статистика обновлена: ${data.length} записей`);
         }
 
         async function deleteSingle(id) {
@@ -273,7 +307,7 @@
 
             if (!confirm(`Удалить заявку "${app.full_name}"?`)) return;
 
-            addLog(`🗑️ Удаляем запись ID: ${id}`);
+            addLog(`🗑️ Удаляем ID: ${id}`);
             
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}`, {
@@ -285,11 +319,12 @@
                 });
 
                 if (response.ok) {
-                    addLog(`✅ Запись ${id} удалена`);
+                    addLog(`✅ ID ${id} удален`);
                     showStatus('✅ Заявка удалена', 'success');
                     await loadData();
                 } else {
-                    addLog(`❌ Ошибка удаления: ${response.status}`);
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
                     showStatus('❌ Ошибка при удалении', 'error');
                 }
             } catch (error) {
@@ -306,7 +341,7 @@
 
             if (!confirm(`⚠️ Удалить ВСЕ заявки (${applications.length} шт.)?`)) return;
 
-            addLog(`🗑️ Начинаем массовое удаление (${applications.length} записей)`);
+            addLog(`🗑️ Массовое удаление ${applications.length} записей`);
             
             let deleted = 0;
             for (const app of applications) {
@@ -320,11 +355,11 @@
                     });
                     if (response.ok) deleted++;
                 } catch (e) {
-                    addLog(`❌ Ошибка при удалении ID ${app.id}: ${e.message}`);
+                    addLog(`❌ Ошибка удаления ID ${app.id}: ${e.message}`);
                 }
             }
 
-            addLog(`✅ Удалено ${deleted} записей`);
+            addLog(`✅ Удалено ${deleted} из ${applications.length}`);
             showStatus(`✅ Удалено ${deleted} заявок`, 'success');
             await loadData();
         }
@@ -336,8 +371,9 @@
 
         // Загрузка при старте
         addLog('🚀 Приложение загружено');
-        addLog(`🔗 Supabase URL: ${SUPABASE_URL}`);
-        addLog(`🔑 Ключ: ${SUPABASE_KEY.slice(0, 20)}... (длина: ${SUPABASE_KEY.length})`);
+        addLog(`🔗 URL: ${SUPABASE_URL}`);
+        addLog(`🔑 Ключ (первые 30 символов): ${SUPABASE_KEY.slice(0, 30)}... (длина: ${SUPABASE_KEY.length})`);
+        addLog(`📱 User Agent: ${navigator.userAgent}`);
     </script>
 </body>
 </html>
