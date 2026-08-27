@@ -5,127 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ панель</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f7fafc;
-            padding: 16px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .card h2 {
-            color: #2d3748;
-            margin-bottom: 8px;
-        }
-        .card h3 {
-            color: #2d3748;
-            margin-bottom: 8px;
-        }
-        .card p {
-            color: #718096;
-            font-size: 14px;
-            margin: 4px 0;
-        }
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 8px;
-        }
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-        .btn-danger {
-            background: #fc8181;
-            color: white;
-        }
-        .btn-success {
-            background: #48bb78;
-            color: white;
-        }
-        .btn-warning {
-            background: #f6ad55;
-            color: white;
-        }
-        .status {
-            padding: 12px;
-            border-radius: 10px;
-            margin: 8px 0;
-        }
-        .status.success {
-            background: #c6f6d5;
-            color: #22543d;
-        }
-        .status.error {
-            background: #fed7d7;
-            color: #742a2a;
-        }
-        .status.info {
-            background: #bee3f8;
-            color: #2a69ac;
-        }
-        .log {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-family: monospace;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        .hidden {
-            display: none;
-        }
-        .password-screen {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .password-screen input {
-            width: 100%;
-            padding: 14px;
-            font-size: 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            margin: 16px 0;
-            text-align: center;
-        }
-        .record {
-            border-left: 4px solid #667eea;
-            padding-left: 16px;
-            margin-top: 12px;
-        }
-        .record:first-child {
-            margin-top: 0;
-        }
-        .record hr {
-            margin: 12px 0;
-            border: none;
-            border-top: 1px solid #edf2f7;
-        }
-        .test-btn {
-            background: #9f7aea;
-            color: white;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f7fafc; padding: 16px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .card h2 { color: #2d3748; margin-bottom: 8px; }
+        .card h3 { color: #2d3748; margin-bottom: 8px; }
+        .card p { color: #718096; font-size: 14px; margin: 4px 0; }
+        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 8px; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-danger { background: #fc8181; color: white; }
+        .btn-success { background: #48bb78; color: white; }
+        .btn-warning { background: #f6ad55; color: white; }
+        .status { padding: 12px; border-radius: 10px; margin: 8px 0; }
+        .status.success { background: #c6f6d5; color: #22543d; }
+        .status.error { background: #fed7d7; color: #742a2a; }
+        .status.info { background: #bee3f8; color: #2a69ac; }
+        .log { background: #2d3748; color: #e2e8f0; padding: 12px; border-radius: 10px; font-size: 12px; font-family: monospace; max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
+        .hidden { display: none; }
+        .password-screen { text-align: center; padding: 40px 20px; }
+        .password-screen input { width: 100%; padding: 14px; font-size: 18px; border: 2px solid #e2e8f0; border-radius: 12px; margin: 16px 0; text-align: center; }
+        .record { border-left: 4px solid #667eea; padding-left: 16px; margin-top: 12px; }
+        .record:first-child { margin-top: 0; }
+        .record hr { margin: 12px 0; border: none; border-top: 1px solid #edf2f7; }
     </style>
 </head>
 <body>
@@ -170,13 +72,12 @@
         let applications = [];
         let logs = [];
 
-        function addLog(message, type = 'info') {
+        function addLog(message) {
             const timestamp = new Date().toLocaleTimeString();
             const logEntry = `[${timestamp}] ${message}`;
             logs.push(logEntry);
-            const logElement = document.getElementById('debugLog');
-            logElement.textContent = logs.join('\n');
-            logElement.scrollTop = logElement.scrollHeight;
+            document.getElementById('debugLog').textContent = logs.join('\n');
+            document.getElementById('debugLog').scrollTop = document.getElementById('debugLog').scrollHeight;
             console.log(logEntry);
         }
 
@@ -191,11 +92,11 @@
             if (input === ADMIN_PASSWORD) {
                 document.getElementById('passwordScreen').classList.add('hidden');
                 document.getElementById('mainScreen').classList.remove('hidden');
-                addLog('✅ Пароль принят, вход выполнен');
+                addLog('✅ Пароль принят');
                 loadData();
             } else {
                 document.getElementById('passwordError').textContent = '❌ Неверный пароль!';
-                addLog('❌ Неверная попытка входа');
+                addLog('❌ Неверный пароль');
             }
         }
 
@@ -206,47 +107,47 @@
         }
 
         async function loadData() {
-            addLog('🔄 Начинаем загрузку данных...');
+            addLog('🔄 Загрузка данных...');
             showStatus('Загрузка...', 'info');
 
             try {
-                // Добавляем apikey в URL как параметр (это решит проблему)
-                const url = `${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc&apikey=${SUPABASE_KEY}`;
-                addLog(`📡 URL с ключом: ${url.substring(0, 80)}...`);
+                // Пробуем GET с параметром apikey в URL
+                const url = `${SUPABASE_URL}/rest/v1/applications?select=*&apikey=${SUPABASE_KEY}`;
+                addLog(`📡 URL: ${url.substring(0, 80)}...`);
 
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Prefer': 'return=representation'
                     }
                 });
 
-                addLog(`📊 Статус: ${response.status} ${response.statusText}`);
+                addLog(`📊 Статус: ${response.status}`);
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    addLog(`❌ Текст ошибки: ${errorText}`);
-                    throw new Error(`Ошибка ${response.status}: ${errorText}`);
+                    addLog(`❌ Ошибка: ${errorText}`);
+                    throw new Error(`Ошибка ${response.status}`);
                 }
 
                 const data = await response.json();
-                addLog(`✅ Успешно! Получено записей: ${data.length}`);
+                addLog(`✅ Получено: ${data.length} записей`);
                 
                 if (data.length > 0) {
-                    addLog(`📝 Пример: ID=${data[0].id}, Имя=${data[0].full_name}`);
+                    addLog(`📝 Пример: ${data[0].full_name} (ID: ${data[0].id})`);
                 }
                 
                 applications = data;
                 renderData(data);
-                updateStats(data);
+                document.getElementById('totalCount').textContent = data.length;
                 showStatus(`✅ Загружено ${data.length} заявок`, 'success');
 
             } catch (error) {
                 addLog(`❌ ОШИБКА: ${error.message}`);
                 showStatus(`❌ Ошибка: ${error.message}`, 'error');
-                addLog(`🔍 Детали: ${error.stack || 'Нет стека'}`);
             }
         }
 
@@ -262,7 +163,6 @@
                         </button>
                     </div>
                 `;
-                addLog('📭 Нет данных для отображения');
                 return;
             }
 
@@ -292,11 +192,6 @@
             html += '</div>';
 
             container.innerHTML = html;
-            addLog(`📋 Отображено ${data.length} карточек`);
-        }
-
-        function updateStats(data) {
-            document.getElementById('totalCount').textContent = data.length;
         }
 
         async function addTestData() {
@@ -306,7 +201,8 @@
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
                     },
                     body: JSON.stringify({
                         full_name: `Тест ${new Date().toLocaleTimeString()}`
@@ -314,7 +210,8 @@
                 });
 
                 if (response.ok) {
-                    addLog('✅ Тестовая запись создана');
+                    const data = await response.json();
+                    addLog(`✅ Создано: ${data[0]?.full_name || 'OK'}`);
                     showStatus('✅ Тестовая заявка добавлена', 'success');
                     await loadData();
                 } else {
@@ -330,7 +227,7 @@
         async function deleteSingle(id) {
             const app = applications.find(a => a.id === id);
             if (!app) return;
-            if (!confirm(`Удалить заявку "${app.full_name}"?`)) return;
+            if (!confirm(`Удалить "${app.full_name}"?`)) return;
 
             addLog(`🗑️ Удаляем ID: ${id}`);
             try {
@@ -342,12 +239,11 @@
                 });
 
                 if (response.ok) {
-                    addLog(`✅ ID ${id} удален`);
+                    addLog(`✅ Удалено`);
                     showStatus('✅ Заявка удалена', 'success');
                     await loadData();
                 } else {
                     addLog(`❌ Ошибка: ${response.status}`);
-                    showStatus('❌ Ошибка при удалении', 'error');
                 }
             } catch (error) {
                 addLog(`❌ Ошибка: ${error.message}`);
@@ -359,9 +255,9 @@
                 showStatus('📭 Нет заявок', 'info');
                 return;
             }
-            if (!confirm(`⚠️ Удалить ВСЕ заявки (${applications.length} шт.)?`)) return;
+            if (!confirm(`⚠️ Удалить ВСЕ (${applications.length} шт.)?`)) return;
 
-            addLog(`🗑️ Массовое удаление ${applications.length} записей`);
+            addLog(`🗑️ Массовое удаление...`);
             let deleted = 0;
             for (const app of applications) {
                 try {
@@ -372,11 +268,9 @@
                         }
                     });
                     if (response.ok) deleted++;
-                } catch (e) {
-                    addLog(`❌ Ошибка ID ${app.id}: ${e.message}`);
-                }
+                } catch (e) {}
             }
-            addLog(`✅ Удалено ${deleted} из ${applications.length}`);
+            addLog(`✅ Удалено ${deleted}`);
             showStatus(`✅ Удалено ${deleted} заявок`, 'success');
             await loadData();
         }
@@ -385,9 +279,7 @@
             if (e.key === 'Enter') checkPassword();
         });
 
-        addLog('🚀 Приложение загружено');
-        addLog(`🔗 URL: ${SUPABASE_URL}`);
-        addLog(`🔑 Ключ (первые 20 символов): ${SUPABASE_KEY.slice(0, 20)}... (длина: ${SUPABASE_KEY.length})`);
+        addLog('🚀 Загружено');
     </script>
 </body>
 </html>
