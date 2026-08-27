@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f7fafc;
+            background: #f0f4f9;
             padding: 20px;
             min-height: 100vh;
         }
@@ -39,7 +39,7 @@
 
         .header h1 {
             font-size: 24px;
-            color: #2d3748;
+            color: #0b1a2e;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -53,7 +53,7 @@
         }
 
         .badge {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 6px 16px;
             border-radius: 20px;
@@ -64,9 +64,9 @@
         .btn {
             padding: 10px 20px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.2s;
             font-size: 14px;
             display: inline-flex;
@@ -113,21 +113,26 @@
         }
 
         .btn-success {
-            background: #48bb78;
+            background: linear-gradient(135deg, #48bb78, #38a169);
             color: white;
         }
 
         .btn-success:hover {
-            background: #38a169;
+            background: linear-gradient(135deg, #38a169, #2f855a);
         }
 
-        .btn-warning {
-            background: #f6ad55;
+        .btn-filter {
+            background: #ebf4ff;
+            color: #2563eb;
+        }
+
+        .btn-filter:hover {
+            background: #dbeafe;
+        }
+
+        .btn-filter.active {
+            background: #2563eb;
             color: white;
-        }
-
-        .btn-warning:hover {
-            background: #ed8936;
         }
 
         .btn:disabled {
@@ -159,7 +164,7 @@
         .stat-card .number {
             font-size: 32px;
             font-weight: 700;
-            color: #2d3748;
+            color: #0b1a2e;
         }
 
         .stat-card .label {
@@ -168,15 +173,23 @@
             margin-top: 4px;
         }
 
-        .stat-card .icon {
-            font-size: 24px;
-            margin-right: 8px;
+        /* Filter tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tabs .btn {
+            border-radius: 40px;
+            padding: 8px 20px;
         }
 
         /* Cards grid */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 24px;
         }
 
@@ -188,11 +201,43 @@
             transition: all 0.3s ease;
             border-left: 4px solid #667eea;
             position: relative;
+            animation: cardAppear 0.3s ease;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .card-type {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .card-type.discipline {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .card-type.hr {
+            background: #ecfdf5;
+            color: #059669;
         }
 
         .card-header {
@@ -205,7 +250,7 @@
         .card-name {
             font-size: 18px;
             font-weight: 600;
-            color: #2d3748;
+            color: #0b1a2e;
         }
 
         .card-date {
@@ -218,6 +263,29 @@
             font-size: 12px;
             color: #a0aec0;
             margin-top: 4px;
+        }
+
+        .card-preview {
+            margin-top: 8px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.5;
+            max-height: 80px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(transparent, #f7fafc);
         }
 
         .card-actions {
@@ -239,6 +307,15 @@
 
         .btn-delete-single:hover {
             background: #f56565;
+        }
+
+        .btn-view {
+            background: #ebf4ff;
+            color: #2563eb;
+        }
+
+        .btn-view:hover {
+            background: #dbeafe;
         }
 
         /* Empty state */
@@ -266,7 +343,7 @@
         /* Loading */
         .loading-spinner {
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
             color: #a0aec0;
             grid-column: 1/-1;
         }
@@ -314,10 +391,12 @@
             background: white;
             padding: 32px;
             border-radius: 24px;
-            max-width: 420px;
+            max-width: 500px;
             width: 90%;
             text-align: center;
             animation: slideUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes slideUp {
@@ -342,16 +421,32 @@
             margin-bottom: 8px;
         }
 
-        .modal-content p {
+        .modal-content .detail-field {
+            text-align: left;
+            margin: 12px 0;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+
+        .modal-content .detail-field strong {
+            display: block;
+            font-size: 12px;
             color: #718096;
-            margin-bottom: 24px;
-            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .modal-content .detail-field p {
+            color: #2d3748;
+            font-size: 14px;
+            word-break: break-word;
         }
 
         .modal-actions {
             display: flex;
             gap: 12px;
             justify-content: center;
+            margin-top: 20px;
         }
 
         .modal-actions .btn {
@@ -453,6 +548,15 @@
                 right: 16px;
                 bottom: 16px;
             }
+
+            .filter-tabs {
+                justify-content: center;
+            }
+
+            .filter-tabs .btn {
+                font-size: 12px;
+                padding: 6px 14px;
+            }
         }
 
         @media (max-width: 400px) {
@@ -491,6 +595,21 @@
                 <div class="number" id="statWeek">0</div>
                 <div class="label">📆 За неделю</div>
             </div>
+            <div class="stat-card">
+                <div class="number" id="statDiscipline">0</div>
+                <div class="label">⚖️ Дисциплинарные</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="statHr">0</div>
+                <div class="label">👥 HR</div>
+            </div>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="filter-tabs">
+            <button class="btn btn-filter active" data-filter="all" onclick="setFilter('all')">📋 Все</button>
+            <button class="btn btn-filter" data-filter="discipline" onclick="setFilter('discipline')">⚖️ Дисциплинарные</button>
+            <button class="btn btn-filter" data-filter="hr" onclick="setFilter('hr')">👥 HR</button>
         </div>
 
         <!-- Cards -->
@@ -498,6 +617,18 @@
             <div class="loading-spinner">
                 <div class="spinner"></div>
                 <p style="margin-top: 16px;">Загрузка заявок...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal для просмотра -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="icon" id="viewIcon">📄</div>
+            <h3 id="viewTitle">Детали заявки</h3>
+            <div id="viewBody"></div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeViewModal()">Закрыть</button>
             </div>
         </div>
     </div>
@@ -526,11 +657,11 @@
             const password = prompt('🔐 Введите пароль для входа в админ-панель:');
             if (password !== ADMIN_PASSWORD) {
                 document.body.innerHTML = `
-                    <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:sans-serif;">
+                    <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:sans-serif;background:#0b1a2e;">
                         <div style="text-align:center;">
                             <div style="font-size:64px;margin-bottom:16px;">🚫</div>
-                            <h2 style="color:#2d3748;">Доступ запрещен</h2>
-                            <p style="color:#a0aec0;">Неверный пароль</p>
+                            <h2 style="color:#e8edf4;">Доступ запрещен</h2>
+                            <p style="color:#6b8ba8;">Неверный пароль</p>
                         </div>
                     </div>
                 `;
@@ -541,6 +672,7 @@
 
         // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
         let applications = [];
+        let currentFilter = 'all';
         let pendingAction = null;
 
         // ==================== ОСНОВНЫЕ ФУНКЦИИ ====================
@@ -577,6 +709,7 @@
                 updateStats(applications);
 
             } catch (error) {
+                console.error('Load error:', error);
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="icon">❌</div>
@@ -592,19 +725,27 @@
         function renderApplications(data) {
             const container = document.getElementById('cardsContainer');
 
-            if (!data || data.length === 0) {
+            // Фильтрация
+            let filtered = data;
+            if (currentFilter === 'discipline') {
+                filtered = data.filter(app => app.survey_type === 'discipline');
+            } else if (currentFilter === 'hr') {
+                filtered = data.filter(app => app.survey_type === 'hr');
+            }
+
+            if (!filtered || filtered.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="icon">📭</div>
                         <h3>Нет заявок</h3>
-                        <p>Пока никто не отправил заявку</p>
-                        <button class="btn btn-success" onclick="addTestData()">➕ Добавить тестовую</button>
+                        <p>${data.length > 0 ? `Нет заявок типа "${currentFilter}"` : 'Пока никто не отправил заявку'}</p>
+                        ${data.length === 0 ? `<button class="btn btn-success" onclick="addTestData()">➕ Добавить тестовую</button>` : ''}
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = data.map(app => {
+            container.innerHTML = filtered.map((app, index) => {
                 const date = new Date(app.created_at);
                 const formattedDate = date.toLocaleString('ru-RU', {
                     day: '2-digit',
@@ -614,31 +755,34 @@
                     minute: '2-digit'
                 });
 
-                const initials = app.full_name
-                    .split(' ')
-                    .map(word => word[0])
-                    .join('')
-                    .toUpperCase()
-                    .slice(0, 2);
+                const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
+                const typeClass = app.survey_type === 'discipline' ? 'discipline' : 'hr';
+                
+                // Превью ответов
+                let preview = '';
+                if (app.q1) preview += `📝 ${app.q1}`;
+                if (app.q2) preview += ` | ${app.q2}`;
+                if (app.about) preview += `\n📋 ${app.about.substring(0, 100)}${app.about.length > 100 ? '...' : ''}`;
+
+                const ratings = app.ratings ? Object.values(JSON.parse(app.ratings)).reduce((a, b) => a + b, 0) : 0;
+                const ratingCount = app.ratings ? Object.keys(JSON.parse(app.ratings)).length : 0;
 
                 return `
-                    <div class="card">
+                    <div class="card" style="animation-delay: ${index * 0.05}s">
+                        <span class="card-type ${typeClass}">${typeLabel}</span>
                         <div class="card-header">
                             <div>
-                                <div class="card-name">${app.full_name}</div>
+                                <div class="card-name">${app.q1 || 'Не указано'}</div>
                                 <div class="card-id">🆔 ID: ${app.id}</div>
                             </div>
                             <div class="card-date">${formattedDate}</div>
                         </div>
-                        <div style="display:flex;gap:8px;margin-top:8px;">
-                            <span style="background:#ebf4ff;color:#667eea;padding:2px 12px;border-radius:12px;font-size:12px;font-weight:500;">
-                                ${initials}
-                            </span>
-                        </div>
+                        ${app.q2 ? `<div style="font-size:13px;color:#718096;margin-bottom:4px;">👤 ${app.q2}</div>` : ''}
+                        ${ratings > 0 ? `<div style="font-size:12px;color:#667eea;">⭐ Рейтинг: ${ratings}/${ratingCount * 5}</div>` : ''}
+                        ${preview ? `<div class="card-preview">${preview.replace(/\n/g, '<br>')}</div>` : ''}
                         <div class="card-actions">
-                            <button class="btn btn-delete-single" onclick="deleteSingle(${app.id})">
-                                🗑️ Удалить
-                            </button>
+                            <button class="btn btn-view" onclick="viewApplication(${app.id})">👁️ Просмотр</button>
+                            <button class="btn btn-delete-single" onclick="deleteSingle(${app.id})">🗑️ Удалить</button>
                         </div>
                     </div>
                 `;
@@ -659,20 +803,117 @@
             weekAgo.setDate(weekAgo.getDate() - 7);
             const week = data.filter(app => new Date(app.created_at) >= weekAgo).length;
 
+            const discipline = data.filter(app => app.survey_type === 'discipline').length;
+            const hr = data.filter(app => app.survey_type === 'hr').length;
+
             document.getElementById('statTotal').textContent = total;
             document.getElementById('statToday').textContent = today;
             document.getElementById('statWeek').textContent = week;
+            document.getElementById('statDiscipline').textContent = discipline;
+            document.getElementById('statHr').textContent = hr;
             document.getElementById('totalCount').textContent = total;
         }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-tabs .btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            renderApplications(applications);
+        }
+
+        // ==================== ПРОСМОТР ЗАЯВКИ ====================
+
+        function viewApplication(id) {
+            const app = applications.find(a => a.id === id);
+            if (!app) return;
+
+            const ratings = app.ratings ? JSON.parse(app.ratings) : {};
+            const ratingEntries = Object.entries(ratings);
+            const ratingHtml = ratingEntries.length > 0 ? `
+                <div class="detail-field">
+                    <strong>⭐ Рейтинги</strong>
+                    ${ratingEntries.map(([key, val]) => `<p>${key.replace('d_', '').replace('h_', '')}: ${'★'.repeat(val)}${'☆'.repeat(5 - val)} (${val}/5)</p>`).join('')}
+                </div>
+            ` : '';
+
+            const fields = [
+                { label: '📝 Имя персонажа', value: app.q1 },
+                { label: '👤 Реальное имя', value: app.q2 },
+                { label: '🎂 Возраст', value: app.q3 },
+                { label: '⏰ Игровой онлайн', value: app.q4 },
+                { label: '🌅 Прайм-тайм', value: app.q5 },
+                { label: '🌍 Часовой пояс', value: app.q6 },
+                { label: '💼 Опыт работы', value: app.experience === 'yes' ? 'Да' : (app.experience === 'no' ? 'Нет' : 'Не указано') },
+                { label: '📋 Детали опыта', value: app.experience_detail },
+                { label: '💰 Деньги за экзамены', value: app.exam_money === 'yes' ? 'Да' : (app.exam_money === 'no' ? 'Нет' : 'Не указано') },
+                { label: '🤝 Ситуация с коллегой', value: app.situation3 || app.situation_colleague },
+                { label: '🏛️ Ситуация в мэрии', value: app.situation1 },
+                { label: '😡 Оскорбление в Discord', value: app.situation2 },
+                { label: '📋 О себе', value: app.about },
+                { label: '🎯 Мотивация', value: app.motivation },
+                { label: '💪 Качества', value: app.qualities },
+                { label: '📚 HR обязанности', value: app.hr_duties },
+                { label: '📄 Индивидуальные наборы', value: app.individual },
+                { label: '👨‍🎓 Стажеры', value: app.trainee === 'yes' ? 'Да' : (app.trainee === 'no' ? 'Нет' : 'Не указано') },
+                { label: '📖 Помощь стажеру', value: app.trainee_detail },
+            ];
+
+            const bodyHtml = fields
+                .filter(f => f.value && f.value.trim())
+                .map(f => `
+                    <div class="detail-field">
+                        <strong>${f.label}</strong>
+                        <p>${f.value}</p>
+                    </div>
+                `).join('');
+
+            document.getElementById('viewIcon').textContent = app.survey_type === 'discipline' ? '⚖️' : '👥';
+            document.getElementById('viewTitle').textContent = `${app.survey_type === 'discipline' ? 'Дисциплинарный инспектор' : 'HR-менеджер'} - ${app.q1 || 'Без имени'}`;
+            document.getElementById('viewBody').innerHTML = ratingHtml + bodyHtml;
+            document.getElementById('viewModal').classList.add('active');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.remove('active');
+        }
+
+        document.getElementById('viewModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeViewModal();
+        });
 
         // ==================== ДОБАВЛЕНИЕ ТЕСТОВОЙ ЗАЯВКИ ====================
 
         async function addTestData() {
-            const testName = `Тест ${new Date().toLocaleTimeString()}`;
-            
+            const types = ['discipline', 'hr'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const testData = {
+                survey_type: type,
+                q1: `Тест ${type === 'discipline' ? 'Дисциплинарный' : 'HR'} ${new Date().toLocaleTimeString()}`,
+                q2: 'Тестовый Пользователь',
+                q3: '25',
+                q4: '4-5 часов',
+                q5: '12:00 - 16:00',
+                q6: 'МСК +3',
+                ratings: JSON.stringify({
+                    r1: 4, r2: 3, r3: 5, r4: 4, r5: 3,
+                    r6: 4, r7: 3, r8: 5, r9: 4, r10: 3, r11: 4
+                }),
+                experience: 'yes',
+                experience_detail: 'Тестовый опыт работы 2 года',
+                exam_money: 'no',
+                situation3: 'Я бы сообщил руководству',
+                situation1: 'Я бы занялся организацией работы',
+                situation2: 'Я бы обратился к модерации',
+                about: 'Тестовый пользователь для проверки системы',
+                motivation: 'Хочу помочь развитию проекта',
+                qualities: 'Ответственность, внимательность, коммуникабельность',
+                created_at: new Date().toISOString()
+            };
+
             try {
                 showToast('⏳ Добавление тестовой заявки...', 'info');
-                
+
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?apikey=${SUPABASE_KEY}`, {
                     method: 'POST',
                     headers: {
@@ -680,9 +921,7 @@
                         'Content-Type': 'application/json',
                         'Prefer': 'return=representation'
                     },
-                    body: JSON.stringify({
-                        full_name: testName
-                    })
+                    body: JSON.stringify(testData)
                 });
 
                 if (response.ok) {
@@ -691,4 +930,129 @@
                 } else {
                     const error = await response.text();
                     showToast(`❌ Ошибка: ${error}`, 'error');
-            
+                }
+            } catch (error) {
+                showToast('❌ Ошибка соединения', 'error');
+            }
+        }
+
+        // ==================== УДАЛЕНИЕ ОДНОЙ ЗАЯВКИ ====================
+
+        function deleteSingle(id) {
+            const app = applications.find(a => a.id === id);
+            if (!app) return;
+
+            showModal(
+                '🗑️',
+                'Удалить заявку?',
+                `Вы действительно хотите удалить заявку <strong>"${app.q1 || 'Без имени'}"</strong>?`,
+                async () => {
+                    try {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${SUPABASE_KEY}`
+                            }
+                        });
+
+                        if (response.ok) {
+                            showToast('✅ Заявка удалена', 'success');
+                            await loadApplications();
+                        } else {
+                            showToast('❌ Ошибка при удалении', 'error');
+                        }
+                    } catch (error) {
+                        showToast('❌ Ошибка соединения', 'error');
+                    }
+                }
+            );
+        }
+
+        // ==================== УДАЛЕНИЕ ВСЕХ ЗАЯВОК ====================
+
+        function deleteAll() {
+            if (applications.length === 0) {
+                showToast('📭 Нет заявок для удаления', 'info');
+                return;
+            }
+
+            showModal(
+                '⚠️',
+                'Удалить все заявки?',
+                `Вы действительно хотите удалить <strong>все ${applications.length}</strong> заявок?<br>Это действие нельзя отменить!`,
+                async () => {
+                    let deleted = 0;
+                    for (const app of applications) {
+                        try {
+                            const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${app.id}&apikey=${SUPABASE_KEY}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                                }
+                            });
+                            if (response.ok) deleted++;
+                        } catch (e) {}
+                    }
+
+                    showToast(`✅ Удалено ${deleted} заявок`, 'success');
+                    await loadApplications();
+                }
+            );
+        }
+
+        // ==================== МОДАЛЬНОЕ ОКНО ====================
+
+        function showModal(icon, title, message, action) {
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').innerHTML = message;
+            document.getElementById('confirmModal').classList.add('active');
+            pendingAction = action;
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            pendingAction = null;
+        }
+
+        document.getElementById('confirmBtn').addEventListener('click', () => {
+            if (pendingAction) {
+                pendingAction();
+                closeModal();
+            }
+        });
+
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+            }
+        });
+
+        // ==================== TOAST УВЕДОМЛЕНИЯ ====================
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(50px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ==================== ЗАПУСК ====================
+
+        document.addEventListener('DOMContentLoaded', loadApplications);
+        setInterval(loadApplications, 30000);
+    </script>
+</body>
+</html>
