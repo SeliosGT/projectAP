@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Аппарат Правительства - Анкеты</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,85 +15,196 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #0b1a2e 0%, #1a3050 100%);
             padding: 20px;
+            background: #0a0f1a;
             position: relative;
             overflow: hidden;
         }
 
-        /* Анимированный фон */
+        /* ========== АНИМИРОВАННЫЙ ФОН ========== */
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at 30% 40%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 60%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
-            animation: backgroundFloat 20s ease-in-out infinite;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.04) 0%, transparent 40%);
+            animation: bgFloat 30s ease-in-out infinite;
+            z-index: 0;
         }
 
-        @keyframes backgroundFloat {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-30px, 20px); }
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(20px, -30px) rotate(2deg) scale(1.02); }
+            50% { transform: translate(-10px, 20px) rotate(-1deg) scale(0.98); }
+            75% { transform: translate(30px, 10px) rotate(3deg) scale(1.01); }
         }
 
+        /* ========== ДЕКОРАТИВНЫЕ СФЕРЫ ========== */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            z-index: 0;
+            animation: orbFloat 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(99, 102, 241, 0.2);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(139, 92, 246, 0.15);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: rgba(236, 72, 153, 0.1);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -40px) scale(1.2); }
+        }
+
+        /* ========== ОСНОВНОЙ КОНТЕЙНЕР ========== */
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             width: 100%;
             position: relative;
             z-index: 1;
         }
 
+        /* ========== ВЕРХНИЙ БЛОК ========== */
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 56px;
+            position: relative;
         }
 
-        .header .logo {
-            font-size: 56px;
-            margin-bottom: 8px;
+        .header .logo-wrapper {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .header .logo-wrapper .logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+
+        .header .logo-icon {
+            font-size: 64px;
             display: block;
+            position: relative;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header .badge-top {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 16px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
         }
 
         .header h1 {
             color: white;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .header h1 .highlight {
+            background: linear-gradient(135deg, #818cf8, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .header p {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 16px;
-            margin-top: 4px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 18px;
+            font-weight: 400;
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
+        .header .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #818cf8, #a78bfa);
+            border-radius: 4px;
+            margin: 16px auto 0;
+        }
+
+        /* ========== СЕТКА КАРТОЧЕК ========== */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
         }
 
+        /* ========== КАРТОЧКА ========== */
         .card {
-            background: rgba(255, 255, 255, 0.06);
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 32px 28px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 28px;
+            padding: 36px 32px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             text-decoration: none;
             color: inherit;
             display: block;
-            position: relative;
             overflow: hidden;
         }
 
@@ -101,150 +215,207 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.05));
+            border-radius: 28px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
             opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(37, 99, 235, 0.3);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.5s ease;
         }
 
         .card:hover::before {
             opacity: 1;
         }
 
+        .card .card-bg-glow {
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .card-discipline .card-bg-glow {
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .card-hr .card-bg-glow {
+            background: rgba(52, 211, 153, 0.08);
+        }
+
+        .card:hover .card-bg-glow {
+            opacity: 1;
+        }
+
+        /* Hover эффекты */
+        .card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
         .card:hover .card-arrow {
-            transform: translateX(4px);
+            transform: translateX(8px);
+            opacity: 1;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .card:hover .card-stats span {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ========== КОНТЕНТ КАРТОЧКИ ========== */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
         }
 
         .card-icon {
-            font-size: 40px;
-            margin-bottom: 16px;
+            font-size: 44px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: block;
+        }
+
+        .card-type-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-discipline .card-type-badge {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .card-hr .card-type-badge {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.15);
         }
 
         .card h2 {
             color: white;
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 8px;
-            position: relative;
+            letter-spacing: -0.3px;
         }
 
         .card p {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            line-height: 1.5;
-            position: relative;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 16px;
         }
 
-        .card-badge {
-            display: inline-block;
-            background: rgba(37, 99, 235, 0.2);
-            color: #60a5fa;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-top: 12px;
-            position: relative;
-        }
-
-        .card-features {
-            margin-top: 16px;
+        /* ========== СТАТИСТИКА КАРТОЧКИ ========== */
+        .card-stats {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            position: relative;
+            gap: 8px;
+            margin-bottom: 20px;
         }
 
-        .card-features span {
+        .card-stats span {
             background: rgba(255, 255, 255, 0.04);
-            color: rgba(255, 255, 255, 0.5);
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
             border: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.4);
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-stats span {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ========== НИЗ КАРТОЧКИ ========== */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .card-footer .card-time {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .card-arrow {
-            position: absolute;
-            bottom: 24px;
-            right: 24px;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease;
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0.5;
         }
 
-        /* Специфичные стили для карточек */
+        /* ========== ОСОБЫЕ ЭФФЕКТЫ ДЛЯ КАЖДОЙ КАРТОЧКИ ========== */
+        .card-discipline {
+            border-left: 3px solid rgba(239, 68, 68, 0.3);
+        }
+
         .card-discipline:hover {
-            border-color: rgba(239, 68, 68, 0.3);
+            border-left-color: #ef4444;
         }
 
-        .card-discipline .card-badge {
-            background: rgba(239, 68, 68, 0.2);
-            color: #f87171;
+        .card-hr {
+            border-left: 3px solid rgba(52, 211, 153, 0.3);
         }
 
         .card-hr:hover {
-            border-color: rgba(52, 211, 153, 0.3);
+            border-left-color: #34d399;
         }
 
-        .card-hr .card-badge {
-            background: rgba(52, 211, 153, 0.2);
-            color: #34d399;
-        }
-
+        /* ========== ФУТЕР ========== */
         .footer {
             text-align: center;
-            margin-top: 40px;
-            color: rgba(255, 255, 255, 0.2);
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.12);
             font-size: 13px;
             font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         .footer span {
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            background: linear-gradient(135deg, #818cf8, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-weight: 700;
         }
 
-        /* Стили для ссылок */
-        .card-link {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* Адаптив */
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 24px;
-            }
-            .header .logo {
-                font-size: 40px;
-            }
-            .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .card {
-                padding: 24px 20px;
-            }
-            .card-icon {
-                font-size: 32px;
-            }
-            .card h2 {
-                font-size: 18px;
-            }
-        }
-
-        /* Анимация появления */
+        /* ========== АНИМАЦИЯ ПОЯВЛЕНИЯ ========== */
         .card {
             opacity: 0;
-            animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform: translateY(40px);
+            animation: cardReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         .card:nth-child(1) {
@@ -255,60 +426,256 @@
             animation-delay: 0.2s;
         }
 
-        @keyframes cardAppear {
+        @keyframes cardReveal {
             from {
                 opacity: 0;
-                transform: translateY(30px) scale(0.95);
+                transform: translateY(40px) scale(0.95);
             }
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
+
+        /* ========== АДАПТИВ ========== */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .header p {
+                font-size: 16px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 28px 24px 24px;
+                border-radius: 24px;
+            }
+
+            .card-icon {
+                font-size: 36px;
+            }
+
+            .card h2 {
+                font-size: 20px;
+            }
+
+            .card p {
+                font-size: 14px;
+            }
+
+            .header .logo-icon {
+                font-size: 48px;
+            }
+
+            .orb-1 {
+                width: 250px;
+                height: 250px;
+            }
+
+            .orb-2 {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header .badge-top {
+                font-size: 10px;
+                padding: 3px 12px;
+            }
+
+            .card {
+                padding: 20px 16px 20px;
+                border-radius: 20px;
+            }
+
+            .card-stats span {
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+
+            .card-footer .card-time {
+                font-size: 11px;
+            }
+
+            .card-arrow {
+                font-size: 18px;
+            }
+
+            .footer {
+                font-size: 11px;
+                margin-top: 32px;
+                padding-top: 16px;
+            }
+        }
+
+        /* ========== ПОДДЕРЖКА ТЕМЫ ========== */
+        @media (prefers-color-scheme: light) {
+            body {
+                background: #f0f4f9;
+            }
+
+            body::before {
+                background: 
+                    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 60%);
+            }
+
+            .header h1 {
+                color: #0b1a2e;
+            }
+
+            .header p {
+                color: rgba(0, 0, 0, 0.4);
+            }
+
+            .card {
+                background: rgba(255, 255, 255, 0.7);
+                border-color: rgba(255, 255, 255, 0.5);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            }
+
+            .card:hover {
+                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08);
+                border-color: rgba(0, 0, 0, 0.06);
+            }
+
+            .card h2 {
+                color: #0b1a2e;
+            }
+
+            .card p {
+                color: rgba(0, 0, 0, 0.5);
+            }
+
+            .card-stats span {
+                background: rgba(0, 0, 0, 0.03);
+                border-color: rgba(0, 0, 0, 0.04);
+                color: rgba(0, 0, 0, 0.4);
+            }
+
+            .card-footer {
+                border-top-color: rgba(0, 0, 0, 0.04);
+            }
+
+            .card-footer .card-time {
+                color: rgba(0, 0, 0, 0.25);
+            }
+
+            .card-arrow {
+                color: rgba(0, 0, 0, 0.15);
+            }
+
+            .card .card-bg-glow {
+                display: none;
+            }
+
+            .card::before {
+                background: linear-gradient(135deg, rgba(0,0,0,0.04), transparent 50%);
+            }
+
+            .header .divider {
+                background: linear-gradient(90deg, #667eea, #764ba2);
+            }
+
+            .header .badge-top {
+                background: rgba(99, 102, 241, 0.08);
+                border-color: rgba(99, 102, 241, 0.1);
+                color: #667eea;
+            }
+
+            .footer {
+                border-top-color: rgba(0, 0, 0, 0.04);
+                color: rgba(0, 0, 0, 0.15);
+            }
+
+            .orb-1, .orb-2, .orb-3 {
+                opacity: 0.15;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Декоративные сферы -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <span class="logo">🏛️</span>
-            <h1>Аппарат Правительства</h1>
-            <p>Выберите анкету для заполнения</p>
+            <div class="badge-top">🏛️ Аппарат Правительства</div>
+            <div class="logo-wrapper">
+                <div class="logo-glow"></div>
+                <span class="logo-icon">⚖️</span>
+            </div>
+            <h1>
+                Выберите <span class="highlight">анкету</span>
+            </h1>
+            <p>Заполните анкету и станьте частью команды Аппарата Правительства</p>
+            <div class="divider"></div>
         </div>
 
+        <!-- Карточки -->
         <div class="cards-grid">
             <!-- Карточка 1: Дисциплинарный инспектор -->
-            <a href="survey1.html" class="card-link">
-                <div class="card card-discipline">
+            <a href="survey1.html" class="card card-discipline">
+                <div class="card-bg-glow"></div>
+                <div class="card-top">
                     <span class="card-icon">⚖️</span>
-                    <h2>Дисциплинарный инспектор</h2>
-                    <p>Анкета для кандидатов на должность Дисциплинарного инспектора Аппарата Правительства</p>
-                    <span class="card-badge">⏱️ ~15 мин</span>
-                    <div class="card-features">
-                        <span>📝 3 шага</span>
-                        <span>⭐ 11 рейтингов</span>
-                        <span>📋 10 вопросов</span>
-                    </div>
+                    <span class="card-type-badge">Дисциплинарный отдел</span>
+                </div>
+                <h2>Дисциплинарный инспектор</h2>
+                <p>Кандидаты на должность Дисциплинарного инспектора Аппарата Правительства</p>
+                <div class="card-stats">
+                    <span>📝 3 шага</span>
+                    <span>⭐ 11 рейтингов</span>
+                    <span>📋 10 вопросов</span>
+                    <span>⏱️ ~15 мин</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">⚡ Начать заполнение</span>
                     <span class="card-arrow">→</span>
                 </div>
             </a>
 
             <!-- Карточка 2: HR-менеджер -->
-            <a href="survey2.html" class="card-link">
-                <div class="card card-hr">
+            <a href="survey2.html" class="card card-hr">
+                <div class="card-bg-glow"></div>
+                <div class="card-top">
                     <span class="card-icon">👥</span>
-                    <h2>HR-менеджер</h2>
-                    <p>Анкета для кандидатов на должность HR-менеджера Аппарата Правительства</p>
-                    <span class="card-badge">⏱️ ~15 мин</span>
-                    <div class="card-features">
-                        <span>📝 3 шага</span>
-                        <span>⭐ 12 рейтингов</span>
-                        <span>📋 10 вопросов</span>
-                    </div>
+                    <span class="card-type-badge">HR-отдел</span>
+                </div>
+                <h2>HR-менеджер</h2>
+                <p>Кандидаты на должность HR-менеджера Аппарата Правительства</p>
+                <div class="card-stats">
+                    <span>📝 3 шага</span>
+                    <span>⭐ 12 рейтингов</span>
+                    <span>📋 10 вопросов</span>
+                    <span>⏱️ ~15 мин</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">⚡ Начать заполнение</span>
                     <span class="card-arrow">→</span>
                 </div>
             </a>
         </div>
 
+        <!-- Footer -->
         <div class="footer">
             by <span>Rubi Antwoord</span>
         </div>
