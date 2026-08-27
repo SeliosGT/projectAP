@@ -265,6 +265,29 @@
             margin-top: 4px;
         }
 
+        .card-ratings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+            margin: 8px 0;
+        }
+
+        .card-ratings .rating-tag {
+            font-size: 11px;
+            background: #ebf4ff;
+            color: #2563eb;
+            padding: 2px 10px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-ratings .rating-tag .stars {
+            color: #f59e0b;
+            letter-spacing: 1px;
+        }
+
         .card-preview {
             margin-top: 8px;
             padding: 12px;
@@ -391,7 +414,7 @@
             background: white;
             padding: 32px;
             border-radius: 24px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             text-align: center;
             animation: slideUp 0.3s ease;
@@ -421,12 +444,33 @@
             margin-bottom: 8px;
         }
 
-        .modal-content .detail-field {
+        .modal-content .detail-section {
+            margin: 16px 0;
             text-align: left;
-            margin: 12px 0;
-            padding: 12px;
+        }
+
+        .modal-content .detail-section .section-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #edf2f7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-content .detail-field {
+            padding: 10px 12px;
             background: #f7fafc;
             border-radius: 10px;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+
+        .modal-content .detail-field:hover {
+            background: #edf2f7;
         }
 
         .modal-content .detail-field strong {
@@ -434,12 +478,25 @@
             font-size: 12px;
             color: #718096;
             margin-bottom: 4px;
+            font-weight: 600;
         }
 
         .modal-content .detail-field p {
             color: #2d3748;
             font-size: 14px;
             word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .modal-content .detail-field .stars-display {
+            color: #f59e0b;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        .modal-content .detail-field .rating-label {
+            font-size: 13px;
+            color: #4a5568;
         }
 
         .modal-actions {
@@ -652,6 +709,74 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1Ym1tbmlobnZ2cXZibWhmbGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDIwNjMsImV4cCI6MjEwMzQxODA2M30.mWO0RYNEXYh1irXkek_Qs75hRbx-FcjmxC2k2iAMfPc';
         const ADMIN_PASSWORD = '54321';
 
+        // ==================== МАППИНГ НАЗВАНИЙ РЕЙТИНГОВ ====================
+        const RATING_NAMES = {
+            discipline: {
+                r1: 'Адекватность',
+                r2: 'Стрессоустойчивость',
+                r3: 'Знание правил сервера',
+                r4: 'Любовь к своей работе',
+                r5: 'Целеустремленность',
+                r6: 'Конституция',
+                r7: 'Уголовный кодекс',
+                r8: 'Этический кодекс',
+                r9: 'Устав Goverment',
+                r10: 'Устав Секретариата',
+                r11: 'Трудовой Кодекс'
+            },
+            hr: {
+                r1: 'Адекватность',
+                r2: 'Стрессоустойчивость',
+                r3: 'Знание правил сервера',
+                r4: 'Любовь к своей работе',
+                r5: 'Целеустремленность',
+                r6: 'Конституция',
+                r7: 'Уголовный кодекс',
+                r8: 'Этический кодекс',
+                r9: 'Устав Goverment',
+                r10: 'Устав Секретариата',
+                r11: 'Трудовой Кодекс',
+                r12: 'Информация о лицензиях'
+            }
+        };
+
+        // ==================== МАППИНГ ВОПРОСОВ ДЛЯ ПРОСМОТРА ====================
+        const QUESTION_LABELS = {
+            // Общие
+            q1: '📝 Ваше Имя Фамилия (IC)',
+            q2: '👤 Ваше Имя (OOC)',
+            q3: '🎂 Ваш возраст (OOC)',
+            q4: '⏰ Ваш игровой онлайн (OOC)',
+            q5: '🌅 Ваш прайм-тайм',
+            q6: '🌍 Ваш часовой пояс',
+            experience: '💼 Имеется ли у вас опыт работы на похожих должностях?',
+            experience_detail: '📋 Где и кем вы работали?',
+            exam_money: '💰 Допустимо ли брать деньги за сдачу экзаменов?',
+            situation3: '🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать?',
+            situation_colleague: '🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать?',
+            situation1: '🏛️ Представим такую ситуацию: В мэрии никого нет, но при этом в штате есть сотрудники Аппарата Правительства, что вы будете делать?',
+            situation2: '😡 Вас оскорбили в Дискорде, что вы будете делать?',
+            about: '📋 Пару слов о себе',
+            motivation: '🎯 Ради чего Вы хотите стать Дисциплинарным инспектором / HR-менеджером?',
+            qualities: '💪 Как вы думаете, какими качествами должен обладать Дисциплинарный инспектор?',
+            // HR специфичные
+            trainee: '👨‍🎓 Готовы ли вы уделять время стажерам, которые требуют особого внимания?',
+            trainee_detail: '📖 Молодой стажер никак не может сдать первый экзамен на секретаря. Расскажите, как вы сможете ему помочь?',
+            individual: '📄 Как вы относитесь к индивидуальным наборам? (Раздача листовок, агитируя отдел АП)',
+            hr_duties: '📚 Как Вы думаете, чем занимается HR-менеджер?'
+        };
+
+        // Эмодзи для типов
+        const TYPE_EMOJIS = {
+            discipline: '⚖️',
+            hr: '👥'
+        };
+
+        const TYPE_NAMES = {
+            discipline: 'Дисциплинарный инспектор',
+            hr: 'HR-менеджер'
+        };
+
         // ==================== ПРОВЕРКА ПАРОЛЯ ====================
         if (!sessionStorage.getItem('admin_auth')) {
             const password = prompt('🔐 Введите пароль для входа в админ-панель:');
@@ -722,10 +847,13 @@
             }
         }
 
+        function getRatingStars(value) {
+            return '★'.repeat(value) + '☆'.repeat(5 - value);
+        }
+
         function renderApplications(data) {
             const container = document.getElementById('cardsContainer');
 
-            // Фильтрация
             let filtered = data;
             if (currentFilter === 'discipline') {
                 filtered = data.filter(app => app.survey_type === 'discipline');
@@ -755,17 +883,39 @@
                     minute: '2-digit'
                 });
 
-                const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
+                const typeLabel = `${TYPE_EMOJIS[app.survey_type] || '📋'} ${TYPE_NAMES[app.survey_type] || 'Неизвестно'}`;
                 const typeClass = app.survey_type === 'discipline' ? 'discipline' : 'hr';
-                
+
+                // Рейтинги в карточке
+                let ratingsHtml = '';
+                if (app.ratings) {
+                    try {
+                        const ratings = JSON.parse(app.ratings);
+                        const names = RATING_NAMES[app.survey_type] || {};
+                        const entries = Object.entries(ratings).filter(([k]) => names[k]);
+                        if (entries.length > 0) {
+                            ratingsHtml = '<div class="card-ratings">';
+                            entries.slice(0, 4).forEach(([key, val]) => {
+                                ratingsHtml += `
+                                    <span class="rating-tag">
+                                        ${names[key] || key}
+                                        <span class="stars">${'★'.repeat(val)}</span>
+                                    </span>
+                                `;
+                            });
+                            if (entries.length > 4) {
+                                ratingsHtml += `<span class="rating-tag">+${entries.length - 4} ещё</span>`;
+                            }
+                            ratingsHtml += '</div>';
+                        }
+                    } catch (e) {}
+                }
+
                 // Превью ответов
                 let preview = '';
                 if (app.q1) preview += `📝 ${app.q1}`;
-                if (app.q2) preview += ` | ${app.q2}`;
-                if (app.about) preview += `\n📋 ${app.about.substring(0, 100)}${app.about.length > 100 ? '...' : ''}`;
-
-                const ratings = app.ratings ? Object.values(JSON.parse(app.ratings)).reduce((a, b) => a + b, 0) : 0;
-                const ratingCount = app.ratings ? Object.keys(JSON.parse(app.ratings)).length : 0;
+                if (app.q2) preview += ` | 👤 ${app.q2}`;
+                if (app.about) preview += `\n📋 ${app.about.substring(0, 80)}${app.about.length > 80 ? '...' : ''}`;
 
                 return `
                     <div class="card" style="animation-delay: ${index * 0.05}s">
@@ -778,7 +928,7 @@
                             <div class="card-date">${formattedDate}</div>
                         </div>
                         ${app.q2 ? `<div style="font-size:13px;color:#718096;margin-bottom:4px;">👤 ${app.q2}</div>` : ''}
-                        ${ratings > 0 ? `<div style="font-size:12px;color:#667eea;">⭐ Рейтинг: ${ratings}/${ratingCount * 5}</div>` : ''}
+                        ${ratingsHtml}
                         ${preview ? `<div class="card-preview">${preview.replace(/\n/g, '<br>')}</div>` : ''}
                         <div class="card-actions">
                             <button class="btn btn-view" onclick="viewApplication(${app.id})">👁️ Просмотр</button>
@@ -828,49 +978,113 @@
             const app = applications.find(a => a.id === id);
             if (!app) return;
 
-            const ratings = app.ratings ? JSON.parse(app.ratings) : {};
-            const ratingEntries = Object.entries(ratings);
-            const ratingHtml = ratingEntries.length > 0 ? `
+            const type = app.survey_type || 'discipline';
+            const typeIcon = TYPE_EMOJIS[type] || '📄';
+            const typeName = TYPE_NAMES[type] || 'Неизвестно';
+
+            // Рейтинги
+            let ratingsHtml = '';
+            if (app.ratings) {
+                try {
+                    const ratings = JSON.parse(app.ratings);
+                    const names = RATING_NAMES[type] || {};
+                    const entries = Object.entries(ratings).filter(([k]) => names[k]);
+                    if (entries.length > 0) {
+                        ratingsHtml = `
+                            <div class="detail-section">
+                                <div class="section-title">⭐ Рейтинги</div>
+                                ${entries.map(([key, val]) => `
+                                    <div class="detail-field">
+                                        <strong>${names[key] || key}</strong>
+                                        <p class="stars-display">${getRatingStars(val)} <span class="rating-label">(${val}/5)</span></p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                } catch (e) {}
+            }
+
+            // Сбор всех полей с вопросами
+            const fields = [];
+            const questionMap = QUESTION_LABELS;
+
+            // Основные поля
+            const mainFields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
+            mainFields.forEach(key => {
+                if (app[key] && app[key].trim()) {
+                    fields.push({ label: questionMap[key] || key, value: app[key] });
+                }
+            });
+
+            // Опыт
+            if (app.experience) {
+                fields.push({
+                    label: questionMap.experience || 'Опыт работы',
+                    value: app.experience === 'yes' ? '✅ Да' : '❌ Нет'
+                });
+                if (app.experience === 'yes' && app.experience_detail) {
+                    fields.push({ label: questionMap.experience_detail || 'Детали опыта', value: app.experience_detail });
+                }
+            }
+
+            // Деньги за экзамены
+            if (app.exam_money) {
+                fields.push({
+                    label: questionMap.exam_money || 'Деньги за экзамены',
+                    value: app.exam_money === 'yes' ? '✅ Да' : '❌ Нет'
+                });
+            }
+
+            // Ситуация с коллегой
+            if (app.situation3 && app.situation3.trim()) {
+                fields.push({ label: questionMap.situation3 || 'Ситуация с коллегой', value: app.situation3 });
+            }
+            if (app.situation_colleague && app.situation_colleague.trim()) {
+                fields.push({ label: questionMap.situation_colleague || 'Ситуация с коллегой', value: app.situation_colleague });
+            }
+
+            // HR специфичные
+            if (app.trainee) {
+                fields.push({
+                    label: questionMap.trainee || 'Готовность к стажерам',
+                    value: app.trainee === 'yes' ? '✅ Да' : '❌ Нет'
+                });
+                if (app.trainee === 'yes' && app.trainee_detail) {
+                    fields.push({ label: questionMap.trainee_detail || 'Помощь стажеру', value: app.trainee_detail });
+                }
+            }
+            if (app.individual && app.individual.trim()) {
+                fields.push({ label: questionMap.individual || 'Индивидуальные наборы', value: app.individual });
+            }
+            if (app.hr_duties && app.hr_duties.trim()) {
+                fields.push({ label: questionMap.hr_duties || 'HR обязанности', value: app.hr_duties });
+            }
+
+            // Остальные поля
+            const otherFields = ['situation1', 'situation2', 'about', 'motivation', 'qualities'];
+            otherFields.forEach(key => {
+                if (app[key] && app[key].trim()) {
+                    fields.push({ label: questionMap[key] || key, value: app[key] });
+                }
+            });
+
+            const fieldsHtml = fields.map(f => `
                 <div class="detail-field">
-                    <strong>⭐ Рейтинги</strong>
-                    ${ratingEntries.map(([key, val]) => `<p>${key.replace('d_', '').replace('h_', '')}: ${'★'.repeat(val)}${'☆'.repeat(5 - val)} (${val}/5)</p>`).join('')}
+                    <strong>${f.label}</strong>
+                    <p>${f.value}</p>
                 </div>
-            ` : '';
+            `).join('');
 
-            const fields = [
-                { label: '📝 Имя персонажа', value: app.q1 },
-                { label: '👤 Реальное имя', value: app.q2 },
-                { label: '🎂 Возраст', value: app.q3 },
-                { label: '⏰ Игровой онлайн', value: app.q4 },
-                { label: '🌅 Прайм-тайм', value: app.q5 },
-                { label: '🌍 Часовой пояс', value: app.q6 },
-                { label: '💼 Опыт работы', value: app.experience === 'yes' ? 'Да' : (app.experience === 'no' ? 'Нет' : 'Не указано') },
-                { label: '📋 Детали опыта', value: app.experience_detail },
-                { label: '💰 Деньги за экзамены', value: app.exam_money === 'yes' ? 'Да' : (app.exam_money === 'no' ? 'Нет' : 'Не указано') },
-                { label: '🤝 Ситуация с коллегой', value: app.situation3 || app.situation_colleague },
-                { label: '🏛️ Ситуация в мэрии', value: app.situation1 },
-                { label: '😡 Оскорбление в Discord', value: app.situation2 },
-                { label: '📋 О себе', value: app.about },
-                { label: '🎯 Мотивация', value: app.motivation },
-                { label: '💪 Качества', value: app.qualities },
-                { label: '📚 HR обязанности', value: app.hr_duties },
-                { label: '📄 Индивидуальные наборы', value: app.individual },
-                { label: '👨‍🎓 Стажеры', value: app.trainee === 'yes' ? 'Да' : (app.trainee === 'no' ? 'Нет' : 'Не указано') },
-                { label: '📖 Помощь стажеру', value: app.trainee_detail },
-            ];
+            document.getElementById('viewIcon').textContent = typeIcon;
+            document.getElementById('viewTitle').textContent = `${typeName} - ${app.q1 || 'Без имени'}`;
+            document.getElementById('viewBody').innerHTML = ratingsHtml + (fieldsHtml ? `
+                <div class="detail-section">
+                    <div class="section-title">📋 Ответы на вопросы</div>
+                    ${fieldsHtml}
+                </div>
+            ` : '<p style="color:#a0aec0;text-align:center;">Нет дополнительной информации</p>');
 
-            const bodyHtml = fields
-                .filter(f => f.value && f.value.trim())
-                .map(f => `
-                    <div class="detail-field">
-                        <strong>${f.label}</strong>
-                        <p>${f.value}</p>
-                    </div>
-                `).join('');
-
-            document.getElementById('viewIcon').textContent = app.survey_type === 'discipline' ? '⚖️' : '👥';
-            document.getElementById('viewTitle').textContent = `${app.survey_type === 'discipline' ? 'Дисциплинарный инспектор' : 'HR-менеджер'} - ${app.q1 || 'Без имени'}`;
-            document.getElementById('viewBody').innerHTML = ratingHtml + bodyHtml;
             document.getElementById('viewModal').classList.add('active');
         }
 
@@ -887,6 +1101,15 @@
         async function addTestData() {
             const types = ['discipline', 'hr'];
             const type = types[Math.floor(Math.random() * types.length)];
+            const ratings = {};
+            const ratingKeys = type === 'discipline' 
+                ? ['r1','r2','r3','r4','r5','r6','r7','r8','r9','r10','r11']
+                : ['r1','r2','r3','r4','r5','r6','r7','r8','r9','r10','r11','r12'];
+            
+            ratingKeys.forEach(key => {
+                ratings[key] = Math.floor(Math.random() * 5) + 1;
+            });
+
             const testData = {
                 survey_type: type,
                 q1: `Тест ${type === 'discipline' ? 'Дисциплинарный' : 'HR'} ${new Date().toLocaleTimeString()}`,
@@ -895,21 +1118,25 @@
                 q4: '4-5 часов',
                 q5: '12:00 - 16:00',
                 q6: 'МСК +3',
-                ratings: JSON.stringify({
-                    r1: 4, r2: 3, r3: 5, r4: 4, r5: 3,
-                    r6: 4, r7: 3, r8: 5, r9: 4, r10: 3, r11: 4
-                }),
+                ratings: JSON.stringify(ratings),
                 experience: 'yes',
-                experience_detail: 'Тестовый опыт работы 2 года',
+                experience_detail: 'Тестовый опыт работы 2 года в аналогичной должности',
                 exam_money: 'no',
-                situation3: 'Я бы сообщил руководству',
-                situation1: 'Я бы занялся организацией работы',
-                situation2: 'Я бы обратился к модерации',
-                about: 'Тестовый пользователь для проверки системы',
-                motivation: 'Хочу помочь развитию проекта',
-                qualities: 'Ответственность, внимательность, коммуникабельность',
+                situation3: 'Я бы сообщил руководству о данном факте и предоставил доказательства',
+                situation1: 'Я бы организовал работу сотрудников, распределил обязанности и обеспечил выполнение задач',
+                situation2: 'Я бы обратился к модерации Discord с жалобой и скриншотами',
+                about: 'Тестовый пользователь для проверки системы. Ответственный, пунктуальный, коммуникабельный.',
+                motivation: 'Хочу помочь развитию проекта и внести свой вклад в работу Аппарата Правительства',
+                qualities: 'Ответственность, внимательность, коммуникабельность, стрессоустойчивость, лидерские качества',
                 created_at: new Date().toISOString()
             };
+
+            if (type === 'hr') {
+                testData.trainee = 'yes';
+                testData.trainee_detail = 'Я бы проводил дополнительные занятия, объяснял материал более подробно, давал практические задания';
+                testData.individual = 'Положительно, это помогает привлекать новых сотрудников и развивать отдел';
+                testData.hr_duties = 'HR-менеджер занимается подбором персонала, проведением собеседований, обучением стажеров';
+            }
 
             try {
                 showToast('⏳ Добавление тестовой заявки...', 'info');
@@ -936,7 +1163,7 @@
             }
         }
 
-        // ==================== УДАЛЕНИЕ ОДНОЙ ЗАЯВКИ ====================
+        // ==================== УДАЛЕНИЕ ====================
 
         function deleteSingle(id) {
             const app = applications.find(a => a.id === id);
@@ -967,8 +1194,6 @@
                 }
             );
         }
-
-        // ==================== УДАЛЕНИЕ ВСЕХ ЗАЯВОК ====================
 
         function deleteAll() {
             if (applications.length === 0) {
@@ -1033,7 +1258,7 @@
             }
         });
 
-        // ==================== TOAST УВЕДОМЛЕНИЯ ====================
+        // ==================== TOAST ====================
 
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
