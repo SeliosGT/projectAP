@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отправить заявку</title>
+    <title>Аппарат Правительства - Анкеты</title>
     <style>
         * {
             margin: 0;
@@ -13,231 +13,305 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            background: linear-gradient(135deg, #0b1a2e 0%, #1a3050 100%);
             padding: 20px;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 48px 40px;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .container:hover {
-            transform: translateY(-5px);
-        }
-
-        h1 {
-            font-size: 28px;
-            color: #2d3748;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: #718096;
-            font-size: 16px;
-            margin-bottom: 32px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f7fafc;
-            color: #2d3748;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        }
-
-        input::placeholder {
-            color: #a0aec0;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .btn.loading {
-            color: transparent;
-        }
-
-        .btn.loading::after {
+        /* Анимированный фон */
+        body::before {
             content: '';
             position: absolute;
-            width: 24px;
-            height: 24px;
-            top: 50%;
-            left: 50%;
-            margin-left: -12px;
-            margin-top: -12px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+            animation: backgroundFloat 20s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes backgroundFloat {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 20px); }
         }
 
-        .message {
-            margin-top: 20px;
-            padding: 12px 16px;
-            border-radius: 10px;
+        .container {
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header .logo {
+            font-size: 56px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            margin-top: 4px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 32px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(37, 99, 235, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover .card-arrow {
+            transform: translateX(4px);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .card h2 {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .card p {
+            color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
-            display: none;
+            line-height: 1.5;
+            position: relative;
         }
 
-        .message.success {
-            display: block;
-            background: #c6f6d5;
-            color: #22543d;
+        .card-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 12px;
+            position: relative;
         }
 
-        .message.error {
-            display: block;
-            background: #fed7d7;
-            color: #742a2a;
+        .card-features {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            position: relative;
+        }
+
+        .card-features span {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.5);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .card-arrow {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        /* Специфичные стили для карточек */
+        .card-discipline:hover {
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .card-discipline .card-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .card-hr:hover {
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+
+        .card-hr .card-badge {
+            background: rgba(52, 211, 153, 0.2);
+            color: #34d399;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .footer span {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Стили для ссылок */
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Адаптив */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            .header .logo {
+                font-size: 40px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .card {
+                padding: 24px 20px;
+            }
+            .card-icon {
+                font-size: 32px;
+            }
+            .card h2 {
+                font-size: 18px;
+            }
+        }
+
+        /* Анимация появления */
+        .card {
+            opacity: 0;
+            animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📝 Отправить заявку</h1>
-        <p class="subtitle">Заполните форму и мы свяжемся с вами</p>
+        <div class="header">
+            <span class="logo">🏛️</span>
+            <h1>Аппарат Правительства</h1>
+            <p>Выберите анкету для заполнения</p>
+        </div>
 
-        <form id="applicationForm">
-            <div class="form-group">
-                <label for="fullName">Имя и фамилия</label>
-                <input 
-                    type="text" 
-                    id="fullName" 
-                    placeholder="Например: Иван Петров"
-                    required
-                    autofocus
-                >
-            </div>
+        <div class="cards-grid">
+            <!-- Карточка 1: Дисциплинарный инспектор -->
+            <a href="survey1.html" class="card-link">
+                <div class="card card-discipline">
+                    <span class="card-icon">⚖️</span>
+                    <h2>Дисциплинарный инспектор</h2>
+                    <p>Анкета для кандидатов на должность Дисциплинарного инспектора Аппарата Правительства</p>
+                    <span class="card-badge">⏱️ ~15 мин</span>
+                    <div class="card-features">
+                        <span>📝 3 шага</span>
+                        <span>⭐ 11 рейтингов</span>
+                        <span>📋 10 вопросов</span>
+                    </div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
 
-            <button type="submit" class="btn" id="submitBtn">Отправить заявку</button>
-        </form>
+            <!-- Карточка 2: HR-менеджер -->
+            <a href="survey2.html" class="card-link">
+                <div class="card card-hr">
+                    <span class="card-icon">👥</span>
+                    <h2>HR-менеджер</h2>
+                    <p>Анкета для кандидатов на должность HR-менеджера Аппарата Правительства</p>
+                    <span class="card-badge">⏱️ ~15 мин</span>
+                    <div class="card-features">
+                        <span>📝 3 шага</span>
+                        <span>⭐ 12 рейтингов</span>
+                        <span>📋 10 вопросов</span>
+                    </div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+        </div>
 
-        <div id="message" class="message"></div>
+        <div class="footer">
+            by <span>Rubi Antwoord</span>
+        </div>
     </div>
-
-    <script>
-        const SUPABASE_URL = 'https://rubmmnihnvvqvbmhfljy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1Ym1tbmlobnZ2cXZibWhmbGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDIwNjMsImV4cCI6MjEwMzQxODA2M30.mWO0RYNEXYh1irXkek_Qs75hRbx-FcjmxC2k2iAMfPc';
-
-        const form = document.getElementById('applicationForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const message = document.getElementById('message');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value.trim();
-            
-            if (!fullName) {
-                showMessage('Пожалуйста, введите имя и фамилию', 'error');
-                return;
-            }
-
-            submitBtn.disabled = true;
-            submitBtn.classList.add('loading');
-
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    },
-                    body: JSON.stringify({
-                        full_name: fullName
-                    })
-                });
-
-                if (response.ok) {
-                    showMessage('✅ Заявка успешно отправлена!', 'success');
-                    form.reset();
-                } else {
-                    const error = await response.json();
-                    showMessage(`❌ Ошибка: ${error.message || 'Попробуйте позже'}`, 'error');
-                }
-            } catch (error) {
-                showMessage('❌ Ошибка соединения. Проверьте интернет.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('loading');
-            }
-        });
-
-        function showMessage(text, type) {
-            message.textContent = text;
-            message.className = `message ${type}`;
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    message.className = 'message';
-                }, 5000);
-            }
-        }
-    </script>
 </body>
 </html>
