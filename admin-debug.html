@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админка (отладка)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f7fafc;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        .card p {
+            color: #718096;
+            font-size: 14px;
+            margin: 4px 0;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-danger {
+            background: #fc8181;
+            color: white;
+        }
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        .status {
+            padding: 12px;
+            border-radius: 10px;
+            margin: 8px 0;
+        }
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        .status.info {
+            background: #bee3f8;
+            color: #2a69ac;
+        }
+        .log {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .hidden {
+            display: none;
+        }
+        .password-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .password-screen input {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin: 16px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- Экран ввода пароля -->
+        <div id="passwordScreen" class="card password-screen">
+            <h2>🔐 Введите пароль</h2>
+            <input type="password" id="passwordInput" placeholder="Пароль">
+            <button class="btn btn-primary" onclick="checkPassword()">Войти</button>
+            <p id="passwordError" style="color:#fc8181;margin-top:12px;"></p>
+        </div>
+
+        <!-- Основной интерфейс -->
+        <div id="mainScreen" class="hidden">
+            <div class="card">
+                <h2>📋 Админ панель</h2>
+                <div id="stats">
+                    <p>Всего заявок: <strong id="totalCount">0</strong></p>
+                </div>
+                <button class="btn btn-primary" onclick="loadData()">🔄 Обновить</button>
+                <button class="btn btn-danger" onclick="clearAll()" style="margin-top:8px;">🗑️ Удалить всё</button>
+            </div>
+
+            <div id="statusMessage"></div>
+
+            <div id="dataContainer">
+                <div class="card">
+                    <p style="text-align:center;color:#a0aec0;">Нажмите "Обновить" для загрузки</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Лог отладки</h3>
+                <div class="log" id="debugLog">Ожидание действий...</div>
+                <button class="btn btn-success" onclick="clearLog()" style="margin-top:8px;">Очистить лог</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // КОНФИГУРАЦИЯ
+        const SUPABASE_URL = 'https://rubmmnihnvvqvbmhfljy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1Ym1tbmlobnZ2cXZibWhmbGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDIwNjMsImV4cCI6MjEwMzQxODA2M30.mWO0RYNEXYh1irXkek_Qs75hRbx-FcjmxC2k2iAMfPc';
+        const ADMIN_PASSWORD = '54321';
+
+        let applications = [];
+        let logs = [];
+
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            logs.push(logEntry);
+            
+            const logElement = document.getElementById('debugLog');
+            logElement.textContent = logs.join('\n');
+            logElement.scrollTop = logElement.scrollHeight;
+            
+            console.log(logEntry);
+        }
+
+        function clearLog() {
+            logs = [];
+            document.getElementById('debugLog').textContent = 'Лог очищен';
+            addLog('Лог очищен');
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            if (input === ADMIN_PASSWORD) {
+                document.getElementById('passwordScreen').classList.add('hidden');
+                document.getElementById('mainScreen').classList.remove('hidden');
+                addLog('✅ Пароль принят, вход выполнен');
+                loadData();
+            } else {
+                document.getElementById('passwordError').textContent = '❌ Неверный пароль!';
+                addLog('❌ Неверная попытка входа');
+            }
+        }
+
+        function showStatus(message, type) {
+            const div = document.getElementById('statusMessage');
+            div.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => div.innerHTML = '', 5000);
+        }
+
+        async function loadData() {
+            addLog('🔄 Начинаем загрузку данных...');
+            showStatus('Загрузка...', 'info');
+
+            try {
+                addLog(`📡 URL запроса: ${SUPABASE_URL}/rest/v1/applications`);
+                
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                addLog(`📊 Статус ответа: ${response.status}`);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${errorText}`);
+                    throw new Error(`Ошибка ${response.status}`);
+                }
+
+                const data = await response.json();
+                addLog(`✅ Получено записей: ${data.length}`);
+                
+                applications = data;
+                renderData(data);
+                updateStats(data);
+                showStatus(`✅ Загружено ${data.length} заявок`, 'success');
+
+            } catch (error) {
+                addLog(`❌ Критическая ошибка: ${error.message}`);
+                showStatus(`❌ Ошибка: ${error.message}`, 'error');
+            }
+        }
+
+        function renderData(data) {
+            const container = document.getElementById('dataContainer');
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <p style="text-align:center;color:#a0aec0;">📭 Нет заявок</p>
+                    </div>
+                `;
+                addLog('📭 Нет данных для отображения');
+                return;
+            }
+
+            let html = '';
+            data.forEach((app, index) => {
+                const date = new Date(app.created_at);
+                const formattedDate = date.toLocaleString('ru-RU', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                html += `
+                    <div class="card">
+                        <h3>${app.full_name}</h3>
+                        <p>🆔 ID: ${app.id}</p>
+                        <p>📅 ${formattedDate}</p>
+                        <button class="btn btn-danger" onclick="deleteSingle(${app.id})">
+                            🗑️ Удалить
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            addLog(`📋 Отображено ${data.length} карточек`);
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalCount').textContent = data.length;
+            addLog(`📊 Обновлена статистика: ${data.length} записей`);
+        }
+
+        async function deleteSingle(id) {
+            const app = applications.find(a => a.id === id);
+            if (!app) return;
+
+            if (!confirm(`Удалить заявку "${app.full_name}"?`)) return;
+
+            addLog(`🗑️ Удаляем запись ID: ${id}`);
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Запись ${id} удалена`);
+                    showStatus('✅ Заявка удалена', 'success');
+                    await loadData();
+                } else {
+                    addLog(`❌ Ошибка удаления: ${response.status}`);
+                    showStatus('❌ Ошибка при удалении', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showStatus('❌ Ошибка соединения', 'error');
+            }
+        }
+
+        async function clearAll() {
+            if (applications.length === 0) {
+                showStatus('📭 Нет заявок для удаления', 'info');
+                return;
+            }
+
+            if (!confirm(`⚠️ Удалить ВСЕ заявки (${applications.length} шт.)?`)) return;
+
+            addLog(`🗑️ Начинаем массовое удаление (${applications.length} записей)`);
+            
+            let deleted = 0;
+            for (const app of applications) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${app.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        }
+                    });
+                    if (response.ok) deleted++;
+                } catch (e) {
+                    addLog(`❌ Ошибка при удалении ID ${app.id}: ${e.message}`);
+                }
+            }
+
+            addLog(`✅ Удалено ${deleted} записей`);
+            showStatus(`✅ Удалено ${deleted} заявок`, 'success');
+            await loadData();
+        }
+
+        // Обработка Enter на поле пароля
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        // Загрузка при старте
+        addLog('🚀 Приложение загружено');
+        addLog(`🔗 Supabase URL: ${SUPABASE_URL}`);
+        addLog(`🔑 Ключ: ${SUPABASE_KEY.slice(0, 20)}... (длина: ${SUPABASE_KEY.length})`);
+    </script>
+</body>
+</html>
