@@ -9,13 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           ПЕРЕМЕННЫЕ
+           ПЕРЕМЕННЫЕ (ПОЛНОСТЬЮ ПЕРЕРАБОТАНЫ ДЛЯ СВЕТЛОЙ ТЕМЫ)
            ============================================================ */
         :root {
             --bg-body: #0a0f1a;
             --bg-container: rgba(255,255,255,0.04);
             --bg-secondary: rgba(255,255,255,0.03);
             --bg-hover: rgba(255,255,255,0.06);
+            --bg-card: rgba(255,255,255,0.03);
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -31,9 +32,11 @@
             --btn-back-hover: rgba(255,255,255,0.08);
             --accent: #818cf8;
             --accent-hover: #6366f1;
+            --accent-light: rgba(129,140,248,0.12);
             --danger: #ef4444;
             --danger-hover: #dc2626;
             --success: #22c55e;
+            --success-hover: #16a34a;
             --warning: #eab308;
             --gradient-start: #818cf8;
             --gradient-end: #a78bfa;
@@ -44,13 +47,50 @@
             --toast-success: rgba(34,197,94,0.15);
             --toast-error: rgba(239,68,68,0.15);
             --radius: 12px;
-            --transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --shadow-modal: 0 30px 80px rgba(0,0,0,0.5);
+        }
+
+        /* ============================================================
+           СВЕТЛАЯ ТЕМА — ПОЛНОСТЬЮ ПЕРЕРАБОТАНА
+           ============================================================ */
+        [data-theme="light"] {
+            --bg-body: #f0f4f9;
+            --bg-container: rgba(255,255,255,0.7);
+            --bg-secondary: rgba(255,255,255,0.5);
+            --bg-hover: rgba(0,0,0,0.04);
+            --bg-card: rgba(255,255,255,0.6);
+            --text-primary: #0b1a2e;
+            --text-secondary: #4a5e78;
+            --text-muted: #6b7f99;
+            --border-color: rgba(0,0,0,0.06);
+            --border-input: rgba(0,0,0,0.08);
+            --shadow: 0 25px 60px rgba(0,0,0,0.06);
+            --shadow-hover: 0 30px 80px rgba(0,0,0,0.1);
+            --input-bg: rgba(255,255,255,0.7);
+            --input-focus: rgba(99,102,241,0.12);
+            --btn-back: rgba(255,255,255,0.6);
+            --btn-back-hover: rgba(255,255,255,0.9);
+            --accent: #667eea;
+            --accent-hover: #5a6fd6;
+            --accent-light: rgba(102,126,234,0.1);
+            --glass-border: rgba(255,255,255,0.3);
+            --orb-1: rgba(99,102,241,0.06);
+            --orb-2: rgba(139,92,246,0.04);
+            --toast-bg: rgba(255,255,255,0.9);
+            --toast-success: #d1fae5;
+            --toast-error: #fee2e2;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --shadow-modal: 0 30px 80px rgba(0,0,0,0.15);
         }
 
         [data-theme="dark"] {
             --bg-body: #0a0f1a;
             --bg-container: rgba(20,30,50,0.85);
             --bg-secondary: rgba(255,255,255,0.03);
+            --bg-hover: rgba(255,255,255,0.06);
+            --bg-card: rgba(255,255,255,0.03);
             --text-primary: #e8edf4;
             --text-secondary: #9aafc8;
             --text-muted: #6b8ba8;
@@ -66,18 +106,14 @@
             --btn-back-hover: rgba(255,255,255,0.08);
             --accent: #818cf8;
             --accent-hover: #6366f1;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-            --success: #22c55e;
-            --warning: #eab308;
-            --gradient-start: #818cf8;
-            --gradient-end: #a78bfa;
-            --orb-1: rgba(129,140,248,0.08);
-            --orb-2: rgba(167,139,250,0.06);
+            --accent-light: rgba(129,140,248,0.12);
             --glass-border: rgba(255,255,255,0.06);
             --toast-bg: rgba(15,23,42,0.9);
             --toast-success: rgba(34,197,94,0.15);
             --toast-error: rgba(239,68,68,0.15);
+            --gradient-start: #818cf8;
+            --gradient-end: #a78bfa;
+            --shadow-modal: 0 30px 80px rgba(0,0,0,0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -88,7 +124,7 @@
             background: var(--bg-body);
             color: var(--text-primary);
             padding: 20px;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: background 0.5s ease, color 0.5s ease;
             position: relative;
             overflow-x: hidden;
         }
@@ -107,6 +143,13 @@
             animation: bgFloat 30s ease-in-out infinite;
             z-index: 0;
             pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        [data-theme="light"] body::before {
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(102,126,234,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(118,75,162,0.04) 0%, transparent 50%);
         }
 
         @keyframes bgFloat {
@@ -124,6 +167,7 @@
             z-index: 0;
             pointer-events: none;
             animation: orbFloat 25s ease-in-out infinite;
+            transition: opacity 0.5s ease;
         }
         .orb-1 {
             width: 400px; height: 400px;
@@ -154,7 +198,7 @@
             box-shadow: var(--shadow);
             position: relative;
             z-index: 1;
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
         }
 
         .app-container::before {
@@ -169,6 +213,7 @@
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
+            transition: opacity 0.5s ease;
         }
 
         /* ========== НАВИГАЦИЯ ========== */
@@ -189,7 +234,7 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            transition: var(--transition);
+            transition: all var(--transition);
             position: relative;
         }
 
@@ -228,7 +273,6 @@
             50% { transform: scale(1.1); }
         }
 
-        /* ========== ТЕМА + ЛОГ ========== */
         .nav-right {
             display: flex;
             gap: 8px;
@@ -245,7 +289,7 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
-            transition: var(--transition);
+            transition: all var(--transition);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -256,16 +300,16 @@
             transform: scale(1.02);
         }
 
-        /* ========== СЕКЦИИ ========== */
+        /* ========== СЕКЦИИ С ПЛАВНЫМ ПОЯВЛЕНИЕМ ========== */
         .section {
             display: none;
-            animation: fadeIn 0.4s ease;
+            animation: sectionFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .section.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .sub-nav {
@@ -284,7 +328,7 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
-            transition: var(--transition);
+            transition: all var(--transition);
         }
 
         .sub-nav-btn:hover {
@@ -300,8 +344,9 @@
 
         .sub-section {
             display: none;
+            animation: sectionFadeIn 0.4s ease;
         }
-        .sub-section.active { display: block; animation: fadeIn 0.3s ease; }
+        .sub-section.active { display: block; }
 
         /* ========== КНОПКИ ========== */
         .btn {
@@ -313,7 +358,7 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
-            transition: var(--transition);
+            transition: all var(--transition);
         }
 
         .btn:hover {
@@ -333,7 +378,7 @@
             background: var(--success);
         }
         .btn-success:hover {
-            background: #16a34a;
+            background: var(--success-hover);
         }
 
         .btn-warning {
@@ -379,7 +424,7 @@
             font-family: 'Consolas', 'Courier New', monospace;
             font-size: 13px;
             resize: vertical;
-            transition: var(--transition);
+            transition: all var(--transition);
         }
 
         textarea:focus {
@@ -395,6 +440,7 @@
             border-radius: var(--radius);
             border: 1px solid var(--border-color);
             background: var(--bg-secondary);
+            transition: background 0.3s ease;
         }
 
         table {
@@ -410,6 +456,7 @@
             border-right: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
+            transition: background 0.2s ease;
         }
 
         th:last-child, td:last-child { border-right: none; }
@@ -427,7 +474,7 @@
         }
 
         tbody tr {
-            transition: background 0.15s;
+            transition: background 0.2s ease;
         }
         tbody tr:hover {
             background: var(--bg-hover);
@@ -442,7 +489,7 @@
 
         .unread-application {
             border-left: 3px solid var(--accent);
-            background: rgba(129,140,248,0.04);
+            background: var(--accent-light);
         }
 
         /* ========== ФИЛЬТРЫ ========== */
@@ -469,6 +516,7 @@
             margin-top: 16px;
             max-height: 500px;
             overflow-y: auto;
+            transition: background 0.3s ease;
         }
 
         .result-item {
@@ -500,7 +548,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 11px;
-            transition: var(--transition);
+            transition: all var(--transition);
         }
 
         .copy-btn:hover {
@@ -516,12 +564,13 @@
         }
 
         .stat-card {
-            background: var(--bg-secondary);
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 10px 16px;
             min-width: 120px;
             flex: 1;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .stat-label {
@@ -538,72 +587,121 @@
             margin-top: 2px;
         }
 
-        /* ========== МОДАЛКА ========== */
+        /* ========== МОДАЛЬНОЕ ОКНО ДЛЯ ПРОСМОТРА ЗАЯВКИ ========== */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(4px);
+            padding: 20px;
         }
         .modal-overlay.show { display: flex; }
 
         .modal {
             background: var(--bg-container);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 28px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
             overflow-y: auto;
-            animation: slideUp 0.3s ease;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            animation: modalSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-modal);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .modal h3 { margin-bottom: 12px; color: var(--text-primary); }
-        .modal pre {
-            background: var(--input-bg);
-            padding: 16px;
-            border-radius: var(--radius);
-            white-space: pre-wrap;
-            word-break: break-word;
-            font-size: 13px;
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
-        .modal-close {
-            position: absolute;
-            top: 12px; right: 18px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 24px;
+        .modal-close-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: var(--transition);
+            font-size: 20px;
+            color: var(--text-secondary);
+            transition: all var(--transition);
         }
-        .modal-close:hover { color: var(--text-primary); }
 
-        .modal-actions {
+        .modal-close-btn:hover {
+            background: var(--bg-hover);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+
+        .modal-field .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .modal-field .field-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .modal-field .field-value .stars {
+            color: #f59e0b;
+            letter-spacing: 2px;
+        }
+
+        .modal-footer {
             display: flex;
             gap: 10px;
-            margin-top: 16px;
-        }
-
-        .modal-content {
-            position: relative;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
         }
 
         /* ========== ЛОГ ========== */
@@ -619,6 +717,7 @@
             font-family: 'Consolas', monospace;
             font-size: 11px;
             color: var(--text-secondary);
+            transition: background 0.3s ease;
         }
 
         .log-panel.active { display: block; }
@@ -633,7 +732,7 @@
             padding: 8px 14px;
             margin: 4px 0;
             font-weight: 600;
-            transition: var(--transition);
+            transition: all var(--transition);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -672,7 +771,7 @@
             justify-content: center;
             cursor: pointer;
             font-size: 12px;
-            transition: var(--transition);
+            transition: all var(--transition);
         }
         .publish-action-btn:hover { transform: scale(1.1); }
         .publish-action-btn.check-red { color: var(--danger); border-color: var(--danger); }
@@ -716,6 +815,7 @@
             th, td { font-size: 11px; padding: 6px 8px; }
             .weekly-inputs { flex-direction: column; }
             .weekly-inputs > div { min-width: auto; }
+            .modal { padding: 20px; }
         }
 
         @media (max-width: 480px) {
@@ -723,42 +823,6 @@
             .nav-btn { font-size: 11px; padding: 6px 10px; }
             .theme-toggle, .log-toggle { font-size: 11px; padding: 4px 8px; }
             .nav-badge { font-size: 8px; min-width: 16px; height: 16px; }
-        }
-
-        /* ========== СВЕТЛАЯ ТЕМА ========== */
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-body: #f1f5f9;
-                --bg-container: rgba(255,255,255,0.85);
-                --bg-secondary: rgba(255,255,255,0.5);
-                --text-primary: #0b1a2e;
-                --text-secondary: #4a5e78;
-                --text-muted: #6b7f99;
-                --border-color: rgba(0,0,0,0.06);
-                --border-input: rgba(0,0,0,0.08);
-                --shadow: 0 25px 60px rgba(0,0,0,0.06);
-                --shadow-hover: 0 30px 80px rgba(0,0,0,0.1);
-                --input-bg: rgba(255,255,255,0.7);
-                --input-focus: rgba(99,102,241,0.12);
-                --btn-back: rgba(255,255,255,0.6);
-                --btn-back-hover: rgba(255,255,255,0.9);
-                --accent: #667eea;
-                --accent-hover: #5a6fd6;
-                --glass-border: rgba(255,255,255,0.3);
-                --orb-1: rgba(99,102,241,0.06);
-                --orb-2: rgba(139,92,246,0.04);
-                --toast-bg: rgba(255,255,255,0.9);
-                --toast-success: #d1fae5;
-                --toast-error: #fee2e2;
-                --gradient-start: #667eea;
-                --gradient-end: #764ba2;
-            }
-            .orb-1, .orb-2 { opacity: 0.5; }
-            body::before {
-                background:
-                    radial-gradient(ellipse at 20% 30%, rgba(99,102,241,0.04) 0%, transparent 50%),
-                    radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.04) 0%, transparent 50%);
-            }
         }
     </style>
 </head>
@@ -801,10 +865,18 @@
         <div id="section-applications" class="section active">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
                 <h2 style="font-weight:700;font-size:20px;color:var(--text-primary);">📋 Заявки</h2>
-                <div style="display:flex;gap:8px;">
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
                     <button class="btn btn-success btn-sm" onclick="markAllAsRead()">✅ Все прочитаны</button>
                     <button class="btn btn-refresh btn-sm" onclick="loadApplications()">🔄 Обновить</button>
                 </div>
+            </div>
+
+            <!-- Фильтры по типу заявок -->
+            <div class="filter-row" style="margin-bottom:12px;">
+                <span style="color:var(--text-muted);font-weight:600;font-size:12px;">Тип:</span>
+                <button class="btn btn-outline btn-sm app-filter-btn active-filter" data-filter="all">📋 Все</button>
+                <button class="btn btn-outline btn-sm app-filter-btn" data-filter="discipline">⚖️ Дисциплинарные</button>
+                <button class="btn btn-outline btn-sm app-filter-btn" data-filter="hr">👥 HR</button>
             </div>
 
             <div class="stats-container" id="appStats">
@@ -1051,17 +1123,31 @@
         </div>
     </div>
 
-    <!-- ========== МОДАЛЬНОЕ ОКНО ========== -->
+    <!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ ПРОСМОТРА ЗАЯВКИ ========== -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="viewModalTitle">📄 Просмотр заявки</h2>
+                <button class="modal-close-btn" id="viewModalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="viewModalBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="viewModalCloseBtn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ ПРЕДУПРЕЖДЕНИЙ ========== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <div class="modal-content">
-                <button class="modal-close" id="modalClose">&times;</button>
-                <h3>⚠️ Автоматическое предупреждение</h3>
-                <pre id="modalText"></pre>
-                <div class="modal-actions">
-                    <button class="btn" id="modalCopy">📋 Копировать</button>
-                    <button class="btn btn-outline" id="modalCloseBtn">Закрыть</button>
-                </div>
+            <div class="modal-header">
+                <h2>⚠️ Автоматическое предупреждение</h2>
+                <button class="modal-close-btn" id="modalClose">&times;</button>
+            </div>
+            <pre id="modalText" style="background:var(--input-bg);padding:16px;border-radius:var(--radius);white-space:pre-wrap;word-break:break-word;font-size:13px;max-height:300px;overflow-y:auto;border:1px solid var(--border-color);color:var(--text-primary);"></pre>
+            <div class="modal-footer">
+                <button class="btn" id="modalCopy">📋 Копировать</button>
+                <button class="btn btn-outline" id="modalCloseBtn">Закрыть</button>
             </div>
         </div>
     </div>
@@ -1103,7 +1189,7 @@
         });
 
         // ================================================================
-        // ТЕМА
+        // ТЕМА — ПЕРЕРАБОТАНА
         // ================================================================
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
@@ -1111,15 +1197,15 @@
 
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme');
-            const newTheme = current === 'dark' ? '' : 'dark';
+            const newTheme = current === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeUI(newTheme);
-            addLog(`🎨 Тема: ${newTheme || 'light'}`);
+            addLog(`🎨 Тема: ${newTheme}`);
         }
 
         function updateThemeUI(theme) {
-            if (theme === 'dark') {
+            if (theme === 'light') {
                 themeIcon.textContent = '☀️';
                 themeLabel.textContent = 'Светлая';
             } else {
@@ -1129,11 +1215,9 @@
         }
 
         themeToggle.addEventListener('click', toggleTheme);
-        const savedTheme = localStorage.getItem('theme') || '';
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeUI(savedTheme);
-        }
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeUI(savedTheme);
 
         // ================================================================
         // ПРОВЕРКА ПАРОЛЯ
@@ -1230,6 +1314,18 @@
         // ================================================================
         // СЕКЦИЯ 1: ЗАЯВКИ
         // ================================================================
+        let appFilter = 'all';
+
+        document.querySelectorAll('.app-filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.app-filter-btn').forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+                appFilter = this.dataset.filter;
+                addLog(`🔍 Фильтр заявок: ${appFilter}`);
+                renderApplications();
+            });
+        });
+
         async function loadApplications() {
             addLog('🔄 Загрузка заявок...');
             try {
@@ -1245,48 +1341,8 @@
 
                 const data = await response.json();
                 addLog(`✅ Загружено ${data.length} заявок`);
-
-                const tbody = document.getElementById('appTbody');
-                tbody.innerHTML = '';
-
-                let unread = 0;
-                data.forEach(app => {
-                    const isRead = app.is_read || false;
-                    if (!isRead) unread++;
-                    const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
-                    const date = new Date(app.created_at);
-                    const formattedDate = date.toLocaleString('ru-RU', {
-                        day: '2-digit', month: '2-digit', year: 'numeric',
-                        hour: '2-digit', minute: '2-digit'
-                    });
-
-                    const tr = document.createElement('tr');
-                    tr.className = isRead ? '' : 'unread-application';
-                    tr.innerHTML = `
-                        <td>#${app.id}</td>
-                        <td>${typeLabel}</td>
-                        <td><strong>${app.q1 || 'Не указано'}</strong></td>
-                        <td>${formattedDate}</td>
-                        <td>${isRead ? '✅ Прочитано' : '🔴 Не прочитано'}</td>
-                        <td>
-                            ${!isRead ? `<button class="btn btn-sm btn-success" onclick="markAsRead(${app.id})">Прочитано</button>` : ''}
-                            <button class="btn btn-sm btn-danger" onclick="deleteApplication(${app.id})">🗑️</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                document.getElementById('appTotal').textContent = data.length;
-                document.getElementById('appUnread').textContent = unread;
-                document.getElementById('appRead').textContent = data.length - unread;
-
-                const badge = document.getElementById('appBadge');
-                if (unread > 0) {
-                    badge.style.display = 'flex';
-                    badge.textContent = unread;
-                } else {
-                    badge.style.display = 'none';
-                }
+                window.applicationsData = data;
+                renderApplications();
 
             } catch (error) {
                 addLog(`❌ Ошибка загрузки заявок: ${error.message}`);
@@ -1294,6 +1350,201 @@
             }
         }
 
+        function renderApplications() {
+            const data = window.applicationsData || [];
+            let filtered = data;
+            if (appFilter === 'discipline') {
+                filtered = data.filter(app => app.survey_type === 'discipline');
+            } else if (appFilter === 'hr') {
+                filtered = data.filter(app => app.survey_type === 'hr');
+            }
+
+            const tbody = document.getElementById('appTbody');
+            tbody.innerHTML = '';
+
+            let unread = 0;
+            filtered.forEach(app => {
+                const isRead = app.is_read || false;
+                if (!isRead) unread++;
+                const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
+                const date = new Date(app.created_at);
+                const formattedDate = date.toLocaleString('ru-RU', {
+                    day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+
+                const tr = document.createElement('tr');
+                tr.className = isRead ? '' : 'unread-application';
+                tr.innerHTML = `
+                    <td>#${app.id}</td>
+                    <td>${typeLabel}</td>
+                    <td><strong>${app.q1 || 'Не указано'}</strong></td>
+                    <td>${formattedDate}</td>
+                    <td>${isRead ? '✅ Прочитано' : '🔴 Не прочитано'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-view" onclick="viewApplication(${app.id})">👁️</button>
+                        ${!isRead ? `<button class="btn btn-sm btn-success" onclick="markAsRead(${app.id})">✓</button>` : ''}
+                        <button class="btn btn-sm btn-danger" onclick="deleteApplication(${app.id})">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('appTotal').textContent = filtered.length;
+            document.getElementById('appUnread').textContent = unread;
+            document.getElementById('appRead').textContent = filtered.length - unread;
+
+            const badge = document.getElementById('appBadge');
+            if (unread > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = unread;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // ================================================================
+        // ПРОСМОТР ЗАЯВКИ В МОДАЛЬНОМ ОКНЕ
+        // ================================================================
+        const RATING_NAMES = {
+            discipline: {
+                r1: 'Адекватность', r2: 'Стрессоустойчивость', r3: 'Знание правил сервера',
+                r4: 'Любовь к своей работе', r5: 'Целеустремленность',
+                r6: 'Конституция', r7: 'Уголовный кодекс', r8: 'Этический кодекс',
+                r9: 'Устав Goverment', r10: 'Устав Секретариата', r11: 'Трудовой Кодекс'
+            },
+            hr: {
+                r1: 'Адекватность', r2: 'Стрессоустойчивость', r3: 'Знание правил сервера',
+                r4: 'Любовь к своей работе', r5: 'Целеустремленность',
+                r6: 'Конституция', r7: 'Уголовный кодекс', r8: 'Этический кодекс',
+                r9: 'Устав Goverment', r10: 'Устав Секретариата', r11: 'Трудовой Кодекс',
+                r12: 'Информация о лицензиях'
+            }
+        };
+
+        const QUESTION_LABELS = {
+            q1: '📝 Имя Фамилия (IC)',
+            q2: '👤 Имя (OOC)',
+            q3: '🎂 Возраст (OOC)',
+            q4: '⏰ Игровой онлайн (OOC)',
+            q5: '🌅 Прайм-тайм',
+            q6: '🌍 Часовой пояс',
+            experience: '💼 Опыт работы на похожих должностях',
+            experience_detail: '📋 Детали опыта',
+            exam_money: '💰 Допустимо ли брать деньги за экзамены?',
+            situation3: '🤝 Ситуация с коллегой (Дисциплинарный)',
+            situation_colleague: '🤝 Ситуация с коллегой (HR)',
+            situation1: '🏛️ Ситуация: в мэрии никого нет',
+            situation2: '😡 Оскорбление в Discord',
+            about: '📋 О себе',
+            motivation: '🎯 Мотивация',
+            qualities: '💪 Качества дисциплинарного инспектора',
+            trainee: '👨‍🎓 Готовность к стажерам',
+            trainee_detail: '📖 Помощь стажеру',
+            individual: '📄 Индивидуальные наборы',
+            hr_duties: '📚 Обязанности HR-менеджера'
+        };
+
+        function viewApplication(id) {
+            const app = window.applicationsData.find(a => a.id === id);
+            if (!app) return;
+
+            const type = app.survey_type || 'discipline';
+            const typeLabel = type === 'discipline' ? '⚖️ Дисциплинарный инспектор' : '👥 HR-менеджер';
+
+            document.getElementById('viewModalTitle').textContent = `${typeLabel} — ${app.q1 || 'Без имени'}`;
+
+            let html = '';
+
+            // Основная информация
+            const mainFields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
+            mainFields.forEach(key => {
+                if (app[key] && app[key].trim()) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">${QUESTION_LABELS[key] || key}</span>
+                            <span class="field-value">${app[key]}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            // Рейтинги
+            if (app.ratings) {
+                try {
+                    const ratings = JSON.parse(app.ratings);
+                    const names = RATING_NAMES[type] || {};
+                    const entries = Object.entries(ratings).filter(([k]) => names[k]);
+                    if (entries.length > 0) {
+                        html += `<div class="modal-field"><span class="field-label">⭐ Рейтинги</span>`;
+                        entries.forEach(([key, val]) => {
+                            const stars = '★'.repeat(val) + '☆'.repeat(5 - val);
+                            html += `<span class="field-value"><span style="color:var(--text-muted);font-size:12px;">${names[key]}:</span> <span class="stars">${stars}</span> (${val}/5)</span>`;
+                        });
+                        html += `</div>`;
+                    }
+                } catch (e) {}
+            }
+
+            // Опыт
+            if (app.experience) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">${QUESTION_LABELS.experience}</span>
+                        <span class="field-value">${app.experience === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
+                if (app.experience === 'yes' && app.experience_detail) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">${QUESTION_LABELS.experience_detail}</span>
+                            <span class="field-value">${app.experience_detail}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            // Деньги за экзамены
+            if (app.exam_money) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">${QUESTION_LABELS.exam_money}</span>
+                        <span class="field-value">${app.exam_money === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
+            }
+
+            // Ситуационные вопросы
+            const situationKeys = ['situation1', 'situation2', 'situation3', 'situation_colleague', 'individual', 'trainee', 'trainee_detail', 'hr_duties', 'qualities', 'about', 'motivation'];
+            situationKeys.forEach(key => {
+                if (app[key] && app[key].trim()) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">${QUESTION_LABELS[key] || key}</span>
+                            <span class="field-value">${app[key]}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('viewModalBody').innerHTML = html;
+            document.getElementById('viewModal').classList.add('show');
+            addLog(`👁️ Просмотр заявки #${id}`);
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.remove('show');
+        }
+
+        document.getElementById('viewModalClose').addEventListener('click', closeViewModal);
+        document.getElementById('viewModalCloseBtn').addEventListener('click', closeViewModal);
+        document.getElementById('viewModal').addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        // ================================================================
+        // ОСТАЛЬНЫЕ ФУНКЦИИ ЗАЯВОК
+        // ================================================================
         async function markAsRead(id) {
             addLog(`📖 Отметка заявки #${id} как прочитанной`);
             try {
@@ -1634,65 +1885,77 @@
         function loadDistEvents() { return JSON.parse(localStorage.getItem(DIST_EVENTS_KEY) || '[]'); }
         function saveDistEvents(events) { localStorage.setItem(DIST_EVENTS_KEY, JSON.stringify(events)); }
 
-        // === ГОСВОЛНЫ: РАСПИСАНИЕ ===
         function parseGosMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
 
+            let events = [];
+            let date = null;
             const apHeader = lines.find(l => l.includes('Гос. волны АП') && !l.includes('USSS'));
             const usssHeader = lines.find(l => l.includes('Гос. волны USSS') && !l.includes('АП'));
             const apUsssHeader = lines.find(l => l.includes('Гос. волны') && (l.includes('АП/USSS') || l.includes('AP/USSS')));
 
-            let apDate = null, usssDate = null, apUsssDate = null;
-            if (apHeader) { const m = apHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) apDate = m[1]; }
-            if (usssHeader) { const m = usssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) usssDate = m[1]; }
-            if (apUsssHeader) { const m = apUsssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) apUsssDate = m[1]; }
-
-            let codeLines = [];
-            const codeBlockMatch = text.match(/```([\s\S]*?)```/);
-            if (codeBlockMatch) {
-                codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            } else {
-                const headerSet = new Set([apHeader, usssHeader, apUsssHeader].filter(Boolean));
-                codeLines = lines.filter(l => !headerSet.has(l));
+            if (apHeader) {
+                const m = apHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/);
+                if (m) date = m[1];
+                let codeLines = [];
+                const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+                if (codeBlockMatch) {
+                    codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                } else {
+                    const headerSet = new Set([apHeader].filter(Boolean));
+                    codeLines = lines.filter(l => !headerSet.has(l));
+                }
+                for (const line of codeLines) {
+                    if (!line.includes('|')) continue;
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length < 4) continue;
+                    const description = parts[0], typeField = parts[1].toUpperCase(), dateFromLine = parts[2], timesStr = parts[3];
+                    const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                    if (times.length === 0) continue;
+                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ')}`;
+                    events.push({ text: eventText, datetimeStr: `${dateFromLine} ${times[0]}`, type: typeField });
+                }
+                if (events.length > 0) return { type: 'ap', events, date };
+                return { type: 'error', message: 'Не найдены события' };
             }
 
-            const events = [];
-            if (apHeader) {
+            if (apUsssHeader) {
+                const m = apUsssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/);
+                if (m) date = m[1];
+                let codeLines = [];
+                const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+                if (codeBlockMatch) {
+                    codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                } else {
+                    const headerSet = new Set([apUsssHeader].filter(Boolean));
+                    codeLines = lines.filter(l => !headerSet.has(l));
+                }
                 for (const line of codeLines) {
                     if (!line.includes('|')) continue;
                     const parts = line.split('|').map(p => p.trim());
                     if (parts.length < 4) continue;
-                    const description = parts[0];
-                    const typeField = parts[1].toUpperCase();
-                    const date = parts[2];
-                    const timesStr = parts[3];
+                    const description = parts[0], typeField = parts[1].toUpperCase(), dateFromLine = parts[2], timesStr = parts[3];
                     const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
                     if (times.length === 0) continue;
-
-                    let formattedTimes = times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ');
-                    const eventText = `${description} | ${typeField} | ${date} | ${formattedTimes}`;
-                    events.push({ text: eventText, datetimeStr: `${date} ${times[0]}`, type: typeField });
+                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ')}`;
+                    events.push({ text: eventText, datetimeStr: `${dateFromLine} ${times[0]}`, type: typeField });
                 }
-                return { type: 'ap', events, date: apDate };
-            } else if (apUsssHeader) {
-                for (const line of codeLines) {
-                    if (!line.includes('|')) continue;
-                    const parts = line.split('|').map(p => p.trim());
-                    if (parts.length < 4) continue;
-                    const description = parts[0];
-                    const typeField = parts[1].toUpperCase();
-                    const date = parts[2];
-                    const timesStr = parts[3];
-                    const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
-                    if (times.length === 0) continue;
+                if (events.length > 0) return { type: 'apUsss', events, date };
+                return { type: 'error', message: 'Не найдены события' };
+            }
 
-                    let formattedTimes = times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ');
-                    const eventText = `${description} | ${typeField} | ${date} | ${formattedTimes}`;
-                    events.push({ text: eventText, datetimeStr: `${date} ${times[0]}`, type: typeField });
+            if (usssHeader) {
+                const m = usssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/);
+                if (m) date = m[1];
+                let codeLines = [];
+                const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+                if (codeBlockMatch) {
+                    codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                } else {
+                    const headerSet = new Set([usssHeader].filter(Boolean));
+                    codeLines = lines.filter(l => !headerSet.has(l));
                 }
-                return { type: 'apUsss', events, date: apUsssDate };
-            } else if (usssHeader) {
                 for (const line of codeLines) {
                     if (!line.includes('|')) continue;
                     const parts = line.split('|').map(p => p.trim());
@@ -1702,9 +1965,10 @@
                     const times = timePart.split('-').map(t => t.trim()).filter(t => t.length > 0);
                     if (times.length === 0) continue;
                     const eventText = `USSS | ${typePart} | ${times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501686647518003221/${t})`).join(' - ')}`;
-                    events.push({ text: eventText, datetimeStr: `${usssDate} ${times[0]}`, type: 'usss' });
+                    events.push({ text: eventText, datetimeStr: `${date} ${times[0]}`, type: 'usss' });
                 }
-                return { type: 'usss', events, date: usssDate };
+                if (events.length > 0) return { type: 'usss', events, date };
+                return { type: 'error', message: 'Не найдены события' };
             }
 
             return { type: 'error', message: 'Не удалось определить тип сообщения' };
@@ -1761,7 +2025,7 @@
             }
         }
 
-        // === ГОСВОЛНЫ: РАСПРЕДЕЛЕНИЕ ===
+        // === РАСПРЕДЕЛЕНИЕ ===
         function parseDistMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
@@ -1867,7 +2131,7 @@
             }
         }
 
-        // === ГОСВОЛНЫ: ПУБЛИКАЦИЯ ===
+        // === ПУБЛИКАЦИЯ ===
         function renderPublishResults() {
             const container = document.getElementById('publishResults');
             const events = loadGosEvents();
@@ -1921,7 +2185,6 @@
         const WEEKLY_INDIVIDUAL_KEY = 'weeklyIndividual';
         const WEEKLY_LECTURES_KEY = 'weeklyLectures';
 
-        // === НАБОРЫ ===
         function processWeeklyRecruitment() {
             const text = document.getElementById('weeklyText').value;
             const linksText = document.getElementById('weeklyLinks').value;
@@ -1999,7 +2262,6 @@
             addLog('🗑️ Отчёт по наборам сброшен');
         }
 
-        // === ЭЛЕКТРОННЫЕ ЗАЯВКИ ===
         function parseApplicationsText(text) {
             const dateTimeRegex = /—\s*(\d{2}\.\d{2}\.\d{4})[,\s]\s*(\d{2}:\d{2})/g;
             const matches = [];
@@ -2048,7 +2310,6 @@
             addLog('🗑️ Отчёт по электронным заявкам сброшен');
         }
 
-        // === ИНДИВИДУАЛЬНЫЕ НАБОРЫ ===
         function parseIndividualText(text) {
             const lines = text.split('\n').map(l => l.trim());
             const dateTimes = [];
@@ -2120,7 +2381,6 @@
             addLog('🗑️ Отчёт по индивидуальным наборам сброшен');
         }
 
-        // === ЛЕКЦИИ ===
         function parseLecturesText(text) {
             const lines = text.split('\n').map(l => l.trim());
             const dateTimes = [];
@@ -2196,12 +2456,15 @@
         // ================================================================
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(129,140,248,0.15)';
+            const textColor = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#818cf8';
+            const borderColor = type === 'success' ? 'rgba(34,197,94,0.2)' : type === 'error' ? 'rgba(239,68,68,0.2)' : 'rgba(129,140,248,0.2)';
+
             toast.style.cssText = `
                 position: fixed; bottom: 24px; right: 24px; z-index: 9999;
                 padding: 14px 24px; border-radius: 12px; font-weight: 600;
-                background: ${type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(129,140,248,0.15)'};
-                color: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#818cf8'};
-                border: 1px solid ${type === 'success' ? 'rgba(34,197,94,0.2)' : type === 'error' ? 'rgba(239,68,68,0.2)' : 'rgba(129,140,248,0.2)'};
+                background: ${bgColor}; color: ${textColor};
+                border: 1px solid ${borderColor};
                 backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.3);
                 animation: slideUp 0.3s ease; max-width: 400px;
             `;
