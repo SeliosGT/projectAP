@@ -442,7 +442,6 @@
             box-shadow: 0 0 0 3px var(--input-focus);
         }
 
-        /* ========== ТАБЛИЦА КАДРОВ — УМЕНЬШЕНЫ ОТСТУПЫ ========== */
         .table-wrapper {
             overflow-x: auto;
             margin-top: 16px;
@@ -491,9 +490,18 @@
 
         tr.danger {
             border-left: 3px solid var(--danger);
+            background: rgba(239,68,68,0.1);
         }
+        tr.danger:hover {
+            background: rgba(239,68,68,0.18);
+        }
+
         tr.warning {
             border-left: 3px solid var(--warning);
+            background: rgba(234,179,8,0.08);
+        }
+        tr.warning:hover {
+            background: rgba(234,179,8,0.16);
         }
 
         .unread-application {
@@ -927,7 +935,6 @@
             .nav-badge { font-size: 8px; min-width: 16px; height: 16px; }
         }
 
-        /* ========== ПК ОПТИМИЗАЦИЯ ========== */
         @media (min-width: 1200px) {
             table { font-size: 12px; }
             th, td { padding: 5px 8px; }
@@ -968,7 +975,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 1: КАДРОВЫЙ УЧЁТ (ГЛАВНАЯ)
+        СЕКЦИЯ 1: КАДРОВЫЙ УЧЁТ
         ============================================================ -->
         <div id="section-cadres" class="section active">
             <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
@@ -1022,10 +1029,9 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 2: ЗАЯВКИ (с паролем)
+        СЕКЦИЯ 2: ЗАЯВКИ
         ============================================================ -->
         <div id="section-applications" class="section" style="position:relative;">
-            <!-- Парольная защита -->
             <div class="password-overlay show" id="appPasswordOverlay">
                 <h3>🔐 Доступ к заявкам</h3>
                 <p>Введите пароль для доступа к разделу</p>
@@ -1050,18 +1056,9 @@
             </div>
 
             <div class="stats-container" id="appStats">
-                <div class="stat-card">
-                    <div class="stat-label">Всего</div>
-                    <div class="stat-value" id="appTotal">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Непрочитанные</div>
-                    <div class="stat-value" id="appUnread" style="color:var(--danger);">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Прочитанные</div>
-                    <div class="stat-value" id="appRead" style="color:var(--success);">0</div>
-                </div>
+                <div class="stat-card"><div class="stat-label">Всего</div><div class="stat-value" id="appTotal">0</div></div>
+                <div class="stat-card"><div class="stat-label">Непрочитанные</div><div class="stat-value" id="appUnread" style="color:var(--danger);">0</div></div>
+                <div class="stat-card"><div class="stat-label">Прочитанные</div><div class="stat-value" id="appRead" style="color:var(--success);">0</div></div>
             </div>
 
             <div class="table-wrapper">
@@ -1123,7 +1120,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 4: ОТЧЁТЫ (3 подвкладки)
+        СЕКЦИЯ 4: ОТЧЁТЫ
         ============================================================ -->
         <div id="section-weekly" class="section">
             <div class="sub-nav">
@@ -1132,9 +1129,8 @@
                 <button class="sub-nav-btn" data-subsection="weekly-discipline">⚖️ Дисциплинарный</button>
             </div>
 
-            <!-- ===== СТАРШИЙ СОСТАВ ===== -->
             <div id="weekly-senior" class="sub-section active">
-                <div class="sub-nav" style="margin-bottom:12px;">
+                <div class="sub-nav" style="margin-bottom:12px;" id="seniorSubNav">
                     <button class="sub-nav-btn active" data-subsection="senior-recruitment">📥 Наборы</button>
                     <button class="sub-nav-btn" data-subsection="senior-applications">📋 Электронные заявки</button>
                     <button class="sub-nav-btn" data-subsection="senior-individual">🎯 Индивидуальные</button>
@@ -1144,14 +1140,8 @@
                 <!-- Наборы -->
                 <div id="senior-recruitment" class="sub-section active">
                     <div class="weekly-inputs">
-                        <div>
-                            <label for="weeklyText">Текст отчётов:</label>
-                            <textarea id="weeklyText" placeholder="Вставьте текст сообщений о наборах..."></textarea>
-                        </div>
-                        <div>
-                            <label for="weeklyLinks">Ссылки (по одной на строку):</label>
-                            <textarea id="weeklyLinks" placeholder="Вставьте ссылки..."></textarea>
-                        </div>
+                        <div><label for="weeklyText">Текст отчётов:</label><textarea id="weeklyText" placeholder="Вставьте текст сообщений о наборах..."></textarea></div>
+                        <div><label for="weeklyLinks">Ссылки (по одной на строку):</label><textarea id="weeklyLinks" placeholder="Вставьте ссылки..."></textarea></div>
                     </div>
                     <div style="display:flex;gap:10px;margin-bottom:10px;">
                         <button class="btn" id="btnProcessWeekly">Сформировать</button>
@@ -1160,24 +1150,15 @@
                     <div id="weeklyError" class="error-message hidden"></div>
                     <div class="stats-container" id="weeklyStats"></div>
                     <div class="table-wrapper">
-                        <table>
-                            <thead><tr><th>Дата и время</th><th>Кол-во принятых</th><th>Ссылки</th></tr></thead>
-                            <tbody id="weeklyTbody"></tbody>
-                        </table>
+                        <table><thead><tr><th>Дата и время</th><th>Кол-во принятых</th><th>Ссылки</th></tr></thead><tbody id="weeklyTbody"></tbody></table>
                     </div>
                 </div>
 
                 <!-- Электронные заявки -->
                 <div id="senior-applications" class="sub-section">
                     <div class="weekly-inputs">
-                        <div>
-                            <label for="appsText">Текст заявок:</label>
-                            <textarea id="appsText" placeholder="Вставьте текст электронных заявок..."></textarea>
-                        </div>
-                        <div>
-                            <label for="appsLinks">Ссылки:</label>
-                            <textarea id="appsLinks" placeholder="Вставьте ссылки..."></textarea>
-                        </div>
+                        <div><label for="appsText">Текст заявок:</label><textarea id="appsText" placeholder="Вставьте текст электронных заявок..."></textarea></div>
+                        <div><label for="appsLinks">Ссылки:</label><textarea id="appsLinks" placeholder="Вставьте ссылки..."></textarea></div>
                     </div>
                     <div style="display:flex;gap:10px;margin-bottom:10px;">
                         <button class="btn" id="btnProcessApps">Сформировать</button>
@@ -1186,24 +1167,15 @@
                     <div id="appsError" class="error-message hidden"></div>
                     <div class="stats-container" id="appsStats"></div>
                     <div class="table-wrapper">
-                        <table>
-                            <thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead>
-                            <tbody id="appsTbody"></tbody>
-                        </table>
+                        <table><thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead><tbody id="appsTbody"></tbody></table>
                     </div>
                 </div>
 
                 <!-- Индивидуальные -->
                 <div id="senior-individual" class="sub-section">
                     <div class="weekly-inputs">
-                        <div>
-                            <label for="indivText">Текст сообщений:</label>
-                            <textarea id="indivText" placeholder="Вставьте текст индивидуальных наборов..."></textarea>
-                        </div>
-                        <div>
-                            <label for="indivLinks">Ссылки:</label>
-                            <textarea id="indivLinks" placeholder="Вставьте ссылки..."></textarea>
-                        </div>
+                        <div><label for="indivText">Текст сообщений:</label><textarea id="indivText" placeholder="Вставьте текст индивидуальных наборов..."></textarea></div>
+                        <div><label for="indivLinks">Ссылки:</label><textarea id="indivLinks" placeholder="Вставьте ссылки..."></textarea></div>
                     </div>
                     <div style="display:flex;gap:10px;margin-bottom:10px;">
                         <button class="btn" id="btnProcessIndiv">Сформировать</button>
@@ -1212,24 +1184,15 @@
                     <div id="indivError" class="error-message hidden"></div>
                     <div class="stats-container" id="indivStats"></div>
                     <div class="table-wrapper">
-                        <table>
-                            <thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead>
-                            <tbody id="indivTbody"></tbody>
-                        </table>
+                        <table><thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead><tbody id="indivTbody"></tbody></table>
                     </div>
                 </div>
 
                 <!-- Лекции -->
                 <div id="senior-lectures" class="sub-section">
                     <div class="weekly-inputs">
-                        <div>
-                            <label for="lecturesText">Текст сообщений:</label>
-                            <textarea id="lecturesText" placeholder="Вставьте текст лекций..."></textarea>
-                        </div>
-                        <div>
-                            <label for="lecturesLinks">Ссылки:</label>
-                            <textarea id="lecturesLinks" placeholder="Вставьте ссылки..."></textarea>
-                        </div>
+                        <div><label for="lecturesText">Текст сообщений:</label><textarea id="lecturesText" placeholder="Вставьте текст лекций..."></textarea></div>
+                        <div><label for="lecturesLinks">Ссылки:</label><textarea id="lecturesLinks" placeholder="Вставьте ссылки..."></textarea></div>
                     </div>
                     <div style="display:flex;gap:10px;margin-bottom:10px;">
                         <button class="btn" id="btnProcessLectures">Сформировать</button>
@@ -1238,15 +1201,11 @@
                     <div id="lecturesError" class="error-message hidden"></div>
                     <div class="stats-container" id="lecturesStats"></div>
                     <div class="table-wrapper">
-                        <table>
-                            <thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead>
-                            <tbody id="lecturesTbody"></tbody>
-                        </table>
+                        <table><thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead><tbody id="lecturesTbody"></tbody></table>
                     </div>
                 </div>
             </div>
 
-            <!-- ===== HR-МЕНЕДЖЕР ===== -->
             <div id="weekly-hr" class="sub-section">
                 <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
                     <div style="font-size:48px;margin-bottom:16px;">👥</div>
@@ -1255,7 +1214,6 @@
                 </div>
             </div>
 
-            <!-- ===== ДИСЦИПЛИНАРНЫЙ ===== -->
             <div id="weekly-discipline" class="sub-section">
                 <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
                     <div style="font-size:48px;margin-bottom:16px;">⚖️</div>
@@ -1269,23 +1227,15 @@
     <!-- ========== МОДАЛЬНЫЕ ОКНА ========== -->
     <div class="modal-overlay" id="viewModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2 id="viewModalTitle">📄 Просмотр заявки</h2>
-                <button class="modal-close-btn" id="viewModalClose">&times;</button>
-            </div>
+            <div class="modal-header"><h2 id="viewModalTitle">📄 Просмотр заявки</h2><button class="modal-close-btn" id="viewModalClose">&times;</button></div>
             <div class="modal-body" id="viewModalBody"></div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="viewModalCloseBtn">Закрыть</button>
-            </div>
+            <div class="modal-footer"><button class="btn btn-outline" id="viewModalCloseBtn">Закрыть</button></div>
         </div>
     </div>
 
     <div class="modal-overlay" id="editModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2 id="editModalTitle">✏️ Редактирование сотрудника</h2>
-                <button class="modal-close-btn" id="editModalClose">&times;</button>
-            </div>
+            <div class="modal-header"><h2 id="editModalTitle">✏️ Редактирование сотрудника</h2><button class="modal-close-btn" id="editModalClose">&times;</button></div>
             <div class="modal-body" id="editModalBody"></div>
             <div class="modal-footer">
                 <button class="btn btn-success" id="editModalSave">💾 Сохранить</button>
@@ -1296,10 +1246,7 @@
 
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <div class="modal-header">
-                <h2>⚠️ Автоматическое предупреждение</h2>
-                <button class="modal-close-btn" id="modalClose">&times;</button>
-            </div>
+            <div class="modal-header"><h2>⚠️ Автоматическое предупреждение</h2><button class="modal-close-btn" id="modalClose">&times;</button></div>
             <pre id="modalText" style="background:var(--input-bg);padding:16px;border-radius:var(--radius);white-space:pre-wrap;word-break:break-word;font-size:13px;max-height:300px;overflow-y:auto;border:1px solid var(--border-color);color:var(--text-primary);"></pre>
             <div class="modal-footer">
                 <button class="btn" id="modalCopy">📋 Копировать</button>
@@ -1318,10 +1265,9 @@
         let appUnlocked = false;
 
         // ================================================================
-        // ЛОГИРОВАНИЕ
+        // ЛОГ
         // ================================================================
         let logs = [];
-
         function addLog(message) {
             const time = new Date().toLocaleTimeString();
             const entry = `[${time}] ${message}`;
@@ -1331,13 +1277,11 @@
             content.scrollTop = content.scrollHeight;
             console.log(entry);
         }
-
         function clearLogs() {
             logs = [];
             document.getElementById('logContent').innerHTML = '<div class="log-entry" style="color:var(--text-muted);">Лог очищен</div>';
             addLog('🧹 Лог очищен');
         }
-
         document.getElementById('logToggle').addEventListener('click', function() {
             const panel = document.getElementById('logPanel');
             panel.classList.toggle('active');
@@ -1351,7 +1295,6 @@
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeLabel = document.getElementById('themeLabel');
-
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme');
             const newTheme = current === 'light' ? 'dark' : 'light';
@@ -1360,24 +1303,17 @@
             updateThemeUI(newTheme);
             addLog(`🎨 Тема: ${newTheme}`);
         }
-
         function updateThemeUI(theme) {
-            if (theme === 'light') {
-                themeIcon.textContent = '☀️';
-                themeLabel.textContent = 'Светлая';
-            } else {
-                themeIcon.textContent = '🌙';
-                themeLabel.textContent = 'Тёмная';
-            }
+            if (theme === 'light') { themeIcon.textContent = '☀️'; themeLabel.textContent = 'Светлая'; }
+            else { themeIcon.textContent = '🌙'; themeLabel.textContent = 'Тёмная'; }
         }
-
         themeToggle.addEventListener('click', toggleTheme);
         const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         updateThemeUI(savedTheme);
 
         // ================================================================
-        // ПАРОЛЬ НА РАЗДЕЛ "ЗАЯВКИ"
+        // ПАРОЛЬ НА ЗАЯВКИ
         // ================================================================
         const appPasswordOverlay = document.getElementById('appPasswordOverlay');
         const appPasswordInput = document.getElementById('appPasswordInput');
@@ -1390,23 +1326,13 @@
             addLog('🔓 Раздел "Заявки" разблокирован');
             loadApplications();
         }
-
         function checkAppPassword() {
             const input = appPasswordInput.value.trim();
-            if (input === ADMIN_PASSWORD) {
-                unlockApplications();
-            } else {
-                appPasswordError.classList.add('show');
-                appPasswordInput.value = '';
-                appPasswordInput.focus();
-                addLog('❌ Неверный пароль для заявок');
-            }
+            if (input === ADMIN_PASSWORD) { unlockApplications(); }
+            else { appPasswordError.classList.add('show'); appPasswordInput.value = ''; appPasswordInput.focus(); addLog('❌ Неверный пароль для заявок'); }
         }
-
         appPasswordBtn.addEventListener('click', checkAppPassword);
-        appPasswordInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') checkAppPassword();
-        });
+        appPasswordInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAppPassword(); });
 
         // ================================================================
         // НАВИГАЦИЯ
@@ -1414,16 +1340,12 @@
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const section = this.dataset.section;
-
-                // Если это заявки — проверяем пароль
                 if (section === 'applications') {
                     if (!appUnlocked) {
-                        // Показываем оверлей поверх текущей вкладки
                         appPasswordOverlay.classList.add('show');
                         appPasswordInput.value = '';
                         appPasswordInput.focus();
                         appPasswordError.classList.remove('show');
-                        // Делаем вкладку активной, но оверлей перекрывает
                         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1432,20 +1354,16 @@
                         return;
                     }
                 }
-
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.getElementById(`section-${section}`).classList.add('active');
                 addLog(`📂 Переход: ${section}`);
-
                 if (section === 'applications' && appUnlocked) loadApplications();
                 if (section === 'cadres') loadCadres();
                 if (section === 'goswaves') { renderGosResults(); renderDistResults(); renderPublishResults(); }
             });
         });
-
-        // Клик по кнопке "Заявки" всегда показывает оверлей, если не разблокировано
         document.getElementById('navApplications').addEventListener('click', function(e) {
             if (!appUnlocked) {
                 appPasswordOverlay.classList.add('show');
@@ -1455,15 +1373,17 @@
             }
         });
 
-        // Навигация внутри подвкладок
+        // Все подвкладки
         document.querySelectorAll('.sub-nav-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                this.closest('.sub-nav').querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+                const parent = this.closest('.sub-nav');
+                if (parent) parent.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 const subsection = this.dataset.subsection;
-                const parent = this.closest('.section');
-                parent.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
-                document.getElementById(subsection).classList.add('active');
+                const section = this.closest('.section');
+                section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+                const target = document.getElementById(subsection);
+                if (target) target.classList.add('active');
                 addLog(`📂 Подраздел: ${subsection}`);
                 if (subsection === 'gos-publication') renderPublishResults();
             });
@@ -1481,36 +1401,31 @@
             if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
             return new Date(Date.UTC(year, month, day));
         }
-
         function formatDate(date) {
             const d = date.getUTCDate();
             const m = date.getUTCMonth() + 1;
             const y = date.getUTCFullYear();
             return `${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}.${y}`;
         }
-
         function todayUTC() {
             const now = new Date();
             return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
         }
-
         function differenceInDays(startUTC, endUTC) {
             const MS_PER_DAY = 1000 * 60 * 60 * 24;
             return Math.floor((endUTC - startUTC) / MS_PER_DAY);
         }
-
         function showError(message, elementId) {
             const el = document.getElementById(elementId);
             if (el) { el.textContent = message; el.classList.remove('hidden'); }
         }
-
         function hideError(elementId) {
             const el = document.getElementById(elementId);
             if (el) { el.textContent = ''; el.classList.add('hidden'); }
         }
 
         // ================================================================
-        // СЕКЦИЯ 1: КАДРЫ
+        // КАДРОВЫЙ УЧЁТ
         // ================================================================
         const POSITION_DEADLINES = {
             'Стажер АП': 3,
@@ -1519,32 +1434,23 @@
             'Секретарь-Ассистент': 10
         };
         const POSITION_ORDER = ['Стажер АП', 'Секретарь', 'Секретарь-Референт', 'Секретарь-Ассистент'];
-
         let editingEmployee = null;
 
         async function loadCadres(filter = 'all') {
             addLog('🔄 Загрузка кадров...');
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Accept': 'application/json' }
                 });
-
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
                 let data = await response.json();
                 addLog(`✅ Загружено ${data.length} сотрудников`);
-
                 data.sort((a, b) => {
                     const idxA = POSITION_ORDER.indexOf(a.position);
                     const idxB = POSITION_ORDER.indexOf(b.position);
                     if (idxA !== idxB) return idxA - idxB;
                     return parseDate(a.last_promotion_date) - parseDate(b.last_promotion_date);
                 });
-
                 if (filter === 'fired') {
                     data = data.filter(emp => calculateStatus(emp).daysLeft <= 0);
                 } else if (filter === 'warning1') {
@@ -1552,24 +1458,19 @@
                 } else if (filter !== 'all') {
                     data = data.filter(emp => emp.position === filter);
                 }
-
                 const tbody = document.getElementById('cadreTbody');
                 tbody.innerHTML = '';
-
                 if (data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);">Нет данных</td></tr>';
                     return;
                 }
-
                 data.forEach(emp => {
                     const status = calculateStatus(emp);
                     const tr = document.createElement('tr');
                     if (status.daysLeft <= 0) tr.classList.add('danger');
                     else if (status.daysLeft === 1) tr.classList.add('warning');
-
                     const vacations = emp.vacations || [];
                     const vacationDisplay = vacations.length > 0 ? vacations.join('; ') : '—';
-
                     tr.innerHTML = `
                         <td>${emp.name}</td>
                         <td>${emp.discord_id}</td>
@@ -1587,7 +1488,6 @@
                     `;
                     tbody.appendChild(tr);
                 });
-
             } catch (error) {
                 addLog(`❌ Ошибка загрузки кадров: ${error.message}`);
                 showToast('❌ Ошибка загрузки кадров', 'error');
@@ -1608,9 +1508,6 @@
             showToast('✅ Кадры синхронизированы', 'success');
         }
 
-        // ================================================================
-        // РЕДАКТИРОВАНИЕ СОТРУДНИКА
-        // ================================================================
         async function editEmployee(discordId) {
             addLog(`✏️ Редактирование сотрудника ${discordId}`);
             try {
@@ -1618,68 +1515,30 @@
                     headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
                 const data = await response.json();
-                if (data.length === 0) {
-                    showToast('❌ Сотрудник не найден', 'error');
-                    return;
-                }
+                if (data.length === 0) { showToast('❌ Сотрудник не найден', 'error'); return; }
                 const emp = data[0];
                 editingEmployee = emp;
-
                 const positions = Object.keys(POSITION_DEADLINES);
-                const positionOptions = positions.map(p =>
-                    `<option value="${p}" ${p === emp.position ? 'selected' : ''}>${p}</option>`
-                ).join('');
-
+                const positionOptions = positions.map(p => `<option value="${p}" ${p === emp.position ? 'selected' : ''}>${p}</option>`).join('');
                 const vacationList = (emp.vacations || []).join('; ');
-
                 document.getElementById('editModalBody').innerHTML = `
-                    <div class="edit-field">
-                        <label>Discord ID</label>
-                        <input type="text" id="editDiscordId" value="${emp.discord_id}" readonly style="opacity:0.6;">
-                    </div>
-                    <div class="edit-field">
-                        <label>Имя</label>
-                        <input type="text" id="editName" value="${emp.name}">
-                    </div>
-                    <div class="edit-field">
-                        <label>Паспорт</label>
-                        <input type="text" id="editPassport" value="${emp.passport || ''}">
-                    </div>
-                    <div class="edit-field">
-                        <label>Должность</label>
-                        <select id="editPosition">${positionOptions}</select>
-                    </div>
-                    <div class="edit-field">
-                        <label>Дата приёма (дд.мм.гггг)</label>
-                        <input type="text" id="editHireDate" value="${emp.hire_date || ''}" placeholder="01.01.2024">
-                    </div>
-                    <div class="edit-field">
-                        <label>Дата последнего повышения (дд.мм.гггг)</label>
-                        <input type="text" id="editLastPromotion" value="${emp.last_promotion_date || ''}" placeholder="01.01.2024">
-                    </div>
-                    <div class="edit-field">
-                        <label>Сдвиг отпуска (дней)</label>
-                        <input type="number" id="editVacationShift" value="${emp.vacation_shift || 0}">
-                    </div>
-                    <div class="edit-field">
-                        <label>Отпуска (через ; )</label>
-                        <input type="text" id="editVacations" value="${vacationList}">
-                    </div>
-                    <div class="edit-field">
-                        <label>Дедлайн (дней) — вычисляется автоматически по должности</label>
-                        <input type="text" id="editDeadlineDays" value="${emp.deadline_days || 3}" readonly style="opacity:0.6;">
-                    </div>
+                    <div class="edit-field"><label>Discord ID</label><input type="text" id="editDiscordId" value="${emp.discord_id}" readonly style="opacity:0.6;"></div>
+                    <div class="edit-field"><label>Имя</label><input type="text" id="editName" value="${emp.name}"></div>
+                    <div class="edit-field"><label>Паспорт</label><input type="text" id="editPassport" value="${emp.passport || ''}"></div>
+                    <div class="edit-field"><label>Должность</label><select id="editPosition">${positionOptions}</select></div>
+                    <div class="edit-field"><label>Дата приёма (дд.мм.гггг)</label><input type="text" id="editHireDate" value="${emp.hire_date || ''}" placeholder="01.01.2024"></div>
+                    <div class="edit-field"><label>Дата последнего повышения (дд.мм.гггг)</label><input type="text" id="editLastPromotion" value="${emp.last_promotion_date || ''}" placeholder="01.01.2024"></div>
+                    <div class="edit-field"><label>Сдвиг отпуска (дней)</label><input type="number" id="editVacationShift" value="${emp.vacation_shift || 0}"></div>
+                    <div class="edit-field"><label>Отпуска (через ; )</label><input type="text" id="editVacations" value="${vacationList}"></div>
+                    <div class="edit-field"><label>Дедлайн (дней) — вычисляется автоматически по должности</label><input type="text" id="editDeadlineDays" value="${emp.deadline_days || 3}" readonly style="opacity:0.6;"></div>
                 `;
-
                 document.getElementById('editPosition').addEventListener('change', function() {
                     const pos = this.value;
                     const days = POSITION_DEADLINES[pos] || 3;
                     document.getElementById('editDeadlineDays').value = days;
                 });
-
                 document.getElementById('editModal').classList.add('show');
                 addLog(`✏️ Открыто редактирование ${emp.name}`);
-
             } catch (error) {
                 addLog(`❌ Ошибка: ${error.message}`);
                 showToast('❌ Ошибка загрузки сотрудника', 'error');
@@ -1688,13 +1547,8 @@
 
         document.getElementById('editModalSave').addEventListener('click', async function() {
             if (!editingEmployee) return;
-
             const password = prompt('Введите пароль для подтверждения изменений:');
-            if (password !== ADMIN_PASSWORD) {
-                showToast('❌ Неверный пароль!', 'error');
-                return;
-            }
-
+            if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
             const discordId = editingEmployee.discord_id;
             const name = document.getElementById('editName').value.trim();
             const passport = document.getElementById('editPassport').value.trim();
@@ -1705,31 +1559,13 @@
             const vacationsRaw = document.getElementById('editVacations').value.trim();
             const vacations = vacationsRaw ? vacationsRaw.split(';').map(s => s.trim()).filter(Boolean) : [];
             const deadlineDays = POSITION_DEADLINES[position] || 3;
-
-            if (!name) {
-                showToast('❌ Имя обязательно', 'error');
-                return;
-            }
-
+            if (!name) { showToast('❌ Имя обязательно', 'error'); return; }
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name,
-                        passport,
-                        position,
-                        hire_date: hireDate || null,
-                        last_promotion_date: lastPromotion || null,
-                        vacation_shift: vacationShift,
-                        vacations,
-                        deadline_days: deadlineDays
-                    })
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, passport, position, hire_date: hireDate || null, last_promotion_date: lastPromotion || null, vacation_shift: vacationShift, vacations, deadline_days: deadlineDays })
                 });
-
                 if (response.ok) {
                     addLog(`✅ Сотрудник ${name} обновлён`);
                     document.getElementById('editModal').classList.remove('show');
@@ -1745,40 +1581,19 @@
                 showToast('❌ Ошибка обновления', 'error');
             }
         });
+        document.getElementById('editModalClose').addEventListener('click', function() { document.getElementById('editModal').classList.remove('show'); editingEmployee = null; });
+        document.getElementById('editModalCancel').addEventListener('click', function() { document.getElementById('editModal').classList.remove('show'); editingEmployee = null; });
+        document.getElementById('editModal').addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('show'); editingEmployee = null; } });
 
-        document.getElementById('editModalClose').addEventListener('click', function() {
-            document.getElementById('editModal').classList.remove('show');
-            editingEmployee = null;
-        });
-
-        document.getElementById('editModalCancel').addEventListener('click', function() {
-            document.getElementById('editModal').classList.remove('show');
-            editingEmployee = null;
-        });
-
-        document.getElementById('editModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('show');
-                editingEmployee = null;
-            }
-        });
-
-        // ================================================================
-        // ФУНКЦИИ КАДРОВ
-        // ================================================================
         async function deleteEmployee(discordId) {
             const password = prompt('Введите пароль для удаления сотрудника:');
             if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
-
             addLog(`🗑️ Удаление сотрудника ${discordId}`);
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
-
                 if (response.ok) {
                     addLog(`✅ Сотрудник удалён`);
                     await loadCadres();
@@ -1795,22 +1610,19 @@
         function parseCadreMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
-
             let discordId = null, name = null;
             for (const line of lines) {
                 const match = line.match(/<@(\d+)>\s*\|\s*(.+)/);
                 if (match) { discordId = match[1]; name = match[2].trim(); break; }
             }
             if (!discordId || !name) return { type: 'error', message: 'Не найдена строка с упоминанием и именем' };
-
             const promotionLine = lines.find(l => l.toLowerCase().includes('повышен до должности'));
             if (promotionLine) {
                 const positionMatch = promotionLine.match(/повышен до должности\s*(.+?)\s*\.?\s*$/i);
                 if (!positionMatch) return { type: 'error', message: 'Не удалось извлечь должность' };
                 return { type: 'promotion', discordId, name, newPosition: positionMatch[1].trim() };
             }
-
-            const hasNabor = lines.some(l => l.toLowerCase().includes('набор'));
+            const hasNabor = lines.some(l => l.toLowerCase().includes('набор') || l.toLowerCase().includes('инд. набор'));
             const dateLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}/));
             if (hasNabor && dateLine) {
                 const passportLine = lines.find(l => !l.includes('<') && !l.includes('|') && !l.includes('.') && /^\d+$/.test(l.trim()));
@@ -1820,7 +1632,6 @@
                 if (!hireDate) return { type: 'error', message: 'Некорректная дата приёма' };
                 return { type: 'hire', discordId, name, passport: passportLine.trim(), hireDateStr };
             }
-
             const vacationLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/));
             if (vacationLine) {
                 const dates = vacationLine.match(/(\d{2}\.\d{2}\.\d{4})\s*-\s*(\d{2}\.\d{2}\.\d{4})/);
@@ -1830,20 +1641,17 @@
                 const duration = differenceInDays(startDate.getTime(), endDate.getTime()) + 1;
                 return { type: 'vacation', discordId, name, vacationStart: dates[1], vacationEnd: dates[2], duration };
             }
-
             return { type: 'error', message: 'Не удалось определить тип сообщения' };
         }
 
         async function processCadreMessage(text) {
             const parsed = parseCadreMessage(text);
             if (parsed.type === 'error') return { success: false, message: parsed.message };
-
             try {
                 const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
                     headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
                 const existing = await checkRes.json();
-
                 if (parsed.type === 'hire') {
                     if (existing.length > 0) return { success: false, message: 'Сотрудник уже существует' };
                     const newEmp = {
@@ -1859,39 +1667,26 @@
                     };
                     const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?apikey=${SUPABASE_KEY}`, {
                         method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
                         body: JSON.stringify(newEmp)
                     });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     addLog(`➕ Добавлен сотрудник ${parsed.name}`);
                     return { success: true, message: `Сотрудник ${parsed.name} добавлен` };
                 }
-
                 if (parsed.type === 'promotion') {
                     if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
                     const emp = existing[0];
                     if (!POSITION_DEADLINES[parsed.newPosition]) return { success: false, message: `Неизвестная должность: ${parsed.newPosition}` };
                     const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
                         method: 'PATCH',
-                        headers: {
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            position: parsed.newPosition,
-                            last_promotion_date: formatDate(new Date()),
-                            deadline_days: POSITION_DEADLINES[parsed.newPosition],
-                            vacation_shift: 0
-                        })
+                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ position: parsed.newPosition, last_promotion_date: formatDate(new Date()), deadline_days: POSITION_DEADLINES[parsed.newPosition], vacation_shift: 0 })
                     });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     addLog(`⬆️ Повышен ${parsed.name} до ${parsed.newPosition}`);
                     return { success: true, message: `${parsed.name} повышен до ${parsed.newPosition}` };
                 }
-
                 if (parsed.type === 'vacation') {
                     if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
                     const emp = existing[0];
@@ -1899,22 +1694,14 @@
                     vacations.push(`${parsed.vacationStart} - ${parsed.vacationEnd}`);
                     const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
                         method: 'PATCH',
-                        headers: {
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            vacation_shift: (emp.vacation_shift || 0) + parsed.duration,
-                            vacations: vacations
-                        })
+                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vacation_shift: (emp.vacation_shift || 0) + parsed.duration, vacations })
                     });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     addLog(`🏖️ Отпуск учтён для ${parsed.name} (${parsed.duration} дн.)`);
                     return { success: true, message: `Отпуск учтён (${parsed.duration} дн.)` };
                 }
-
                 return { success: false, message: 'Неизвестная ошибка' };
-
             } catch (error) {
                 addLog(`❌ Ошибка обработки: ${error.message}`);
                 return { success: false, message: error.message };
@@ -1922,7 +1709,7 @@
         }
 
         // ================================================================
-        // СЕКЦИЯ 2: ЗАЯВКИ
+        // ЗАЯВКИ
         // ================================================================
         let appFilter = 'all';
         let applicationsData = [];
@@ -1942,19 +1729,12 @@
             addLog('🔄 Загрузка заявок...');
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc&apikey=${SUPABASE_KEY}`, {
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Accept': 'application/json' }
                 });
-
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
                 applicationsData = await response.json();
                 addLog(`✅ Загружено ${applicationsData.length} заявок`);
                 renderApplications();
-
             } catch (error) {
                 addLog(`❌ Ошибка загрузки заявок: ${error.message}`);
                 showToast('❌ Ошибка загрузки заявок', 'error');
@@ -1964,15 +1744,10 @@
         function renderApplications() {
             const data = applicationsData || [];
             let filtered = data;
-            if (appFilter === 'discipline') {
-                filtered = data.filter(app => app.survey_type === 'discipline');
-            } else if (appFilter === 'hr') {
-                filtered = data.filter(app => app.survey_type === 'hr');
-            }
-
+            if (appFilter === 'discipline') filtered = data.filter(app => app.survey_type === 'discipline');
+            else if (appFilter === 'hr') filtered = data.filter(app => app.survey_type === 'hr');
             const tbody = document.getElementById('appTbody');
             tbody.innerHTML = '';
-
             let unread = 0;
             filtered.forEach(app => {
                 const isRead = app.is_read || false;
@@ -1983,7 +1758,6 @@
                     day: '2-digit', month: '2-digit', year: 'numeric',
                     hour: '2-digit', minute: '2-digit'
                 });
-
                 const tr = document.createElement('tr');
                 tr.className = isRead ? '' : 'unread-application';
                 tr.innerHTML = `
@@ -2000,18 +1774,12 @@
                 `;
                 tbody.appendChild(tr);
             });
-
             document.getElementById('appTotal').textContent = filtered.length;
             document.getElementById('appUnread').textContent = unread;
             document.getElementById('appRead').textContent = filtered.length - unread;
-
             const badge = document.getElementById('appBadge');
-            if (unread > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = unread;
-            } else {
-                badge.style.display = 'none';
-            }
+            if (unread > 0) { badge.style.display = 'flex'; badge.textContent = unread; }
+            else { badge.style.display = 'none'; }
         }
 
         // ================================================================
@@ -2034,51 +1802,41 @@
         };
 
         const QUESTION_LABELS = {
-            q1: '📝 Имя Фамилия (IC)',
-            q2: '👤 Имя (OOC)',
-            q3: '🎂 Возраст (OOC)',
-            q4: '⏰ Игровой онлайн (OOC)',
-            q5: '🌅 Прайм-тайм',
-            q6: '🌍 Часовой пояс',
+            q1: '📝 Ваше Имя Фамилия (IC)',
+            q2: '👤 Ваше Имя (OOC)',
+            q3: '🎂 Ваш возраст (OOC)',
+            q4: '⏰ Ваш игровой онлайн (OOC)',
+            q5: '🌅 Ваш прайм-тайм',
+            q6: '🌍 Ваш часовой пояс',
             experience: '💼 Опыт работы на похожих должностях',
             experience_detail: '📋 Детали опыта',
             exam_money: '💰 Допустимо ли брать деньги за экзамены?',
-            situation3: '🤝 Ситуация с коллегой (Дисциплинарный)',
-            situation_colleague: '🤝 Ситуация с коллегой (HR)',
-            situation1: '🏛️ Ситуация: в мэрии никого нет',
-            situation2: '😡 Оскорбление в Discord',
-            about: '📋 О себе',
-            motivation: '🎯 Мотивация',
-            qualities: '💪 Качества дисциплинарного инспектора',
-            trainee: '👨‍🎓 Готовность к стажерам',
-            trainee_detail: '📖 Помощь стажеру',
-            individual: '📄 Индивидуальные наборы',
-            hr_duties: '📚 Обязанности HR-менеджера'
+            situation3: '🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (Дисциплинарный)',
+            situation_colleague: '🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (HR)',
+            situation1: '🏛️ Представим такую ситуацию: В мэрии никого нет, но при этом в штате есть сотрудники Аппарата Правительства, что вы будете делать?',
+            situation2: '😡 Вас оскорбили в Дискорде, что вы будете делать?',
+            about: '📋 Пару слов о себе',
+            motivation: '🎯 Ради чего Вы хотите стать Дисциплинарным инспектором / HR-менеджером?',
+            qualities: '💪 Как вы думаете, какими качествами должен обладать Дисциплинарный инспектор?',
+            trainee: '👨‍🎓 Готовы ли вы уделять время стажерам, которые требуют особого внимания?',
+            trainee_detail: '📖 Молодой стажер никак не может сдать первый экзамен на секретаря. Расскажите, как вы сможете ему помочь?',
+            individual: '📄 Как вы относитесь к индивидуальным наборам? (Раздача листовок, агитируя отдел АП)',
+            hr_duties: '📚 Как Вы думаете, чем занимается HR-менеджер?'
         };
 
         function viewApplication(id) {
             const app = applicationsData.find(a => a.id === id);
             if (!app) return;
-
             const type = app.survey_type || 'discipline';
             const typeLabel = type === 'discipline' ? '⚖️ Дисциплинарный инспектор' : '👥 HR-менеджер';
-
             document.getElementById('viewModalTitle').textContent = `${typeLabel} — ${app.q1 || 'Без имени'}`;
-
             let html = '';
-
             const mainFields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
             mainFields.forEach(key => {
                 if (app[key] && app[key].trim()) {
-                    html += `
-                        <div class="modal-field">
-                            <span class="field-label">${QUESTION_LABELS[key] || key}</span>
-                            <span class="field-value">${app[key]}</span>
-                        </div>
-                    `;
+                    html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS[key] || key}</span><span class="field-value">${app[key]}</span></div>`;
                 }
             });
-
             if (app.ratings) {
                 try {
                     const ratings = JSON.parse(app.ratings);
@@ -2094,45 +1852,21 @@
                     }
                 } catch (e) {}
             }
-
             if (app.experience) {
-                html += `
-                    <div class="modal-field">
-                        <span class="field-label">${QUESTION_LABELS.experience}</span>
-                        <span class="field-value">${app.experience === 'yes' ? '✅ Да' : '❌ Нет'}</span>
-                    </div>
-                `;
+                html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS.experience}</span><span class="field-value">${app.experience === 'yes' ? '✅ Да' : '❌ Нет'}</span></div>`;
                 if (app.experience === 'yes' && app.experience_detail) {
-                    html += `
-                        <div class="modal-field">
-                            <span class="field-label">${QUESTION_LABELS.experience_detail}</span>
-                            <span class="field-value">${app.experience_detail}</span>
-                        </div>
-                    `;
+                    html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS.experience_detail}</span><span class="field-value">${app.experience_detail}</span></div>`;
                 }
             }
-
             if (app.exam_money) {
-                html += `
-                    <div class="modal-field">
-                        <span class="field-label">${QUESTION_LABELS.exam_money}</span>
-                        <span class="field-value">${app.exam_money === 'yes' ? '✅ Да' : '❌ Нет'}</span>
-                    </div>
-                `;
+                html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS.exam_money}</span><span class="field-value">${app.exam_money === 'yes' ? '✅ Да' : '❌ Нет'}</span></div>`;
             }
-
             const situationKeys = ['situation1', 'situation2', 'situation3', 'situation_colleague', 'individual', 'trainee', 'trainee_detail', 'hr_duties', 'qualities', 'about', 'motivation'];
             situationKeys.forEach(key => {
                 if (app[key] && app[key].trim()) {
-                    html += `
-                        <div class="modal-field">
-                            <span class="field-label">${QUESTION_LABELS[key] || key}</span>
-                            <span class="field-value">${app[key]}</span>
-                        </div>
-                    `;
+                    html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS[key] || key}</span><span class="field-value">${app[key]}</span></div>`;
                 }
             });
-
             document.getElementById('viewModalBody').innerHTML = html;
             document.getElementById('viewModal').classList.add('show');
             addLog(`👁️ Просмотр заявки #${id}`);
@@ -2141,30 +1875,19 @@
         function closeViewModal() {
             document.getElementById('viewModal').classList.remove('show');
         }
-
         document.getElementById('viewModalClose').addEventListener('click', closeViewModal);
         document.getElementById('viewModalCloseBtn').addEventListener('click', closeViewModal);
-        document.getElementById('viewModal').addEventListener('click', function(e) {
-            if (e.target === this) closeViewModal();
-        });
+        document.getElementById('viewModal').addEventListener('click', function(e) { if (e.target === this) closeViewModal(); });
 
-        // ================================================================
-        // ФУНКЦИИ ЗАЯВОК
-        // ================================================================
         async function markAsRead(id) {
             if (!appUnlocked) return;
             addLog(`📖 Отметка заявки #${id} как прочитанной`);
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
                     body: JSON.stringify({ is_read: true })
                 });
-
                 if (response.ok) {
                     addLog(`✅ Заявка #${id} отмечена как прочитанная`);
                     await loadApplications();
@@ -2186,14 +1909,9 @@
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?is_read=eq.false&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
                     body: JSON.stringify({ is_read: true })
                 });
-
                 if (response.ok) {
                     addLog('✅ Все заявки отмечены как прочитанные');
                     await loadApplications();
@@ -2216,11 +1934,8 @@
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
-
                 if (response.ok) {
                     addLog(`✅ Заявка #${id} удалена`);
                     await loadApplications();
@@ -2235,7 +1950,7 @@
         }
 
         // ================================================================
-        // СЕКЦИЯ 3: ГОСВОЛНЫ (локально)
+        // ГОСВОЛНЫ
         // ================================================================
         const GOS_EVENTS_KEY = 'gosEvents';
         const DIST_EVENTS_KEY = 'distEvents';
@@ -2245,10 +1960,32 @@
         function loadDistEvents() { return JSON.parse(localStorage.getItem(DIST_EVENTS_KEY) || '[]'); }
         function saveDistEvents(events) { localStorage.setItem(DIST_EVENTS_KEY, JSON.stringify(events)); }
 
+        const AP_LINKS = {
+            recruit: [
+                'https://discord.com/channels/713076956748316702/1501696693211500644/1501696743035637803',
+                'https://discord.com/channels/713076956748316702/1501696693211500644/1501696756889550919',
+                'https://discord.com/channels/713076956748316702/1501696693211500644/1501696771276013609'
+            ],
+            lecture: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696897369378936'
+        };
+        const AP_USSS_LINKS = {
+            recruit_start: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696802733428757',
+            recruit_middle: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696817329340416',
+            recruit_end: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696831900483594',
+            lecture: AP_LINKS.lecture
+        };
+        const USSS_LINKS = {
+            recruit: [
+                'https://discord.com/channels/713076956748316702/1501686647518003221/1501696425237418135',
+                'https://discord.com/channels/713076956748316702/1501686647518003221/1501696439535800492'
+            ],
+            electronic: 'https://discord.com/channels/713076956748316702/1501686647518003221/1501696457269313637'
+        };
+        const GOS_FINAL_LINE = 'МК | Мини-МП «Картинг» | [20:50](https://discord.com/channels/713076956748316702/1501697235476287539/1501697283585085642)';
+
         function parseGosMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
-
             let events = [];
             let date = null;
             const apHeader = lines.find(l => l.includes('Гос. волны АП') && !l.includes('USSS'));
@@ -2270,10 +2007,55 @@
                     if (!line.includes('|')) continue;
                     const parts = line.split('|').map(p => p.trim());
                     if (parts.length < 4) continue;
-                    const description = parts[0], typeField = parts[1].toUpperCase(), dateFromLine = parts[2], timesStr = parts[3];
+                    const description = parts[0];
+                    let typeField = parts[1].toUpperCase();
+                    const dateFromLine = parts[2];
+                    const timesStr = parts[3];
                     const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
                     if (times.length === 0) continue;
-                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ')}`;
+                    let formattedTimes = '';
+                    if (typeField === 'АП') {
+                        const isLecture = description.toLowerCase().includes('лекция');
+                        if (isLecture) {
+                            formattedTimes = times.map(t => `[${t}](${AP_LINKS.lecture})`).join(' - ');
+                        } else {
+                            const links = AP_LINKS.recruit;
+                            formattedTimes = times.map((t, idx) => {
+                                let link;
+                                if (idx === 0) link = links[0];
+                                else if (idx === 1 && times.length === 2) link = links[2];
+                                else if (idx === 1 && times.length >= 3) link = links[1];
+                                else if (idx === 2) link = links[2];
+                                else link = links[links.length - 1];
+                                return `[${t}](${link})`;
+                            }).join(' - ');
+                        }
+                    } else if (typeField === 'АП/USSS' || typeField === 'AP/USSS') {
+                        const isLecture = description.toLowerCase().includes('лекция');
+                        if (isLecture) {
+                            formattedTimes = times.map(t => `[${t}](${AP_USSS_LINKS.lecture})`).join(' - ');
+                        } else {
+                            formattedTimes = times.map((t, idx) => {
+                                let link;
+                                if (times.length === 2) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else if (times.length === 3) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === 1) link = AP_USSS_LINKS.recruit_middle;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === times.length - 1) link = AP_USSS_LINKS.recruit_end;
+                                    else link = AP_USSS_LINKS.recruit_middle;
+                                }
+                                return `[${t}](${link})`;
+                            }).join(' - ');
+                        }
+                    } else {
+                        continue;
+                    }
+                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${formattedTimes}`;
                     events.push({ text: eventText, datetimeStr: `${dateFromLine} ${times[0]}`, type: typeField });
                 }
                 if (events.length > 0) return { type: 'ap', events, date };
@@ -2295,10 +2077,39 @@
                     if (!line.includes('|')) continue;
                     const parts = line.split('|').map(p => p.trim());
                     if (parts.length < 4) continue;
-                    const description = parts[0], typeField = parts[1].toUpperCase(), dateFromLine = parts[2], timesStr = parts[3];
+                    const description = parts[0];
+                    let typeField = parts[1].toUpperCase();
+                    const dateFromLine = parts[2];
+                    const timesStr = parts[3];
                     const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
                     if (times.length === 0) continue;
-                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ')}`;
+                    let formattedTimes = '';
+                    if (typeField === 'АП' || typeField === 'АП/USSS' || typeField === 'AP/USSS') {
+                        const isLecture = description.toLowerCase().includes('лекция');
+                        if (isLecture) {
+                            formattedTimes = times.map(t => `[${t}](${AP_USSS_LINKS.lecture})`).join(' - ');
+                        } else {
+                            formattedTimes = times.map((t, idx) => {
+                                let link;
+                                if (times.length === 2) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else if (times.length === 3) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === 1) link = AP_USSS_LINKS.recruit_middle;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === times.length - 1) link = AP_USSS_LINKS.recruit_end;
+                                    else link = AP_USSS_LINKS.recruit_middle;
+                                }
+                                return `[${t}](${link})`;
+                            }).join(' - ');
+                        }
+                    } else {
+                        continue;
+                    }
+                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${formattedTimes}`;
                     events.push({ text: eventText, datetimeStr: `${dateFromLine} ${times[0]}`, type: typeField });
                 }
                 if (events.length > 0) return { type: 'apUsss', events, date };
@@ -2324,7 +2135,19 @@
                     const typePart = parts[1].toLowerCase();
                     const times = timePart.split('-').map(t => t.trim()).filter(t => t.length > 0);
                     if (times.length === 0) continue;
-                    const eventText = `USSS | ${typePart} | ${times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501686647518003221/${t})`).join(' - ')}`;
+                    let eventText = '';
+                    if (typePart.includes('набор')) {
+                        const formattedTimes = times.map((t, idx) => {
+                            const link = idx === 0 ? USSS_LINKS.recruit[0] : USSS_LINKS.recruit[1];
+                            return `[${t}](${link})`;
+                        }).join(' - ');
+                        eventText = `USSS | Набор | ${formattedTimes}`;
+                    } else if (typePart.includes('электрон')) {
+                        const formattedTimes = times.map(t => `[${t}](${USSS_LINKS.electronic})`).join(' - ');
+                        eventText = `USSS | Электронка | ${formattedTimes}`;
+                    } else {
+                        continue;
+                    }
                     events.push({ text: eventText, datetimeStr: `${date} ${times[0]}`, type: 'usss' });
                 }
                 if (events.length > 0) return { type: 'usss', events, date };
@@ -2374,6 +2197,20 @@
                 });
                 container.appendChild(item);
             });
+            const finalItem = document.createElement('div');
+            finalItem.className = 'result-item final-result';
+            finalItem.innerHTML = `
+                <span class="result-number">★</span>
+                <span class="result-text">${GOS_FINAL_LINE}</span>
+                <button class="copy-btn">Копировать</button>
+            `;
+            finalItem.querySelector('.copy-btn').addEventListener('click', function() {
+                navigator.clipboard.writeText(GOS_FINAL_LINE).then(() => {
+                    this.textContent = '✓';
+                    setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
+                });
+            });
+            container.appendChild(finalItem);
         }
 
         function resetGosData() {
@@ -2389,11 +2226,9 @@
         function parseDistMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
-
             let date = null;
             const apHeader = lines.find(l => l.includes('Гос. волны АП') || l.includes('Гос. волны USSS'));
             if (apHeader) { const m = apHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) date = m[1]; }
-
             let codeLines = [];
             const codeBlockMatch = text.match(/```([\s\S]*?)```/);
             if (codeBlockMatch) {
@@ -2402,7 +2237,6 @@
                 const headerSet = new Set([apHeader].filter(Boolean));
                 codeLines = lines.filter(l => !headerSet.has(l));
             }
-
             if (!date) {
                 for (const line of codeLines) {
                     if (line.includes('|')) {
@@ -2415,18 +2249,20 @@
                 }
             }
             if (!date) return { type: 'error', message: 'Не удалось извлечь дату' };
-
             const tasks = [];
             for (const line of codeLines) {
                 if (!line.includes('|')) continue;
                 const parts = line.split('|').map(p => p.trim());
                 if (parts.length < 4) continue;
-                const description = parts[0], type = parts[1].toUpperCase(), dateFromLine = parts[2], timesStr = parts[3];
+                const description = parts[0];
+                const type = parts[1].toUpperCase();
+                const dateFromLine = parts[2];
+                const timesStr = parts[3];
                 const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
                 if (times.length === 0) continue;
-                tasks.push({ text: `${description} | ${type} | ${dateFromLine} | ${times.join(' - ')}`, datetimeStr: `${dateFromLine} ${times[0]}` });
+                const taskText = `${description} | ${type} | ${dateFromLine} | ${times.join(' - ')}`;
+                tasks.push({ text: taskText, datetimeStr: `${dateFromLine} ${times[0]}` });
             }
-
             if (tasks.length === 0) return { type: 'error', message: 'Не найдены события' };
             tasks.sort((a, b) => a.datetimeStr.localeCompare(b.datetimeStr));
             return { type: 'success', tasks, date };
@@ -2500,7 +2336,6 @@
                 container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет данных для публикации</div>';
                 return;
             }
-
             const grouped = {};
             events.forEach(event => {
                 const dateMatch = event.text.match(/\d{2}\.\d{2}\.\d{4}/);
@@ -2511,52 +2346,418 @@
                 }
             });
 
+            const templates = {
+                '1501696743035637803': (endTime) => [
+                    `В холле Мэрии ЛС до ${endTime} будет проводиться собеседование в Аппарат Правительства.`,
+                    `Вам необходимо проживать в штате не менее 2-х лет.`,
+                    `С уважением, Правительство Штата.`
+                ],
+                '1501696756889550919': (endTime) => [
+                    `Напоминаем, в холле Мэрии ЛС до ${endTime} проводится собеседование в Аппарат Правительства.`,
+                    `Вам необходимо проживать в штате не менее 2-х лет.`,
+                    `С уважением, Правительство Штата.`
+                ],
+                '1501696771276013609': () => [
+                    `Собеседование в Аппарат Правительства окончено.`,
+                    `Если Вы не успели посетить собеседование, оставьте электронную заявку на портале штата.`,
+                    `С уважением, Правительство Штата.`
+                ],
+                '1501696802733428757': (endTime) => [
+                    `Граждане штата! В данный момент проходит собеседование в ряды Аппарат Правительства и в USSS.`,
+                    `Необходимо проживание в штате от 2 лет, не иметь судимостей, так же быть старше 21 года.`,
+                    `Собеседование проходит на территории Мэрии ЛС до ${endTime}. С уважением, Правительство Штата.`
+                ],
+                '1501696817329340416': (endTime) => [
+                    `Граждане штата! Напоминаем, что продолжается собеседование в ряды Аппарат Правительства и в USSS.`,
+                    `Необходимо проживать 2 года в штате, не иметь судимостей, так же быть старше 21 года.`,
+                    `Собеседование проходит на территории Мэрии ЛС до ${endTime}. С уважением, Правительство Штата.`
+                ],
+                '1501696831900483594': () => [
+                    `Уважаемые жители штата! Собеседование на службу в ряды Аппарат Правительства и в USSS окончено.`,
+                    `Если вы не успели посетить собеседование - оставьте электронную заявку на портале штата.`,
+                    `В разделе "Приемная для граждан". С уважением, Правительство Штата.`
+                ],
+                '1501696897369378936': (lectureTime) => {
+                    const [h, m] = lectureTime.split(':').map(Number);
+                    const d = new Date(2000,0,1,h,m+10);
+                    const newTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+                    return [
+                        `В ${newTime} в холле Мэрии ЛС будет проводиться лекция для новоприбывших жителей нашего Штата.`,
+                        `Тема лекции - "Работа в Аппарате Правительства".`,
+                        `С уважением, Правительство Штата.`
+                    ];
+                }
+            };
+
             Object.keys(grouped).sort().forEach(date => {
-                const header = document.createElement('div');
-                header.style.cssText = 'font-weight:700;color:var(--accent);padding:10px 0 5px;font-size:16px;';
-                header.textContent = date;
-                container.appendChild(header);
+                const dateHeader = document.createElement('div');
+                dateHeader.style.cssText = 'font-weight:700;color:var(--accent);padding:10px 0 5px;font-size:16px;';
+                dateHeader.textContent = date;
+                container.appendChild(dateHeader);
 
                 grouped[date].forEach(event => {
-                    const block = document.createElement('div');
-                    block.className = 'publish-block';
-                    block.innerHTML = `
-                        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-                            <span style="font-weight:600;color:var(--text-secondary);">${event.text}</span>
-                            <button class="copy-btn" style="flex-shrink:0;">Копировать</button>
-                        </div>
-                    `;
-                    block.querySelector('.copy-btn').addEventListener('click', function() {
-                        navigator.clipboard.writeText(event.text).then(() => {
-                            this.textContent = '✓';
-                            setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
-                        });
+                    const linkMatches = event.text.match(/\[(\d{2}:\d{2})\]\((https:\/\/discord\.com\/channels\/[\d\/]+)\)/g);
+                    if (!linkMatches) return;
+                    const links = linkMatches.map(l => {
+                        const m = l.match(/\[(\d{2}:\d{2})\]\((https:\/\/discord\.com\/channels\/[\d\/]+)\)/);
+                        return { time: m[1], url: m[2] };
                     });
-                    container.appendChild(block);
+                    const lastTime = links.length > 0 ? links[links.length-1].time : '00:00';
+                    const firstTime = links.length > 0 ? links[0].time : '00:00';
+
+                    const description = event.text.split('|')[0].trim();
+                    const header = document.createElement('div');
+                    header.className = 'collapse-header';
+                    const timesStr = links.map(l => l.time).join(' - ');
+                    header.innerHTML = `<span>${date} ${description} ${timesStr}</span><span class="collapse-arrow">▶</span>`;
+
+                    const content = document.createElement('div');
+                    content.className = 'collapse-content';
+
+                    links.forEach((link, idx) => {
+                        const linkId = link.url.split('/').pop();
+                        const template = templates[linkId];
+                        if (!template) return;
+                        let lines = [];
+                        if (linkId === '1501696897369378936') lines = template(firstTime);
+                        else if (linkId === '1501696771276013609' || linkId === '1501696831900483594') lines = template();
+                        else lines = template(lastTime);
+
+                        const block = document.createElement('div');
+                        block.className = 'publish-block';
+
+                        const actionsDiv = document.createElement('div');
+                        actionsDiv.style.cssText = 'display:flex;gap:4px;margin-bottom:6px;';
+                        const checkBtn = document.createElement('button');
+                        checkBtn.className = 'publish-action-btn check-red';
+                        checkBtn.innerHTML = '✓';
+                        const eyeBtn = document.createElement('button');
+                        eyeBtn.className = 'publish-action-btn eye-green';
+                        eyeBtn.innerHTML = '👁';
+                        actionsDiv.appendChild(checkBtn);
+                        actionsDiv.appendChild(eyeBtn);
+
+                        const title = document.createElement('span');
+                        title.style.cssText = 'font-weight:600;color:var(--text-muted);';
+                        title.textContent = `Сообщение ${idx+1}`;
+                        const headerRow = document.createElement('div');
+                        headerRow.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:8px;';
+                        headerRow.appendChild(actionsDiv);
+                        headerRow.appendChild(title);
+                        block.appendChild(headerRow);
+
+                        lines.forEach(line => {
+                            const lineDiv = document.createElement('div');
+                            lineDiv.className = 'publish-line';
+                            lineDiv.innerHTML = `
+                                <span class="publish-line-text">${line}</span>
+                                <button class="copy-btn">Копировать</button>
+                            `;
+                            lineDiv.querySelector('.copy-btn').addEventListener('click', function() {
+                                navigator.clipboard.writeText(line).then(() => {
+                                    this.textContent = '✓';
+                                    setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
+                                });
+                            });
+                            block.appendChild(lineDiv);
+                        });
+
+                        checkBtn.addEventListener('click', () => {
+                            checkBtn.classList.toggle('active');
+                            block.classList.toggle('highlight-red');
+                            if (checkBtn.classList.contains('active')) {
+                                eyeBtn.classList.remove('active');
+                                block.classList.remove('highlight-green');
+                            }
+                        });
+                        eyeBtn.addEventListener('click', () => {
+                            eyeBtn.classList.toggle('active');
+                            block.classList.toggle('highlight-green');
+                            if (eyeBtn.classList.contains('active')) {
+                                checkBtn.classList.remove('active');
+                                block.classList.remove('highlight-red');
+                            }
+                        });
+
+                        content.appendChild(block);
+                    });
+
+                    header.addEventListener('click', () => {
+                        content.classList.toggle('active');
+                        header.querySelector('.collapse-arrow').classList.toggle('open');
+                    });
+                    container.appendChild(header);
+                    container.appendChild(content);
                 });
             });
         }
 
         // ================================================================
-        // СЕКЦИЯ 4: ОТЧЁТЫ (СТАРШИЙ СОСТАВ)
+        // ОТЧЁТЫ (ВСЕ 4)
         // ================================================================
         const WEEKLY_RECRUITMENT_KEY = 'weeklyRecruitment';
         const WEEKLY_APPLICATIONS_KEY = 'weeklyApplications';
         const WEEKLY_INDIVIDUAL_KEY = 'weeklyIndividual';
         const WEEKLY_LECTURES_KEY = 'weeklyLectures';
 
-        // --- ВСЕ ФУНКЦИИ ОТЧЁТОВ (код сохранён, но сокращён для экономии места) ---
-        // Полный код функций отчётов был в предыдущих версиях, он полностью сохранён
+        // ----- НАБОРЫ -----
+        function processWeeklyRecruitment() {
+            const text = document.getElementById('weeklyText').value;
+            const linksText = document.getElementById('weeklyLinks').value;
+            hideError('weeklyError');
+            const blocks = [];
+            const lines = text.split('\n').map(l => l.trim());
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('📝 Отчет по наборам 📝')) {
+                    let dateTime = null, count = 0;
+                    i++;
+                    while (i < lines.length && !lines[i].includes('📝 Отчет по наборам 📝')) {
+                        const line = lines[i];
+                        if (line.startsWith('Дата и время проведения набора')) {
+                            const after = line.replace('Дата и время проведения набора', '').trim();
+                            if (after) {
+                                const dtMatch = after.match(/\d{2}\.\d{2}\.\d{4}\s*(?:\||\s)\s*\d{2}:\d{2}/);
+                                if (dtMatch) dateTime = dtMatch[0].replace(/\s*\|\s*/, ' ');
+                                else dateTime = after;
+                            } else if (i + 1 < lines.length) {
+                                const nextLine = lines[i + 1];
+                                const dtMatch = nextLine.match(/\d{2}\.\d{2}\.\d{4}\s*(?:\||\s)\s*\d{2}:\d{2}/);
+                                if (dtMatch) dateTime = dtMatch[0].replace(/\s*\|\s*/, ' ');
+                                else dateTime = nextLine;
+                                i++;
+                            }
+                        } else if (line.startsWith('Кол-во принятых людей')) {
+                            const after = line.replace('Кол-во принятых людей', '').trim();
+                            if (after) { const num = parseInt(after, 10); if (!isNaN(num)) count = num; }
+                            else if (i + 1 < lines.length) {
+                                const nextLine = lines[i + 1];
+                                const num = parseInt(nextLine, 10);
+                                if (!isNaN(num)) count = num;
+                                i++;
+                            }
+                        }
+                        i++;
+                    }
+                    if (dateTime) blocks.push({ dateTime, count });
+                } else { i++; }
+            }
+            if (blocks.length === 0) {
+                showError('Не найдено ни одного отчёта по наборам.', 'weeklyError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('weeklyTbody');
+            tbody.innerHTML = '';
+            blocks.forEach((block, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${block.dateTime}</td><td>${block.count}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            const totalPeople = blocks.reduce((sum, b) => sum + b.count, 0);
+            document.getElementById('weeklyStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество наборов</div><div class="stat-value">${blocks.length}</div></div>
+                <div class="stat-card"><div class="stat-label">Принято людей</div><div class="stat-value">${totalPeople}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_RECRUITMENT_KEY, JSON.stringify({ blocks, links }));
+            addLog(`📊 Сформирован отчёт по наборам (${blocks.length} записей)`);
+        }
+        function resetWeeklyRecruitment() {
+            document.getElementById('weeklyText').value = '';
+            document.getElementById('weeklyLinks').value = '';
+            document.getElementById('weeklyTbody').innerHTML = '';
+            document.getElementById('weeklyStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_RECRUITMENT_KEY);
+            addLog('🗑️ Отчёт по наборам сброшен');
+        }
+
+        // ----- ЭЛЕКТРОННЫЕ ЗАЯВКИ -----
+        function parseApplicationsText(text) {
+            const dateTimeRegex = /—\s*(\d{2}\.\d{2}\.\d{4})[,\s]\s*(\d{2}:\d{2})/g;
+            const matches = [];
+            let match;
+            while ((match = dateTimeRegex.exec(text)) !== null) {
+                matches.push(`${match[1]} ${match[2]}`);
+            }
+            return matches;
+        }
+        function processWeeklyApplications() {
+            const text = document.getElementById('appsText').value;
+            const linksText = document.getElementById('appsLinks').value;
+            hideError('appsError');
+            const dateTimes = parseApplicationsText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени заявки.', 'appsError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('appsTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('appsStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Обработано заявок</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_APPLICATIONS_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по электронным заявкам (${dateTimes.length} записей)`);
+        }
+        function resetWeeklyApplications() {
+            document.getElementById('appsText').value = '';
+            document.getElementById('appsLinks').value = '';
+            document.getElementById('appsTbody').innerHTML = '';
+            document.getElementById('appsStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_APPLICATIONS_KEY);
+            addLog('🗑️ Отчёт по электронным заявкам сброшен');
+        }
+
+        // ----- ИНДИВИДУАЛЬНЫЕ НАБОРЫ -----
+        function parseIndividualText(text) {
+            const lines = text.split('\n').map(l => l.trim());
+            const dateTimes = [];
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('Дата и время проведения набора')) {
+                    i++;
+                    if (i < lines.length) {
+                        const value = lines[i].trim();
+                        let formatted = value;
+                        const hmDate = value.match(/^(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{2})$/);
+                        if (hmDate) {
+                            const [time, date] = [hmDate[1], hmDate[2]];
+                            const [day, month, yearShort] = date.split('.').map(Number);
+                            const year = 2000 + yearShort;
+                            formatted = `${String(day).padStart(2,'0')}.${String(month).padStart(2,'0')}.${year} ${time}`;
+                        } else {
+                            const dtMatch = value.match(/(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})/);
+                            if (dtMatch) formatted = `${dtMatch[1]} ${dtMatch[2]}`;
+                            else {
+                                const dtMatch2 = value.match(/(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{4})/);
+                                if (dtMatch2) formatted = `${dtMatch2[2]} ${dtMatch2[1]}`;
+                            }
+                        }
+                        dateTimes.push(formatted);
+                    }
+                }
+                i++;
+            }
+            return dateTimes;
+        }
+        function processWeeklyIndividual() {
+            const text = document.getElementById('indivText').value;
+            const linksText = document.getElementById('indivLinks').value;
+            hideError('indivError');
+            const dateTimes = parseIndividualText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени.', 'indivError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('indivTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('indivStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество инд. наборов</div><div class="stat-value">${dateTimes.length}</div></div>
+                <div class="stat-card"><div class="stat-label">Принято людей</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_INDIVIDUAL_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по индивидуальным наборам (${dateTimes.length} записей)`);
+        }
+        function resetWeeklyIndividual() {
+            document.getElementById('indivText').value = '';
+            document.getElementById('indivLinks').value = '';
+            document.getElementById('indivTbody').innerHTML = '';
+            document.getElementById('indivStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_INDIVIDUAL_KEY);
+            addLog('🗑️ Отчёт по индивидуальным наборам сброшен');
+        }
+
+        // ----- ЛЕКЦИИ -----
+        function parseLecturesText(text) {
+            const lines = text.split('\n').map(l => l.trim());
+            const dateTimes = [];
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('Дата и время проведения лекции')) {
+                    i++;
+                    if (i < lines.length) {
+                        const value = lines[i].trim();
+                        let formatted = value;
+                        const hmDate = value.match(/^(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{2})$/);
+                        if (hmDate) {
+                            const [time, date] = [hmDate[1], hmDate[2]];
+                            const [day, month, yearShort] = date.split('.').map(Number);
+                            const year = 2000 + yearShort;
+                            formatted = `${String(day).padStart(2,'0')}.${String(month).padStart(2,'0')}.${year} ${time}`;
+                        } else {
+                            const dtMatch = value.match(/(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})/);
+                            if (dtMatch) formatted = `${dtMatch[1]} ${dtMatch[2]}`;
+                            else {
+                                const dtMatch2 = value.match(/(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{4})/);
+                                if (dtMatch2) formatted = `${dtMatch2[2]} ${dtMatch2[1]}`;
+                            }
+                        }
+                        dateTimes.push(formatted);
+                    }
+                }
+                i++;
+            }
+            return dateTimes;
+        }
+        function processWeeklyLectures() {
+            const text = document.getElementById('lecturesText').value;
+            const linksText = document.getElementById('lecturesLinks').value;
+            hideError('lecturesError');
+            const dateTimes = parseLecturesText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени лекции.', 'lecturesError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('lecturesTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('lecturesStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество лекций</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_LECTURES_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по лекциям (${dateTimes.length} записей)`);
+        }
+        function resetWeeklyLectures() {
+            document.getElementById('lecturesText').value = '';
+            document.getElementById('lecturesLinks').value = '';
+            document.getElementById('lecturesTbody').innerHTML = '';
+            document.getElementById('lecturesStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_LECTURES_KEY);
+            addLog('🗑️ Отчёт по лекциям сброшен');
+        }
 
         // ================================================================
-        // TOAST-УВЕДОМЛЕНИЯ
+        // TOAST
         // ================================================================
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             const bgColor = type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(129,140,248,0.15)';
             const textColor = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#818cf8';
             const borderColor = type === 'success' ? 'rgba(34,197,94,0.2)' : type === 'error' ? 'rgba(239,68,68,0.2)' : 'rgba(129,140,248,0.2)';
-
             toast.style.cssText = `
                 position: fixed; bottom: 24px; right: 24px; z-index: 9999;
                 padding: 14px 24px; border-radius: 12px; font-weight: 600;
@@ -2614,12 +2815,10 @@
             if (!confirm('Удалить ВСЕХ сотрудников?')) return;
             const password = prompt('Введите пароль:');
             if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
-
             try {
                 const employees = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=id&apikey=${SUPABASE_KEY}`, {
                     headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 }).then(r => r.json());
-
                 for (const emp of employees) {
                     await fetch(`${SUPABASE_URL}/rest/v1/employees?id=eq.${emp.id}&apikey=${SUPABASE_KEY}`, {
                         method: 'DELETE',
@@ -2642,12 +2841,10 @@
                 });
                 const employees = await response.json();
                 const warningEmployees = employees.filter(emp => calculateStatus(emp).daysLeft === 1);
-
                 if (warningEmployees.length === 0) {
                     showToast('⚠️ Нет сотрудников с 1 днём до дедлайна', 'info');
                     return;
                 }
-
                 const today = new Date();
                 const tomorrow = new Date(today);
                 tomorrow.setDate(tomorrow.getDate() + 1);
@@ -2655,7 +2852,6 @@
                 const tomorrowStr = formatDate(tomorrow);
                 const mentions = warningEmployees.map(emp => `<@${emp.discord_id}>`).join(', ');
                 const message = `‼️  ${mentions}, напоминаю Вам, что сегодня, ${todayStr}, у Вас последний день для продвижения по ранговой лестнице. Уже завтра, ${tomorrowStr}, Вы можете быть уволены по соответствующим причинам. Хорошего Вам дня. ‼️`;
-
                 document.getElementById('modalText').textContent = message;
                 document.getElementById('modalOverlay').classList.add('show');
                 addLog(`⚠️ Предупреждение для ${warningEmployees.length} сотрудников`);
@@ -2693,7 +2889,6 @@
                 showToast(result.message, 'error');
             }
         });
-
         document.getElementById('btnResetGos').addEventListener('click', resetGosData);
 
         document.getElementById('btnProcessDist').addEventListener('click', function() {
@@ -2710,11 +2905,17 @@
                 showToast(result.message, 'error');
             }
         });
-
         document.getElementById('btnResetDist').addEventListener('click', resetDistData);
 
-        // === БИНДИНГ КНОПОК ОТЧЁТОВ (СТАРШИЙ СОСТАВ) ===
-        // ... (все биндинги из предыдущей версии)
+        // === БИНДИНГ КНОПОК ОТЧЁТОВ ===
+        document.getElementById('btnProcessWeekly').addEventListener('click', processWeeklyRecruitment);
+        document.getElementById('btnResetWeekly').addEventListener('click', resetWeeklyRecruitment);
+        document.getElementById('btnProcessApps').addEventListener('click', processWeeklyApplications);
+        document.getElementById('btnResetApps').addEventListener('click', resetWeeklyApplications);
+        document.getElementById('btnProcessIndiv').addEventListener('click', processWeeklyIndividual);
+        document.getElementById('btnResetIndiv').addEventListener('click', resetWeeklyIndividual);
+        document.getElementById('btnProcessLectures').addEventListener('click', processWeeklyLectures);
+        document.getElementById('btnResetLectures').addEventListener('click', resetWeeklyLectures);
 
         // ================================================================
         // ЗАПУСК
@@ -2722,7 +2923,6 @@
         addLog('🚀 Приложение загружено');
         loadCadres();
 
-        // Автообновление заявок каждые 30 секунд (если разблокировано)
         setInterval(() => {
             if (appUnlocked) loadApplications();
         }, 30000);
