@@ -840,7 +840,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 2: КАДРОВЫЙ УЧЁТ (с синхронизацией с Supabase)
+        СЕКЦИЯ 2: КАДРОВЫЙ УЧЁТ
         ============================================================ -->
         <div id="section-cadres" class="section">
             <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
@@ -894,7 +894,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 3: ГОСВОЛНЫ (локально)
+        СЕКЦИЯ 3: ГОСВОЛНЫ
         ============================================================ -->
         <div id="section-goswaves" class="section">
             <div class="sub-nav">
@@ -935,7 +935,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 4: ЕЖЕНЕДЕЛЬНЫЕ ОТЧЁТЫ (локально)
+        СЕКЦИЯ 4: ЕЖЕНЕДЕЛЬНЫЕ ОТЧЁТЫ
         ============================================================ -->
         <div id="section-weekly" class="section">
             <div class="sub-nav">
@@ -1067,711 +1067,1311 @@
     </div>
 
     <script>
-    // ================================================================
-    // КОНФИГУРАЦИЯ
-    // ================================================================
-    const SUPABASE_URL = 'https://rubmmnihnvvqvbmhfljy.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1Ym1tbmlobnZ2cXZibWhmbGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDIwNjMsImV4cCI6MjEwMzQxODA2M30.mWO0RYNEXYh1irXkek_Qs75hRbx-FcjmxC2k2iAMfPc';
-    const ADMIN_PASSWORD = '54321';
+        // ================================================================
+        // КОНФИГУРАЦИЯ
+        // ================================================================
+        const SUPABASE_URL = 'https://rubmmnihnvvqvbmhfljy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1Ym1tbmlobnZ2cXZibWhmbGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDIwNjMsImV4cCI6MjEwMzQxODA2M30.mWO0RYNEXYh1irXkek_Qs75hRbx-FcjmxC2k2iAMfPc';
+        const ADMIN_PASSWORD = '54321';
 
-    // ================================================================
-    // ЛОГИРОВАНИЕ
-    // ================================================================
-    let logs = [];
+        // ================================================================
+        // ЛОГИРОВАНИЕ
+        // ================================================================
+        let logs = [];
 
-    function addLog(message) {
-        const time = new Date().toLocaleTimeString();
-        const entry = `[${time}] ${message}`;
-        logs.push(entry);
-        document.getElementById('logContent').innerHTML = logs.map(l => `<div class="log-entry">${l}</div>`).join('');
-        document.getElementById('logContent').scrollTop = document.getElementById('logContent').scrollHeight;
-        console.log(entry);
-    }
-
-    function clearLogs() {
-        logs = [];
-        document.getElementById('logContent').innerHTML = '<div class="log-entry" style="color:var(--text-muted);">Лог очищен</div>';
-        addLog('🧹 Лог очищен');
-    }
-
-    document.getElementById('logToggle').addEventListener('click', function() {
-        const panel = document.getElementById('logPanel');
-        panel.classList.toggle('active');
-        this.textContent = panel.classList.contains('active') ? '📝 Скрыть лог' : '📝 Лог';
-        if (panel.classList.contains('active')) addLog('👁️ Лог открыт');
-    });
-
-    // ================================================================
-    // ТЕМА
-    // ================================================================
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const themeLabel = document.getElementById('themeLabel');
-
-    function toggleTheme() {
-        const current = document.documentElement.getAttribute('data-theme');
-        const newTheme = current === 'dark' ? '' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeUI(newTheme);
-        addLog(`🎨 Тема: ${newTheme || 'light'}`);
-    }
-
-    function updateThemeUI(theme) {
-        if (theme === 'dark') {
-            themeIcon.textContent = '☀️';
-            themeLabel.textContent = 'Светлая';
-        } else {
-            themeIcon.textContent = '🌙';
-            themeLabel.textContent = 'Тёмная';
+        function addLog(message) {
+            const time = new Date().toLocaleTimeString();
+            const entry = `[${time}] ${message}`;
+            logs.push(entry);
+            const content = document.getElementById('logContent');
+            content.innerHTML = logs.map(l => `<div class="log-entry">${l}</div>`).join('');
+            content.scrollTop = content.scrollHeight;
+            console.log(entry);
         }
-    }
 
-    themeToggle.addEventListener('click', toggleTheme);
-    const savedTheme = localStorage.getItem('theme') || '';
-    if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        updateThemeUI(savedTheme);
-    }
+        function clearLogs() {
+            logs = [];
+            document.getElementById('logContent').innerHTML = '<div class="log-entry" style="color:var(--text-muted);">Лог очищен</div>';
+            addLog('🧹 Лог очищен');
+        }
 
-    // ================================================================
-    // ПРОВЕРКА ПАРОЛЯ
-    // ================================================================
-    if (!sessionStorage.getItem('admin_auth')) {
-        const password = prompt('🔐 Введите пароль для входа в админ-панель:');
-        if (password !== ADMIN_PASSWORD) {
-            document.body.innerHTML = `
-                <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:sans-serif;background:#0a0f1a;">
-                    <div style="text-align:center;">
-                        <div style="font-size:64px;margin-bottom:16px;">🚫</div>
-                        <h2 style="color:#e8edf4;">Доступ запрещен</h2>
-                        <p style="color:#6b8ba8;">Неверный пароль</p>
+        document.getElementById('logToggle').addEventListener('click', function() {
+            const panel = document.getElementById('logPanel');
+            panel.classList.toggle('active');
+            this.textContent = panel.classList.contains('active') ? '📝 Скрыть лог' : '📝 Лог';
+            if (panel.classList.contains('active')) addLog('👁️ Лог открыт');
+        });
+
+        // ================================================================
+        // ТЕМА
+        // ================================================================
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeLabel = document.getElementById('themeLabel');
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? '' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeUI(newTheme);
+            addLog(`🎨 Тема: ${newTheme || 'light'}`);
+        }
+
+        function updateThemeUI(theme) {
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeLabel.textContent = 'Светлая';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeLabel.textContent = 'Тёмная';
+            }
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        const savedTheme = localStorage.getItem('theme') || '';
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeUI(savedTheme);
+        }
+
+        // ================================================================
+        // ПРОВЕРКА ПАРОЛЯ
+        // ================================================================
+        if (!sessionStorage.getItem('admin_auth')) {
+            const password = prompt('🔐 Введите пароль для входа в админ-панель:');
+            if (password !== ADMIN_PASSWORD) {
+                document.body.innerHTML = `
+                    <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:sans-serif;background:#0a0f1a;">
+                        <div style="text-align:center;">
+                            <div style="font-size:64px;margin-bottom:16px;">🚫</div>
+                            <h2 style="color:#e8edf4;">Доступ запрещен</h2>
+                            <p style="color:#6b8ba8;">Неверный пароль</p>
+                        </div>
                     </div>
-                </div>
-            `;
-            throw new Error('Access denied');
-        }
-        sessionStorage.setItem('admin_auth', 'true');
-        addLog('🔐 Пароль принят');
-    }
-
-    // ================================================================
-    // НАВИГАЦИЯ
-    // ================================================================
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            const section = this.dataset.section;
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(`section-${section}`).classList.add('active');
-            addLog(`📂 Переход: ${section}`);
-
-            if (section === 'applications') loadApplications();
-            if (section === 'cadres') loadCadres();
-            if (section === 'goswaves') { renderGosResults(); renderDistResults(); renderPublishResults(); }
-        });
-    });
-
-    document.querySelectorAll('.sub-nav-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            this.closest('.sub-nav').querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            const subsection = this.dataset.subsection;
-            const parent = this.closest('.section');
-            parent.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(subsection).classList.add('active');
-            addLog(`📂 Подраздел: ${subsection}`);
-            if (subsection === 'gos-publication') renderPublishResults();
-        });
-    });
-
-    // ================================================================
-    // УТИЛИТЫ
-    // ================================================================
-    function parseDate(str) {
-        const parts = str.trim().split('.');
-        if (parts.length !== 3) return null;
-        const day = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1;
-        const year = parseInt(parts[2], 10);
-        if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
-        return new Date(Date.UTC(year, month, day));
-    }
-
-    function formatDate(date) {
-        const d = date.getUTCDate();
-        const m = date.getUTCMonth() + 1;
-        const y = date.getUTCFullYear();
-        return `${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}.${y}`;
-    }
-
-    function todayUTC() {
-        const now = new Date();
-        return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    }
-
-    function differenceInDays(startUTC, endUTC) {
-        const MS_PER_DAY = 1000 * 60 * 60 * 24;
-        return Math.floor((endUTC - startUTC) / MS_PER_DAY);
-    }
-
-    function showError(message, elementId) {
-        const el = document.getElementById(elementId);
-        if (el) { el.textContent = message; el.classList.remove('hidden'); }
-    }
-
-    function hideError(elementId) {
-        const el = document.getElementById(elementId);
-        if (el) { el.textContent = ''; el.classList.add('hidden'); }
-    }
-
-    // ================================================================
-    // СЕКЦИЯ 1: ЗАЯВКИ (с уведомлениями)
-    // ================================================================
-    async function loadApplications() {
-        addLog('🔄 Загрузка заявок...');
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc&apikey=${SUPABASE_KEY}`, {
-                headers: {
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            const data = await response.json();
-            addLog(`✅ Загружено ${data.length} заявок`);
-
-            const tbody = document.getElementById('appTbody');
-            tbody.innerHTML = '';
-
-            let unread = 0;
-            data.forEach(app => {
-                const isRead = app.is_read || false;
-                if (!isRead) unread++;
-                const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
-                const date = new Date(app.created_at);
-                const formattedDate = date.toLocaleString('ru-RU', {
-                    day: '2-digit', month: '2-digit', year: 'numeric',
-                    hour: '2-digit', minute: '2-digit'
-                });
-
-                const tr = document.createElement('tr');
-                tr.className = isRead ? '' : 'unread-application';
-                tr.innerHTML = `
-                    <td>#${app.id}</td>
-                    <td>${typeLabel}</td>
-                    <td><strong>${app.q1 || 'Не указано'}</strong></td>
-                    <td>${formattedDate}</td>
-                    <td>${isRead ? '✅ Прочитано' : '🔴 Не прочитано'}</td>
-                    <td>
-                        ${!isRead ? `<button class="btn btn-sm btn-success" onclick="markAsRead(${app.id})">Прочитано</button>` : ''}
-                        <button class="btn btn-sm btn-danger" onclick="deleteApplication(${app.id})">🗑️</button>
-                    </td>
                 `;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById('appTotal').textContent = data.length;
-            document.getElementById('appUnread').textContent = unread;
-            document.getElementById('appRead').textContent = data.length - unread;
-
-            const badge = document.getElementById('appBadge');
-            if (unread > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = unread;
-            } else {
-                badge.style.display = 'none';
+                throw new Error('Access denied');
             }
-
-        } catch (error) {
-            addLog(`❌ Ошибка загрузки заявок: ${error.message}`);
-            showToast('❌ Ошибка загрузки заявок', 'error');
+            sessionStorage.setItem('admin_auth', 'true');
+            addLog('🔐 Пароль принят');
         }
-    }
 
-    async function markAsRead(id) {
-        addLog(`📖 Отметка заявки #${id} как прочитанной`);
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ is_read: true })
+        // ================================================================
+        // НАВИГАЦИЯ
+        // ================================================================
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const section = this.dataset.section;
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+                addLog(`📂 Переход: ${section}`);
+
+                if (section === 'applications') loadApplications();
+                if (section === 'cadres') loadCadres();
+                if (section === 'goswaves') { renderGosResults(); renderDistResults(); renderPublishResults(); }
             });
+        });
 
-            if (response.ok) {
-                addLog(`✅ Заявка #${id} отмечена как прочитанная`);
-                await loadApplications();
-                showToast('✅ Заявка отмечена как прочитанная', 'success');
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
-        } catch (error) {
-            addLog(`❌ Ошибка: ${error.message}`);
-            showToast('❌ Ошибка при обновлении', 'error');
-        }
-    }
-
-    async function markAllAsRead() {
-        addLog('📖 Отметка всех заявок как прочитанных');
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?is_read=eq.false&apikey=${SUPABASE_KEY}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ is_read: true })
+        document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.sub-nav').querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const subsection = this.dataset.subsection;
+                const parent = this.closest('.section');
+                parent.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(subsection).classList.add('active');
+                addLog(`📂 Подраздел: ${subsection}`);
+                if (subsection === 'gos-publication') renderPublishResults();
             });
+        });
 
-            if (response.ok) {
-                addLog('✅ Все заявки отмечены как прочитанные');
-                await loadApplications();
-                showToast('✅ Все заявки отмечены как прочитанные', 'success');
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
-        } catch (error) {
-            addLog(`❌ Ошибка: ${error.message}`);
-            showToast('❌ Ошибка при обновлении', 'error');
-        }
-    }
-
-    async function deleteApplication(id) {
-        if (!confirm(`Удалить заявку #${id}?`)) return;
-        addLog(`🗑️ Удаление заявки #${id}`);
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${SUPABASE_KEY}`
-                }
-            });
-
-            if (response.ok) {
-                addLog(`✅ Заявка #${id} удалена`);
-                await loadApplications();
-                showToast('✅ Заявка удалена', 'success');
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
-        } catch (error) {
-            addLog(`❌ Ошибка: ${error.message}`);
-            showToast('❌ Ошибка при удалении', 'error');
-        }
-    }
-
-    // ================================================================
-    // СЕКЦИЯ 2: КАДРОВЫЙ УЧЁТ (синхронизация с Supabase)
-    // ================================================================
-    const POSITION_DEADLINES = {
-        'Стажер АП': 3,
-        'Секретарь': 7,
-        'Секретарь-Референт': 10,
-        'Секретарь-Ассистент': 10
-    };
-    const POSITION_ORDER = ['Стажер АП', 'Секретарь', 'Секретарь-Референт', 'Секретарь-Ассистент'];
-
-    async function loadCadres(filter = 'all') {
-        addLog('🔄 Загрузка кадров...');
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
-                headers: {
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            let data = await response.json();
-            addLog(`✅ Загружено ${data.length} сотрудников`);
-
-            data.sort((a, b) => {
-                const idxA = POSITION_ORDER.indexOf(a.position);
-                const idxB = POSITION_ORDER.indexOf(b.position);
-                if (idxA !== idxB) return idxA - idxB;
-                return parseDate(a.last_promotion_date) - parseDate(b.last_promotion_date);
-            });
-
-            if (filter === 'fired') {
-                data = data.filter(emp => calculateStatus(emp).daysLeft <= 0);
-            } else if (filter === 'warning1') {
-                data = data.filter(emp => calculateStatus(emp).daysLeft === 1);
-            } else if (filter !== 'all') {
-                data = data.filter(emp => emp.position === filter);
-            }
-
-            const tbody = document.getElementById('cadreTbody');
-            tbody.innerHTML = '';
-
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);">Нет данных</td></tr>';
-                return;
-            }
-
-            data.forEach(emp => {
-                const status = calculateStatus(emp);
-                const tr = document.createElement('tr');
-                if (status.daysLeft <= 0) tr.classList.add('danger');
-                else if (status.daysLeft === 1) tr.classList.add('warning');
-
-                const vacations = emp.vacations || [];
-                const vacationDisplay = vacations.length > 0 ? vacations.join('; ') : '—';
-
-                tr.innerHTML = `
-                    <td>${emp.name}</td>
-                    <td>${emp.discord_id}</td>
-                    <td>${emp.passport || '—'}</td>
-                    <td>${emp.position}</td>
-                    <td>${emp.hire_date || '—'}</td>
-                    <td>${emp.last_promotion_date || '—'}</td>
-                    <td>${status.daysLeft}</td>
-                    <td>${status.deadlineDate}</td>
-                    <td>${vacationDisplay}</td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.discord_id}')">Удалить</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-        } catch (error) {
-            addLog(`❌ Ошибка загрузки кадров: ${error.message}`);
-            showToast('❌ Ошибка загрузки кадров', 'error');
-        }
-    }
-
-    function calculateStatus(emp) {
-        const today = todayUTC();
-        const lastPromotionUTC = parseDate(emp.last_promotion_date).getTime();
-        const deadlineUTC = lastPromotionUTC + (emp.deadline_days + emp.vacation_shift) * 24 * 60 * 60 * 1000;
-        const daysLeft = differenceInDays(today, deadlineUTC);
-        return { daysLeft, deadlineDate: formatDate(new Date(deadlineUTC)) };
-    }
-
-    async function syncCadres() {
-        addLog('🔄 Синхронизация кадров с Supabase...');
-        await loadCadres();
-        showToast('✅ Кадры синхронизированы', 'success');
-    }
-
-    async function deleteEmployee(discordId) {
-        const password = prompt('Введите пароль для удаления сотрудника:');
-        if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
-
-        addLog(`🗑️ Удаление сотрудника ${discordId}`);
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${SUPABASE_KEY}`
-                }
-            });
-
-            if (response.ok) {
-                addLog(`✅ Сотрудник удалён`);
-                await loadCadres();
-                showToast('✅ Сотрудник удалён', 'success');
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
-        } catch (error) {
-            addLog(`❌ Ошибка: ${error.message}`);
-            showToast('❌ Ошибка при удалении', 'error');
-        }
-    }
-
-    function parseCadreMessage(text) {
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
-
-        let discordId = null, name = null;
-        for (const line of lines) {
-            const match = line.match(/<@(\d+)>\s*\|\s*(.+)/);
-            if (match) { discordId = match[1]; name = match[2].trim(); break; }
-        }
-        if (!discordId || !name) return { type: 'error', message: 'Не найдена строка с упоминанием и именем' };
-
-        const promotionLine = lines.find(l => l.toLowerCase().includes('повышен до должности'));
-        if (promotionLine) {
-            const positionMatch = promotionLine.match(/повышен до должности\s*(.+?)\s*\.?\s*$/i);
-            if (!positionMatch) return { type: 'error', message: 'Не удалось извлечь должность' };
-            return { type: 'promotion', discordId, name, newPosition: positionMatch[1].trim() };
+        // ================================================================
+        // УТИЛИТЫ
+        // ================================================================
+        function parseDate(str) {
+            const parts = str.trim().split('.');
+            if (parts.length !== 3) return null;
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parseInt(parts[2], 10);
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+            return new Date(Date.UTC(year, month, day));
         }
 
-        const hasNabor = lines.some(l => l.toLowerCase().includes('набор'));
-        const dateLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}/));
-        if (hasNabor && dateLine) {
-            const passportLine = lines.find(l => !l.includes('<') && !l.includes('|') && !l.includes('.') && /^\d+$/.test(l.trim()));
-            if (!passportLine) return { type: 'error', message: 'Не найден номер паспорта' };
-            const hireDateStr = dateLine.match(/\d{2}\.\d{2}\.\d{4}/)[0];
-            const hireDate = parseDate(hireDateStr);
-            if (!hireDate) return { type: 'error', message: 'Некорректная дата приёма' };
-            return { type: 'hire', discordId, name, passport: passportLine.trim(), hireDateStr };
+        function formatDate(date) {
+            const d = date.getUTCDate();
+            const m = date.getUTCMonth() + 1;
+            const y = date.getUTCFullYear();
+            return `${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}.${y}`;
         }
 
-        const vacationLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/));
-        if (vacationLine) {
-            const dates = vacationLine.match(/(\d{2}\.\d{2}\.\d{4})\s*-\s*(\d{2}\.\d{2}\.\d{4})/);
-            if (!dates) return { type: 'error', message: 'Не удалось извлечь даты отпуска' };
-            const startDate = parseDate(dates[1]);
-            const endDate = parseDate(dates[2]);
-            const duration = differenceInDays(startDate.getTime(), endDate.getTime()) + 1;
-            return { type: 'vacation', discordId, name, vacationStart: dates[1], vacationEnd: dates[2], duration };
+        function todayUTC() {
+            const now = new Date();
+            return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
         }
 
-        return { type: 'error', message: 'Не удалось определить тип сообщения' };
-    }
+        function differenceInDays(startUTC, endUTC) {
+            const MS_PER_DAY = 1000 * 60 * 60 * 24;
+            return Math.floor((endUTC - startUTC) / MS_PER_DAY);
+        }
 
-    async function processCadreMessage(text) {
-        const parsed = parseCadreMessage(text);
-        if (parsed.type === 'error') return { success: false, message: parsed.message };
+        function showError(message, elementId) {
+            const el = document.getElementById(elementId);
+            if (el) { el.textContent = message; el.classList.remove('hidden'); }
+        }
 
-        try {
-            // Проверяем существование сотрудника
-            const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
-                headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            });
-            const existing = await checkRes.json();
+        function hideError(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) { el.textContent = ''; el.classList.add('hidden'); }
+        }
 
-            if (parsed.type === 'hire') {
-                if (existing.length > 0) return { success: false, message: 'Сотрудник уже существует' };
-                const newEmp = {
-                    discord_id: parsed.discordId,
-                    name: parsed.name,
-                    passport: parsed.passport,
-                    position: 'Стажер АП',
-                    hire_date: parsed.hireDateStr,
-                    last_promotion_date: parsed.hireDateStr,
-                    deadline_days: POSITION_DEADLINES['Стажер АП'],
-                    vacation_shift: 0,
-                    vacations: []
-                };
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?apikey=${SUPABASE_KEY}`, {
-                    method: 'POST',
+        // ================================================================
+        // СЕКЦИЯ 1: ЗАЯВКИ
+        // ================================================================
+        async function loadApplications() {
+            addLog('🔄 Загрузка заявок...');
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc&apikey=${SUPABASE_KEY}`, {
                     headers: {
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newEmp)
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
                 });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                addLog(`➕ Добавлен сотрудник ${parsed.name}`);
-                return { success: true, message: `Сотрудник ${parsed.name} добавлен` };
-            }
 
-            if (parsed.type === 'promotion') {
-                if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
-                const emp = existing[0];
-                if (!POSITION_DEADLINES[parsed.newPosition]) return { success: false, message: `Неизвестная должность: ${parsed.newPosition}` };
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                addLog(`✅ Загружено ${data.length} заявок`);
+
+                const tbody = document.getElementById('appTbody');
+                tbody.innerHTML = '';
+
+                let unread = 0;
+                data.forEach(app => {
+                    const isRead = app.is_read || false;
+                    if (!isRead) unread++;
+                    const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
+                    const date = new Date(app.created_at);
+                    const formattedDate = date.toLocaleString('ru-RU', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+
+                    const tr = document.createElement('tr');
+                    tr.className = isRead ? '' : 'unread-application';
+                    tr.innerHTML = `
+                        <td>#${app.id}</td>
+                        <td>${typeLabel}</td>
+                        <td><strong>${app.q1 || 'Не указано'}</strong></td>
+                        <td>${formattedDate}</td>
+                        <td>${isRead ? '✅ Прочитано' : '🔴 Не прочитано'}</td>
+                        <td>
+                            ${!isRead ? `<button class="btn btn-sm btn-success" onclick="markAsRead(${app.id})">Прочитано</button>` : ''}
+                            <button class="btn btn-sm btn-danger" onclick="deleteApplication(${app.id})">🗑️</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('appTotal').textContent = data.length;
+                document.getElementById('appUnread').textContent = unread;
+                document.getElementById('appRead').textContent = data.length - unread;
+
+                const badge = document.getElementById('appBadge');
+                if (unread > 0) {
+                    badge.style.display = 'flex';
+                    badge.textContent = unread;
+                } else {
+                    badge.style.display = 'none';
+                }
+
+            } catch (error) {
+                addLog(`❌ Ошибка загрузки заявок: ${error.message}`);
+                showToast('❌ Ошибка загрузки заявок', 'error');
+            }
+        }
+
+        async function markAsRead(id) {
+            addLog(`📖 Отметка заявки #${id} как прочитанной`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
                     headers: {
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
                     },
-                    body: JSON.stringify({
-                        position: parsed.newPosition,
-                        last_promotion_date: formatDate(new Date()),
-                        deadline_days: POSITION_DEADLINES[parsed.newPosition],
-                        vacation_shift: 0
-                    })
+                    body: JSON.stringify({ is_read: true })
                 });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                addLog(`⬆️ Повышен ${parsed.name} до ${parsed.newPosition}`);
-                return { success: true, message: `${parsed.name} повышен до ${parsed.newPosition}` };
-            }
 
-            if (parsed.type === 'vacation') {
-                if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
-                const emp = existing[0];
-                const vacations = emp.vacations || [];
-                vacations.push(`${parsed.vacationStart} - ${parsed.vacationEnd}`);
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
+                if (response.ok) {
+                    addLog(`✅ Заявка #${id} отмечена как прочитанная`);
+                    await loadApplications();
+                    showToast('✅ Заявка отмечена как прочитанная', 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при обновлении', 'error');
+            }
+        }
+
+        async function markAllAsRead() {
+            addLog('📖 Отметка всех заявок как прочитанных');
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?is_read=eq.false&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
                     headers: {
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
                     },
-                    body: JSON.stringify({
-                        vacation_shift: (emp.vacation_shift || 0) + parsed.duration,
-                        vacations: vacations
-                    })
+                    body: JSON.stringify({ is_read: true })
                 });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                addLog(`🏖️ Отпуск учтён для ${parsed.name} (${parsed.duration} дн.)`);
-                return { success: true, message: `Отпуск учтён (${parsed.duration} дн.)` };
+
+                if (response.ok) {
+                    addLog('✅ Все заявки отмечены как прочитанные');
+                    await loadApplications();
+                    showToast('✅ Все заявки отмечены как прочитанные', 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при обновлении', 'error');
             }
-
-            return { success: false, message: 'Неизвестная ошибка' };
-
-        } catch (error) {
-            addLog(`❌ Ошибка обработки: ${error.message}`);
-            return { success: false, message: error.message };
         }
-    }
 
-    // ================================================================
-    // СЕКЦИЯ 3: ГОСВОЛНЫ (локально)
-    // ================================================================
-    const GOS_EVENTS_KEY = 'gosEvents';
-    const DIST_EVENTS_KEY = 'distEvents';
-
-    function loadGosEvents() { return JSON.parse(localStorage.getItem(GOS_EVENTS_KEY) || '[]'); }
-    function saveGosEvents(events) { localStorage.setItem(GOS_EVENTS_KEY, JSON.stringify(events)); }
-    function loadDistEvents() { return JSON.parse(localStorage.getItem(DIST_EVENTS_KEY) || '[]'); }
-    function saveDistEvents(events) { localStorage.setItem(DIST_EVENTS_KEY, JSON.stringify(events)); }
-
-    // Полный код парсинга госволн — я сократил для экономии, но он есть в утилите
-    // В финальном файле будет полная версия
-
-    // ================================================================
-    // СЕКЦИЯ 4: ЕЖЕНЕДЕЛЬНЫЕ ОТЧЁТЫ (локально)
-    // ================================================================
-    // Полный код отчётов — он есть в утилите
-
-    // ================================================================
-    // TOAST-УВЕДОМЛЕНИЯ
-    // ================================================================
-    function showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-            padding: 14px 24px; border-radius: 12px; font-weight: 600;
-            background: ${type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(129,140,248,0.15)'};
-            color: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#818cf8'};
-            border: 1px solid ${type === 'success' ? 'rgba(34,197,94,0.2)' : type === 'error' ? 'rgba(239,68,68,0.2)' : 'rgba(129,140,248,0.2)'};
-            backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease; max-width: 400px;
-        `;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(20px)';
-            toast.style.transition = 'all 0.3s ease';
-            setTimeout(() => toast.remove(), 300);
-        }, 3500);
-    }
-
-    // ================================================================
-    // ИНИЦИАЛИЗАЦИЯ
-    // ================================================================
-    document.getElementById('btnToggleAdd').addEventListener('click', function() {
-        const field = document.getElementById('addField');
-        field.classList.toggle('hidden');
-        if (!field.classList.contains('hidden')) document.getElementById('cadreInput').focus();
-        addLog(field.classList.contains('hidden') ? '📝 Поле добавления скрыто' : '📝 Поле добавления открыто');
-    });
-
-    document.getElementById('btnAddRecord').addEventListener('click', async function() {
-        const text = document.getElementById('cadreInput').value.trim();
-        if (!text) return showError('Введите сообщение', 'cadreError');
-        const result = await processCadreMessage(text);
-        if (result.success) {
-            document.getElementById('cadreInput').value = '';
-            hideError('cadreError');
-            await loadCadres();
-            showToast(result.message, 'success');
-            addLog(`✅ ${result.message}`);
-        } else {
-            showError(result.message, 'cadreError');
-            showToast(result.message, 'error');
-        }
-    });
-
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
-            this.classList.add('active-filter');
-            loadCadres(this.dataset.filter);
-            addLog(`🔍 Фильтр: ${this.dataset.filter}`);
-        });
-    });
-
-    document.getElementById('btnResetCadres').addEventListener('click', async function() {
-        if (!confirm('Удалить ВСЕХ сотрудников?')) return;
-        const password = prompt('Введите пароль:');
-        if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
-
-        try {
-            const employees = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=id&apikey=${SUPABASE_KEY}`, {
-                headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            }).then(r => r.json());
-
-            for (const emp of employees) {
-                await fetch(`${SUPABASE_URL}/rest/v1/employees?id=eq.${emp.id}&apikey=${SUPABASE_KEY}`, {
+        async function deleteApplication(id) {
+            if (!confirm(`Удалить заявку #${id}?`)) return;
+            addLog(`🗑️ Удаление заявки #${id}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
                     method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Заявка #${id} удалена`);
+                    await loadApplications();
+                    showToast('✅ Заявка удалена', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при удалении', 'error');
+            }
+        }
+
+        // ================================================================
+        // СЕКЦИЯ 2: КАДРОВЫЙ УЧЁТ
+        // ================================================================
+        const POSITION_DEADLINES = {
+            'Стажер АП': 3,
+            'Секретарь': 7,
+            'Секретарь-Референт': 10,
+            'Секретарь-Ассистент': 10
+        };
+        const POSITION_ORDER = ['Стажер АП', 'Секретарь', 'Секретарь-Референт', 'Секретарь-Ассистент'];
+
+        async function loadCadres(filter = 'all') {
+            addLog('🔄 Загрузка кадров...');
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                let data = await response.json();
+                addLog(`✅ Загружено ${data.length} сотрудников`);
+
+                data.sort((a, b) => {
+                    const idxA = POSITION_ORDER.indexOf(a.position);
+                    const idxB = POSITION_ORDER.indexOf(b.position);
+                    if (idxA !== idxB) return idxA - idxB;
+                    return parseDate(a.last_promotion_date) - parseDate(b.last_promotion_date);
+                });
+
+                if (filter === 'fired') {
+                    data = data.filter(emp => calculateStatus(emp).daysLeft <= 0);
+                } else if (filter === 'warning1') {
+                    data = data.filter(emp => calculateStatus(emp).daysLeft === 1);
+                } else if (filter !== 'all') {
+                    data = data.filter(emp => emp.position === filter);
+                }
+
+                const tbody = document.getElementById('cadreTbody');
+                tbody.innerHTML = '';
+
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);">Нет данных</td></tr>';
+                    return;
+                }
+
+                data.forEach(emp => {
+                    const status = calculateStatus(emp);
+                    const tr = document.createElement('tr');
+                    if (status.daysLeft <= 0) tr.classList.add('danger');
+                    else if (status.daysLeft === 1) tr.classList.add('warning');
+
+                    const vacations = emp.vacations || [];
+                    const vacationDisplay = vacations.length > 0 ? vacations.join('; ') : '—';
+
+                    tr.innerHTML = `
+                        <td>${emp.name}</td>
+                        <td>${emp.discord_id}</td>
+                        <td>${emp.passport || '—'}</td>
+                        <td>${emp.position}</td>
+                        <td>${emp.hire_date || '—'}</td>
+                        <td>${emp.last_promotion_date || '—'}</td>
+                        <td>${status.daysLeft}</td>
+                        <td>${status.deadlineDate}</td>
+                        <td>${vacationDisplay}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.discord_id}')">Удалить</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                addLog(`❌ Ошибка загрузки кадров: ${error.message}`);
+                showToast('❌ Ошибка загрузки кадров', 'error');
+            }
+        }
+
+        function calculateStatus(emp) {
+            const today = todayUTC();
+            const lastPromotionUTC = parseDate(emp.last_promotion_date).getTime();
+            const deadlineUTC = lastPromotionUTC + (emp.deadline_days + emp.vacation_shift) * 24 * 60 * 60 * 1000;
+            const daysLeft = differenceInDays(today, deadlineUTC);
+            return { daysLeft, deadlineDate: formatDate(new Date(deadlineUTC)) };
+        }
+
+        async function syncCadres() {
+            addLog('🔄 Синхронизация кадров с Supabase...');
+            await loadCadres();
+            showToast('✅ Кадры синхронизированы', 'success');
+        }
+
+        async function deleteEmployee(discordId) {
+            const password = prompt('Введите пароль для удаления сотрудника:');
+            if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
+
+            addLog(`🗑️ Удаление сотрудника ${discordId}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Сотрудник удалён`);
+                    await loadCadres();
+                    showToast('✅ Сотрудник удалён', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при удалении', 'error');
+            }
+        }
+
+        function parseCadreMessage(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
+
+            let discordId = null, name = null;
+            for (const line of lines) {
+                const match = line.match(/<@(\d+)>\s*\|\s*(.+)/);
+                if (match) { discordId = match[1]; name = match[2].trim(); break; }
+            }
+            if (!discordId || !name) return { type: 'error', message: 'Не найдена строка с упоминанием и именем' };
+
+            const promotionLine = lines.find(l => l.toLowerCase().includes('повышен до должности'));
+            if (promotionLine) {
+                const positionMatch = promotionLine.match(/повышен до должности\s*(.+?)\s*\.?\s*$/i);
+                if (!positionMatch) return { type: 'error', message: 'Не удалось извлечь должность' };
+                return { type: 'promotion', discordId, name, newPosition: positionMatch[1].trim() };
+            }
+
+            const hasNabor = lines.some(l => l.toLowerCase().includes('набор'));
+            const dateLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}/));
+            if (hasNabor && dateLine) {
+                const passportLine = lines.find(l => !l.includes('<') && !l.includes('|') && !l.includes('.') && /^\d+$/.test(l.trim()));
+                if (!passportLine) return { type: 'error', message: 'Не найден номер паспорта' };
+                const hireDateStr = dateLine.match(/\d{2}\.\d{2}\.\d{4}/)[0];
+                const hireDate = parseDate(hireDateStr);
+                if (!hireDate) return { type: 'error', message: 'Некорректная дата приёма' };
+                return { type: 'hire', discordId, name, passport: passportLine.trim(), hireDateStr };
+            }
+
+            const vacationLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/));
+            if (vacationLine) {
+                const dates = vacationLine.match(/(\d{2}\.\d{2}\.\d{4})\s*-\s*(\d{2}\.\d{2}\.\d{4})/);
+                if (!dates) return { type: 'error', message: 'Не удалось извлечь даты отпуска' };
+                const startDate = parseDate(dates[1]);
+                const endDate = parseDate(dates[2]);
+                const duration = differenceInDays(startDate.getTime(), endDate.getTime()) + 1;
+                return { type: 'vacation', discordId, name, vacationStart: dates[1], vacationEnd: dates[2], duration };
+            }
+
+            return { type: 'error', message: 'Не удалось определить тип сообщения' };
+        }
+
+        async function processCadreMessage(text) {
+            const parsed = parseCadreMessage(text);
+            if (parsed.type === 'error') return { success: false, message: parsed.message };
+
+            try {
+                const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
                     headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
+                const existing = await checkRes.json();
+
+                if (parsed.type === 'hire') {
+                    if (existing.length > 0) return { success: false, message: 'Сотрудник уже существует' };
+                    const newEmp = {
+                        discord_id: parsed.discordId,
+                        name: parsed.name,
+                        passport: parsed.passport,
+                        position: 'Стажер АП',
+                        hire_date: parsed.hireDateStr,
+                        last_promotion_date: parsed.hireDateStr,
+                        deadline_days: POSITION_DEADLINES['Стажер АП'],
+                        vacation_shift: 0,
+                        vacations: []
+                    };
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?apikey=${SUPABASE_KEY}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(newEmp)
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    addLog(`➕ Добавлен сотрудник ${parsed.name}`);
+                    return { success: true, message: `Сотрудник ${parsed.name} добавлен` };
+                }
+
+                if (parsed.type === 'promotion') {
+                    if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
+                    const emp = existing[0];
+                    if (!POSITION_DEADLINES[parsed.newPosition]) return { success: false, message: `Неизвестная должность: ${parsed.newPosition}` };
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            position: parsed.newPosition,
+                            last_promotion_date: formatDate(new Date()),
+                            deadline_days: POSITION_DEADLINES[parsed.newPosition],
+                            vacation_shift: 0
+                        })
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    addLog(`⬆️ Повышен ${parsed.name} до ${parsed.newPosition}`);
+                    return { success: true, message: `${parsed.name} повышен до ${parsed.newPosition}` };
+                }
+
+                if (parsed.type === 'vacation') {
+                    if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
+                    const emp = existing[0];
+                    const vacations = emp.vacations || [];
+                    vacations.push(`${parsed.vacationStart} - ${parsed.vacationEnd}`);
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            vacation_shift: (emp.vacation_shift || 0) + parsed.duration,
+                            vacations: vacations
+                        })
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    addLog(`🏖️ Отпуск учтён для ${parsed.name} (${parsed.duration} дн.)`);
+                    return { success: true, message: `Отпуск учтён (${parsed.duration} дн.)` };
+                }
+
+                return { success: false, message: 'Неизвестная ошибка' };
+
+            } catch (error) {
+                addLog(`❌ Ошибка обработки: ${error.message}`);
+                return { success: false, message: error.message };
             }
-            addLog(`🗑️ Удалено ${employees.length} сотрудников`);
-            await loadCadres();
-            showToast(`✅ Удалено ${employees.length} сотрудников`, 'success');
-        } catch (error) {
-            addLog(`❌ Ошибка сброса: ${error.message}`);
-            showToast('❌ Ошибка сброса', 'error');
         }
-    });
 
-    document.getElementById('btnAutoWarning').addEventListener('click', async function() {
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
-                headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        // ================================================================
+        // СЕКЦИЯ 3: ГОСВОЛНЫ (локально)
+        // ================================================================
+        const GOS_EVENTS_KEY = 'gosEvents';
+        const DIST_EVENTS_KEY = 'distEvents';
+
+        function loadGosEvents() { return JSON.parse(localStorage.getItem(GOS_EVENTS_KEY) || '[]'); }
+        function saveGosEvents(events) { localStorage.setItem(GOS_EVENTS_KEY, JSON.stringify(events)); }
+        function loadDistEvents() { return JSON.parse(localStorage.getItem(DIST_EVENTS_KEY) || '[]'); }
+        function saveDistEvents(events) { localStorage.setItem(DIST_EVENTS_KEY, JSON.stringify(events)); }
+
+        // === ГОСВОЛНЫ: РАСПИСАНИЕ ===
+        function parseGosMessage(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
+
+            const apHeader = lines.find(l => l.includes('Гос. волны АП') && !l.includes('USSS'));
+            const usssHeader = lines.find(l => l.includes('Гос. волны USSS') && !l.includes('АП'));
+            const apUsssHeader = lines.find(l => l.includes('Гос. волны') && (l.includes('АП/USSS') || l.includes('AP/USSS')));
+
+            let apDate = null, usssDate = null, apUsssDate = null;
+            if (apHeader) { const m = apHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) apDate = m[1]; }
+            if (usssHeader) { const m = usssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) usssDate = m[1]; }
+            if (apUsssHeader) { const m = apUsssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) apUsssDate = m[1]; }
+
+            let codeLines = [];
+            const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+            if (codeBlockMatch) {
+                codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            } else {
+                const headerSet = new Set([apHeader, usssHeader, apUsssHeader].filter(Boolean));
+                codeLines = lines.filter(l => !headerSet.has(l));
+            }
+
+            const events = [];
+            if (apHeader) {
+                for (const line of codeLines) {
+                    if (!line.includes('|')) continue;
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length < 4) continue;
+                    const description = parts[0];
+                    const typeField = parts[1].toUpperCase();
+                    const date = parts[2];
+                    const timesStr = parts[3];
+                    const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                    if (times.length === 0) continue;
+
+                    let formattedTimes = times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ');
+                    const eventText = `${description} | ${typeField} | ${date} | ${formattedTimes}`;
+                    events.push({ text: eventText, datetimeStr: `${date} ${times[0]}`, type: typeField });
+                }
+                return { type: 'ap', events, date: apDate };
+            } else if (apUsssHeader) {
+                for (const line of codeLines) {
+                    if (!line.includes('|')) continue;
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length < 4) continue;
+                    const description = parts[0];
+                    const typeField = parts[1].toUpperCase();
+                    const date = parts[2];
+                    const timesStr = parts[3];
+                    const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                    if (times.length === 0) continue;
+
+                    let formattedTimes = times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501696693211500644/${t})`).join(' - ');
+                    const eventText = `${description} | ${typeField} | ${date} | ${formattedTimes}`;
+                    events.push({ text: eventText, datetimeStr: `${date} ${times[0]}`, type: typeField });
+                }
+                return { type: 'apUsss', events, date: apUsssDate };
+            } else if (usssHeader) {
+                for (const line of codeLines) {
+                    if (!line.includes('|')) continue;
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length < 2) continue;
+                    const timePart = parts[0];
+                    const typePart = parts[1].toLowerCase();
+                    const times = timePart.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                    if (times.length === 0) continue;
+                    const eventText = `USSS | ${typePart} | ${times.map(t => `[${t}](https://discord.com/channels/713076956748316702/1501686647518003221/${t})`).join(' - ')}`;
+                    events.push({ text: eventText, datetimeStr: `${usssDate} ${times[0]}`, type: 'usss' });
+                }
+                return { type: 'usss', events, date: usssDate };
+            }
+
+            return { type: 'error', message: 'Не удалось определить тип сообщения' };
+        }
+
+        function processGosMessage(text) {
+            const parsed = parseGosMessage(text);
+            if (parsed.type === 'error') return { success: false, message: parsed.message };
+            let events = loadGosEvents();
+            events = events.concat(parsed.events);
+            events.sort((a, b) => {
+                const da = a.datetimeStr.split(' ').join('');
+                const db = b.datetimeStr.split(' ').join('');
+                return da.localeCompare(db);
             });
-            const employees = await response.json();
-            const warningEmployees = employees.filter(emp => calculateStatus(emp).daysLeft === 1);
+            saveGosEvents(events);
+            renderGosResults();
+            renderPublishResults();
+            return { success: true, message: `Добавлено ${parsed.events.length} строк` };
+        }
 
-            if (warningEmployees.length === 0) {
-                showToast('⚠️ Нет сотрудников с 1 днём до дедлайна', 'info');
+        function renderGosResults() {
+            const container = document.getElementById('gosResults');
+            const events = loadGosEvents();
+            container.innerHTML = '';
+            if (events.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет обработанных сообщений</div>';
+                return;
+            }
+            events.forEach((event, index) => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.innerHTML = `
+                    <span class="result-number">${index + 1}.</span>
+                    <span class="result-text">${event.text}</span>
+                    <button class="copy-btn" data-text="${event.text.replace(/"/g, '&quot;')}">Копировать</button>
+                `;
+                item.querySelector('.copy-btn').addEventListener('click', function() {
+                    navigator.clipboard.writeText(this.dataset.text).then(() => {
+                        this.textContent = '✓';
+                        setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
+                    });
+                });
+                container.appendChild(item);
+            });
+        }
+
+        function resetGosData() {
+            if (confirm('Очистить все обработанные сообщения?')) {
+                localStorage.removeItem(GOS_EVENTS_KEY);
+                renderGosResults();
+                renderPublishResults();
+                addLog('🗑️ Госволны сброшены');
+            }
+        }
+
+        // === ГОСВОЛНЫ: РАСПРЕДЕЛЕНИЕ ===
+        function parseDistMessage(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
+
+            let date = null;
+            const apHeader = lines.find(l => l.includes('Гос. волны АП') || l.includes('Гос. волны USSS'));
+            if (apHeader) { const m = apHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) date = m[1]; }
+
+            let codeLines = [];
+            const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+            if (codeBlockMatch) {
+                codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            } else {
+                const headerSet = new Set([apHeader].filter(Boolean));
+                codeLines = lines.filter(l => !headerSet.has(l));
+            }
+
+            if (!date) {
+                for (const line of codeLines) {
+                    if (line.includes('|')) {
+                        const parts = line.split('|').map(p => p.trim());
+                        if (parts.length >= 3) {
+                            const m = parts[2].match(/\d{2}\.\d{2}\.\d{4}/);
+                            if (m) { date = m[0]; break; }
+                        }
+                    }
+                }
+            }
+            if (!date) return { type: 'error', message: 'Не удалось извлечь дату' };
+
+            const tasks = [];
+            for (const line of codeLines) {
+                if (!line.includes('|')) continue;
+                const parts = line.split('|').map(p => p.trim());
+                if (parts.length < 4) continue;
+                const description = parts[0], type = parts[1].toUpperCase(), dateFromLine = parts[2], timesStr = parts[3];
+                const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                if (times.length === 0) continue;
+                tasks.push({ text: `${description} | ${type} | ${dateFromLine} | ${times.join(' - ')}`, datetimeStr: `${dateFromLine} ${times[0]}` });
+            }
+
+            if (tasks.length === 0) return { type: 'error', message: 'Не найдены события' };
+            tasks.sort((a, b) => a.datetimeStr.localeCompare(b.datetimeStr));
+            return { type: 'success', tasks, date };
+        }
+
+        function processDistMessage(text) {
+            const parsed = parseDistMessage(text);
+            if (parsed.type === 'error') return { success: false, message: parsed.message };
+            let distData = loadDistEvents();
+            distData.push({ date: parsed.date, tasks: parsed.tasks.map(t => t.text) });
+            saveDistEvents(distData);
+            renderDistResults();
+            return { success: true, message: `Добавлено ${parsed.tasks.length} задач` };
+        }
+
+        function renderDistResults() {
+            const container = document.getElementById('distResults');
+            const distData = loadDistEvents();
+            container.innerHTML = '';
+            if (distData.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет обработанных сообщений</div>';
+                return;
+            }
+            distData.forEach(entry => {
+                const headerText = `# Список задач на ${entry.date}\n||<@&717037322268311553> ||`;
+                const headerItem = document.createElement('div');
+                headerItem.className = 'result-item';
+                headerItem.style.borderLeft = '3px solid var(--accent)';
+                headerItem.innerHTML = `
+                    <span class="result-number">📋</span>
+                    <span class="result-text">${headerText.replace(/\n/g, '<br>')}</span>
+                    <button class="copy-btn">Копировать</button>
+                `;
+                headerItem.querySelector('.copy-btn').addEventListener('click', function() {
+                    navigator.clipboard.writeText(headerText).then(() => { this.textContent = '✓'; setTimeout(() => { this.textContent = 'Копировать'; }, 1000); });
+                });
+                container.appendChild(headerItem);
+                entry.tasks.forEach(taskText => {
+                    const taskItem = document.createElement('div');
+                    taskItem.className = 'result-item';
+                    taskItem.innerHTML = `
+                        <span class="result-number"></span>
+                        <span class="result-text">* ${taskText}</span>
+                        <button class="copy-btn">Копировать</button>
+                    `;
+                    taskItem.querySelector('.copy-btn').addEventListener('click', function() {
+                        navigator.clipboard.writeText(`* ${taskText}`).then(() => { this.textContent = '✓'; setTimeout(() => { this.textContent = 'Копировать'; }, 1000); });
+                    });
+                    container.appendChild(taskItem);
+                });
+                const spacer = document.createElement('div');
+                spacer.style.height = '10px';
+                container.appendChild(spacer);
+            });
+        }
+
+        function resetDistData() {
+            if (confirm('Очистить все задачи распределения?')) {
+                localStorage.removeItem(DIST_EVENTS_KEY);
+                renderDistResults();
+                addLog('🗑️ Распределение сброшено');
+            }
+        }
+
+        // === ГОСВОЛНЫ: ПУБЛИКАЦИЯ ===
+        function renderPublishResults() {
+            const container = document.getElementById('publishResults');
+            const events = loadGosEvents();
+            container.innerHTML = '';
+            if (events.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет данных для публикации</div>';
                 return;
             }
 
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const todayStr = formatDate(today);
-            const tomorrowStr = formatDate(tomorrow);
-            const mentions = warningEmployees.map(emp => `<@${emp.discord_id}>`).join(', ');
-            const message = `‼️  ${mentions}, напоминаю Вам, что сегодня, ${todayStr}, у Вас последний день для продвижения по ранговой лестнице. Уже завтра, ${tomorrowStr}, Вы можете быть уволены по соответствующим причинам. Хорошего Вам дня. ‼️`;
+            const grouped = {};
+            events.forEach(event => {
+                const dateMatch = event.text.match(/\d{2}\.\d{2}\.\d{4}/);
+                if (dateMatch) {
+                    const date = dateMatch[0];
+                    if (!grouped[date]) grouped[date] = [];
+                    grouped[date].push(event);
+                }
+            });
 
-            document.getElementById('modalText').textContent = message;
-            document.getElementById('modalOverlay').classList.add('show');
-            addLog(`⚠️ Предупреждение для ${warningEmployees.length} сотрудников`);
-        } catch (error) {
-            addLog(`❌ Ошибка: ${error.message}`);
+            Object.keys(grouped).sort().forEach(date => {
+                const header = document.createElement('div');
+                header.style.cssText = 'font-weight:700;color:var(--accent);padding:10px 0 5px;font-size:16px;';
+                header.textContent = date;
+                container.appendChild(header);
+
+                grouped[date].forEach(event => {
+                    const block = document.createElement('div');
+                    block.className = 'publish-block';
+                    block.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                            <span style="font-weight:600;color:var(--text-secondary);">${event.text}</span>
+                            <button class="copy-btn" style="flex-shrink:0;">Копировать</button>
+                        </div>
+                    `;
+                    block.querySelector('.copy-btn').addEventListener('click', function() {
+                        navigator.clipboard.writeText(event.text).then(() => {
+                            this.textContent = '✓';
+                            setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
+                        });
+                    });
+                    container.appendChild(block);
+                });
+            });
         }
-    });
 
-    document.getElementById('modalClose').addEventListener('click', () => {
-        document.getElementById('modalOverlay').classList.remove('show');
-    });
-    document.getElementById('modalCloseBtn').addEventListener('click', () => {
-        document.getElementById('modalOverlay').classList.remove('show');
-    });
-    document.getElementById('modalCopy').addEventListener('click', function() {
-        const text = document.getElementById('modalText').textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            this.textContent = '✅ Скопировано!';
-            setTimeout(() => this.textContent = '📋 Копировать', 2000);
+        // ================================================================
+        // СЕКЦИЯ 4: ЕЖЕНЕДЕЛЬНЫЕ ОТЧЁТЫ (локально)
+        // ================================================================
+        const WEEKLY_RECRUITMENT_KEY = 'weeklyRecruitment';
+        const WEEKLY_APPLICATIONS_KEY = 'weeklyApplications';
+        const WEEKLY_INDIVIDUAL_KEY = 'weeklyIndividual';
+        const WEEKLY_LECTURES_KEY = 'weeklyLectures';
+
+        // === НАБОРЫ ===
+        function processWeeklyRecruitment() {
+            const text = document.getElementById('weeklyText').value;
+            const linksText = document.getElementById('weeklyLinks').value;
+            hideError('weeklyError');
+
+            const blocks = [];
+            const lines = text.split('\n').map(l => l.trim());
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('📝 Отчет по наборам 📝')) {
+                    let dateTime = null, count = 0;
+                    i++;
+                    while (i < lines.length && !lines[i].includes('📝 Отчет по наборам 📝')) {
+                        const line = lines[i];
+                        if (line.startsWith('Дата и время проведения набора')) {
+                            const after = line.replace('Дата и время проведения набора', '').trim();
+                            if (after) {
+                                const dtMatch = after.match(/\d{2}\.\d{2}\.\d{4}\s*(?:\||\s)\s*\d{2}:\d{2}/);
+                                if (dtMatch) dateTime = dtMatch[0].replace(/\s*\|\s*/, ' ');
+                                else dateTime = after;
+                            } else if (i + 1 < lines.length) {
+                                const nextLine = lines[i + 1];
+                                const dtMatch = nextLine.match(/\d{2}\.\d{2}\.\d{4}\s*(?:\||\s)\s*\d{2}:\d{2}/);
+                                if (dtMatch) dateTime = dtMatch[0].replace(/\s*\|\s*/, ' ');
+                                else dateTime = nextLine;
+                                i++;
+                            }
+                        } else if (line.startsWith('Кол-во принятых людей')) {
+                            const after = line.replace('Кол-во принятых людей', '').trim();
+                            if (after) { const num = parseInt(after, 10); if (!isNaN(num)) count = num; }
+                            else if (i + 1 < lines.length) {
+                                const nextLine = lines[i + 1];
+                                const num = parseInt(nextLine, 10);
+                                if (!isNaN(num)) count = num;
+                                i++;
+                            }
+                        }
+                        i++;
+                    }
+                    if (dateTime) blocks.push({ dateTime, count });
+                } else { i++; }
+            }
+
+            if (blocks.length === 0) {
+                showError('Не найдено ни одного отчёта по наборам.', 'weeklyError');
+                return;
+            }
+
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('weeklyTbody');
+            tbody.innerHTML = '';
+            blocks.forEach((block, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${block.dateTime}</td><td>${block.count}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            const totalPeople = blocks.reduce((sum, b) => sum + b.count, 0);
+            document.getElementById('weeklyStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество наборов</div><div class="stat-value">${blocks.length}</div></div>
+                <div class="stat-card"><div class="stat-label">Принято людей</div><div class="stat-value">${totalPeople}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_RECRUITMENT_KEY, JSON.stringify({ blocks, links }));
+            addLog(`📊 Сформирован отчёт по наборам (${blocks.length} записей)`);
+        }
+
+        function resetWeeklyRecruitment() {
+            document.getElementById('weeklyText').value = '';
+            document.getElementById('weeklyLinks').value = '';
+            document.getElementById('weeklyTbody').innerHTML = '';
+            document.getElementById('weeklyStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_RECRUITMENT_KEY);
+            addLog('🗑️ Отчёт по наборам сброшен');
+        }
+
+        // === ЭЛЕКТРОННЫЕ ЗАЯВКИ ===
+        function parseApplicationsText(text) {
+            const dateTimeRegex = /—\s*(\d{2}\.\d{2}\.\d{4})[,\s]\s*(\d{2}:\d{2})/g;
+            const matches = [];
+            let match;
+            while ((match = dateTimeRegex.exec(text)) !== null) {
+                matches.push(`${match[1]} ${match[2]}`);
+            }
+            return matches;
+        }
+
+        function processWeeklyApplications() {
+            const text = document.getElementById('appsText').value;
+            const linksText = document.getElementById('appsLinks').value;
+            hideError('appsError');
+
+            const dateTimes = parseApplicationsText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени заявки.', 'appsError');
+                return;
+            }
+
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('appsTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('appsStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Обработано заявок</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_APPLICATIONS_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по электронным заявкам (${dateTimes.length} записей)`);
+        }
+
+        function resetWeeklyApplications() {
+            document.getElementById('appsText').value = '';
+            document.getElementById('appsLinks').value = '';
+            document.getElementById('appsTbody').innerHTML = '';
+            document.getElementById('appsStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_APPLICATIONS_KEY);
+            addLog('🗑️ Отчёт по электронным заявкам сброшен');
+        }
+
+        // === ИНДИВИДУАЛЬНЫЕ НАБОРЫ ===
+        function parseIndividualText(text) {
+            const lines = text.split('\n').map(l => l.trim());
+            const dateTimes = [];
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('Дата и время проведения набора')) {
+                    i++;
+                    if (i < lines.length) {
+                        const value = lines[i].trim();
+                        let formatted = value;
+                        const hmDate = value.match(/^(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{2})$/);
+                        if (hmDate) {
+                            const [time, date] = [hmDate[1], hmDate[2]];
+                            const [day, month, yearShort] = date.split('.').map(Number);
+                            const year = 2000 + yearShort;
+                            formatted = `${String(day).padStart(2,'0')}.${String(month).padStart(2,'0')}.${year} ${time}`;
+                        } else {
+                            const dtMatch = value.match(/(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})/);
+                            if (dtMatch) formatted = `${dtMatch[1]} ${dtMatch[2]}`;
+                            else {
+                                const dtMatch2 = value.match(/(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{4})/);
+                                if (dtMatch2) formatted = `${dtMatch2[2]} ${dtMatch2[1]}`;
+                            }
+                        }
+                        dateTimes.push(formatted);
+                    }
+                }
+                i++;
+            }
+            return dateTimes;
+        }
+
+        function processWeeklyIndividual() {
+            const text = document.getElementById('indivText').value;
+            const linksText = document.getElementById('indivLinks').value;
+            hideError('indivError');
+
+            const dateTimes = parseIndividualText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени.', 'indivError');
+                return;
+            }
+
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('indivTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('indivStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество инд. наборов</div><div class="stat-value">${dateTimes.length}</div></div>
+                <div class="stat-card"><div class="stat-label">Принято людей</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_INDIVIDUAL_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по индивидуальным наборам (${dateTimes.length} записей)`);
+        }
+
+        function resetWeeklyIndividual() {
+            document.getElementById('indivText').value = '';
+            document.getElementById('indivLinks').value = '';
+            document.getElementById('indivTbody').innerHTML = '';
+            document.getElementById('indivStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_INDIVIDUAL_KEY);
+            addLog('🗑️ Отчёт по индивидуальным наборам сброшен');
+        }
+
+        // === ЛЕКЦИИ ===
+        function parseLecturesText(text) {
+            const lines = text.split('\n').map(l => l.trim());
+            const dateTimes = [];
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('Дата и время проведения лекции')) {
+                    i++;
+                    if (i < lines.length) {
+                        const value = lines[i].trim();
+                        let formatted = value;
+                        const hmDate = value.match(/^(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{2})$/);
+                        if (hmDate) {
+                            const [time, date] = [hmDate[1], hmDate[2]];
+                            const [day, month, yearShort] = date.split('.').map(Number);
+                            const year = 2000 + yearShort;
+                            formatted = `${String(day).padStart(2,'0')}.${String(month).padStart(2,'0')}.${year} ${time}`;
+                        } else {
+                            const dtMatch = value.match(/(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})/);
+                            if (dtMatch) formatted = `${dtMatch[1]} ${dtMatch[2]}`;
+                            else {
+                                const dtMatch2 = value.match(/(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{4})/);
+                                if (dtMatch2) formatted = `${dtMatch2[2]} ${dtMatch2[1]}`;
+                            }
+                        }
+                        dateTimes.push(formatted);
+                    }
+                }
+                i++;
+            }
+            return dateTimes;
+        }
+
+        function processWeeklyLectures() {
+            const text = document.getElementById('lecturesText').value;
+            const linksText = document.getElementById('lecturesLinks').value;
+            hideError('lecturesError');
+
+            const dateTimes = parseLecturesText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени лекции.', 'lecturesError');
+                return;
+            }
+
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('lecturesTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('lecturesStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество лекций</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_LECTURES_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по лекциям (${dateTimes.length} записей)`);
+        }
+
+        function resetWeeklyLectures() {
+            document.getElementById('lecturesText').value = '';
+            document.getElementById('lecturesLinks').value = '';
+            document.getElementById('lecturesTbody').innerHTML = '';
+            document.getElementById('lecturesStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_LECTURES_KEY);
+            addLog('🗑️ Отчёт по лекциям сброшен');
+        }
+
+        // ================================================================
+        // TOAST-УВЕДОМЛЕНИЯ
+        // ================================================================
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+                padding: 14px 24px; border-radius: 12px; font-weight: 600;
+                background: ${type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(129,140,248,0.15)'};
+                color: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#818cf8'};
+                border: 1px solid ${type === 'success' ? 'rgba(34,197,94,0.2)' : type === 'error' ? 'rgba(239,68,68,0.2)' : 'rgba(129,140,248,0.2)'};
+                backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                animation: slideUp 0.3s ease; max-width: 400px;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // ================================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ================================================================
+        document.getElementById('btnToggleAdd').addEventListener('click', function() {
+            const field = document.getElementById('addField');
+            field.classList.toggle('hidden');
+            if (!field.classList.contains('hidden')) document.getElementById('cadreInput').focus();
+            addLog(field.classList.contains('hidden') ? '📝 Поле добавления скрыто' : '📝 Поле добавления открыто');
         });
-    });
 
-    // ================================================================
-    // ЗАПУСК
-    // ================================================================
-    addLog('🚀 Приложение загружено');
-    loadApplications();
-    loadCadres();
+        document.getElementById('btnAddRecord').addEventListener('click', async function() {
+            const text = document.getElementById('cadreInput').value.trim();
+            if (!text) return showError('Введите сообщение', 'cadreError');
+            const result = await processCadreMessage(text);
+            if (result.success) {
+                document.getElementById('cadreInput').value = '';
+                hideError('cadreError');
+                await loadCadres();
+                showToast(result.message, 'success');
+                addLog(`✅ ${result.message}`);
+            } else {
+                showError(result.message, 'cadreError');
+                showToast(result.message, 'error');
+            }
+        });
 
-    // Автообновление заявок каждые 30 секунд
-    setInterval(loadApplications, 30000);
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+                loadCadres(this.dataset.filter);
+                addLog(`🔍 Фильтр: ${this.dataset.filter}`);
+            });
+        });
+
+        document.getElementById('btnResetCadres').addEventListener('click', async function() {
+            if (!confirm('Удалить ВСЕХ сотрудников?')) return;
+            const password = prompt('Введите пароль:');
+            if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
+
+            try {
+                const employees = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=id&apikey=${SUPABASE_KEY}`, {
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                }).then(r => r.json());
+
+                for (const emp of employees) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/employees?id=eq.${emp.id}&apikey=${SUPABASE_KEY}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    });
+                }
+                addLog(`🗑️ Удалено ${employees.length} сотрудников`);
+                await loadCadres();
+                showToast(`✅ Удалено ${employees.length} сотрудников`, 'success');
+            } catch (error) {
+                addLog(`❌ Ошибка сброса: ${error.message}`);
+                showToast('❌ Ошибка сброса', 'error');
+            }
+        });
+
+        document.getElementById('btnAutoWarning').addEventListener('click', async function() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const employees = await response.json();
+                const warningEmployees = employees.filter(emp => calculateStatus(emp).daysLeft === 1);
+
+                if (warningEmployees.length === 0) {
+                    showToast('⚠️ Нет сотрудников с 1 днём до дедлайна', 'info');
+                    return;
+                }
+
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const todayStr = formatDate(today);
+                const tomorrowStr = formatDate(tomorrow);
+                const mentions = warningEmployees.map(emp => `<@${emp.discord_id}>`).join(', ');
+                const message = `‼️  ${mentions}, напоминаю Вам, что сегодня, ${todayStr}, у Вас последний день для продвижения по ранговой лестнице. Уже завтра, ${tomorrowStr}, Вы можете быть уволены по соответствующим причинам. Хорошего Вам дня. ‼️`;
+
+                document.getElementById('modalText').textContent = message;
+                document.getElementById('modalOverlay').classList.add('show');
+                addLog(`⚠️ Предупреждение для ${warningEmployees.length} сотрудников`);
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+            }
+        });
+
+        document.getElementById('modalClose').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('show');
+        });
+        document.getElementById('modalCloseBtn').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('show');
+        });
+        document.getElementById('modalCopy').addEventListener('click', function() {
+            const text = document.getElementById('modalText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                this.textContent = '✅ Скопировано!';
+                setTimeout(() => this.textContent = '📋 Копировать', 2000);
+            });
+        });
+
+        // === БИНДИНГ КНОПОК ГОСВОЛН ===
+        document.getElementById('btnProcessGos').addEventListener('click', function() {
+            const text = document.getElementById('gosInput').value.trim();
+            if (!text) return showError('Введите сообщение', 'gosError');
+            const result = processGosMessage(text);
+            if (result.success) {
+                document.getElementById('gosInput').value = '';
+                hideError('gosError');
+                showToast(result.message, 'success');
+                addLog(`✅ ${result.message}`);
+            } else {
+                showError(result.message, 'gosError');
+                showToast(result.message, 'error');
+            }
+        });
+
+        document.getElementById('btnResetGos').addEventListener('click', resetGosData);
+
+        document.getElementById('btnProcessDist').addEventListener('click', function() {
+            const text = document.getElementById('distInput').value.trim();
+            if (!text) return showError('Введите сообщение', 'distError');
+            const result = processDistMessage(text);
+            if (result.success) {
+                document.getElementById('distInput').value = '';
+                hideError('distError');
+                showToast(result.message, 'success');
+                addLog(`✅ ${result.message}`);
+            } else {
+                showError(result.message, 'distError');
+                showToast(result.message, 'error');
+            }
+        });
+
+        document.getElementById('btnResetDist').addEventListener('click', resetDistData);
+
+        // === БИНДИНГ КНОПОК ОТЧЁТОВ ===
+        document.getElementById('btnProcessWeekly').addEventListener('click', processWeeklyRecruitment);
+        document.getElementById('btnResetWeekly').addEventListener('click', resetWeeklyRecruitment);
+        document.getElementById('btnProcessApps').addEventListener('click', processWeeklyApplications);
+        document.getElementById('btnResetApps').addEventListener('click', resetWeeklyApplications);
+        document.getElementById('btnProcessIndiv').addEventListener('click', processWeeklyIndividual);
+        document.getElementById('btnResetIndiv').addEventListener('click', resetWeeklyIndividual);
+        document.getElementById('btnProcessLectures').addEventListener('click', processWeeklyLectures);
+        document.getElementById('btnResetLectures').addEventListener('click', resetWeeklyLectures);
+
+        // ================================================================
+        // ЗАПУСК
+        // ================================================================
+        addLog('🚀 Приложение загружено');
+        loadApplications();
+        loadCadres();
+
+        // Автообновление заявок каждые 30 секунд
+        setInterval(loadApplications, 30000);
     </script>
 </body>
 </html>
