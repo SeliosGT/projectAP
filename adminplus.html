@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           ПЕРЕМЕННЫЕ (ПОЛНОСТЬЮ ПЕРЕРАБОТАНЫ ДЛЯ СВЕТЛОЙ ТЕМЫ)
+           ПЕРЕМЕННЫЕ
            ============================================================ */
         :root {
             --bg-body: #0a0f1a;
@@ -51,9 +51,6 @@
             --shadow-modal: 0 30px 80px rgba(0,0,0,0.5);
         }
 
-        /* ============================================================
-           СВЕТЛАЯ ТЕМА — ПОЛНОСТЬЮ ПЕРЕРАБОТАНА
-           ============================================================ */
         [data-theme="light"] {
             --bg-body: #f0f4f9;
             --bg-container: rgba(255,255,255,0.7);
@@ -129,7 +126,6 @@
             overflow-x: hidden;
         }
 
-        /* ========== ФОН ========== */
         body::before {
             content: '';
             position: fixed;
@@ -185,7 +181,6 @@
             50% { transform: translate(30px,-40px) scale(1.1); }
         }
 
-        /* ========== КОНТЕЙНЕР ========== */
         .app-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -216,7 +211,6 @@
             transition: opacity 0.5s ease;
         }
 
-        /* ========== НАВИГАЦИЯ ========== */
         .nav {
             display: flex;
             gap: 10px;
@@ -248,6 +242,16 @@
             border-color: var(--accent);
             color: #fff;
             box-shadow: 0 4px 16px rgba(129,140,248,0.3);
+        }
+
+        .nav-btn.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.locked:hover {
+            transform: none;
+            background: var(--bg-secondary);
         }
 
         .nav-badge {
@@ -300,7 +304,6 @@
             transform: scale(1.02);
         }
 
-        /* ========== СЕКЦИИ С ПЛАВНЫМ ПОЯВЛЕНИЕМ ========== */
         .section {
             display: none;
             animation: sectionFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -348,7 +351,6 @@
         }
         .sub-section.active { display: block; }
 
-        /* ========== КНОПКИ ========== */
         .btn {
             background: var(--accent);
             color: #fff;
@@ -412,7 +414,6 @@
             color: #fff;
         }
 
-        /* ========== ТЕКСТАРЕА ========== */
         textarea {
             width: 100%;
             min-height: 100px;
@@ -433,7 +434,24 @@
             box-shadow: 0 0 0 3px var(--input-focus);
         }
 
-        /* ========== ТАБЛИЦЫ ========== */
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            transition: all var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
         .table-wrapper {
             overflow-x: auto;
             margin-top: 16px;
@@ -492,7 +510,6 @@
             background: var(--accent-light);
         }
 
-        /* ========== ФИЛЬТРЫ ========== */
         .filters-container {
             display: flex;
             flex-direction: column;
@@ -507,7 +524,6 @@
             align-items: center;
         }
 
-        /* ========== РЕЗУЛЬТАТЫ ========== */
         .result-list {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -555,7 +571,6 @@
             background: var(--bg-hover);
         }
 
-        /* ========== СТАТИСТИКА ========== */
         .stats-container {
             display: flex;
             gap: 12px;
@@ -587,7 +602,7 @@
             margin-top: 2px;
         }
 
-        /* ========== МОДАЛЬНОЕ ОКНО ДЛЯ ПРОСМОТРА ЗАЯВКИ ========== */
+        /* ========== МОДАЛЬНЫЕ ОКНА ========== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -704,6 +719,102 @@
             flex-wrap: wrap;
         }
 
+        /* ========== РЕДАКТИРОВАНИЕ ========== */
+        .edit-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .edit-field label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .edit-field input, .edit-field select {
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            transition: all var(--transition);
+        }
+
+        .edit-field input:focus, .edit-field select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
+        .edit-field select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        /* ========== ПАРОЛЬНАЯ ЗАЩИТА ========== */
+        .password-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-container);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+            padding: 40px;
+            animation: sectionFadeIn 0.5s ease;
+        }
+
+        .password-overlay.show {
+            display: flex;
+        }
+
+        .password-overlay h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .password-overlay p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .password-overlay input {
+            padding: 12px 20px;
+            border: 2px solid var(--border-input);
+            border-radius: var(--radius);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 16px;
+            text-align: center;
+            width: 200px;
+            transition: all var(--transition);
+        }
+
+        .password-overlay input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
+        .password-overlay .password-error {
+            color: var(--danger);
+            font-size: 13px;
+            display: none;
+        }
+
+        .password-overlay .password-error.show {
+            display: block;
+        }
+
         /* ========== ЛОГ ========== */
         .log-panel {
             display: none;
@@ -816,6 +927,8 @@
             .weekly-inputs { flex-direction: column; }
             .weekly-inputs > div { min-width: auto; }
             .modal { padding: 20px; }
+            .password-overlay { padding: 20px; }
+            .password-overlay input { width: 100%; }
         }
 
         @media (max-width: 480px) {
@@ -833,7 +946,7 @@
     <div class="app-container">
         <!-- ========== НАВИГАЦИЯ ========== -->
         <div class="nav">
-            <button class="nav-btn active" data-section="applications">
+            <button class="nav-btn active" data-section="applications" id="navApplications">
                 📋 Заявки
                 <span class="nav-badge" id="appBadge" style="display:none;">0</span>
             </button>
@@ -860,9 +973,18 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 1: ЗАЯВКИ
+        СЕКЦИЯ 1: ЗАЯВКИ (с паролем)
         ============================================================ -->
-        <div id="section-applications" class="section active">
+        <div id="section-applications" class="section active" style="position:relative;">
+            <!-- Парольная защита -->
+            <div class="password-overlay show" id="appPasswordOverlay">
+                <h3>🔐 Доступ к заявкам</h3>
+                <p>Введите пароль для доступа к разделу</p>
+                <input type="password" id="appPasswordInput" placeholder="Введите пароль" autofocus>
+                <div class="password-error" id="appPasswordError">❌ Неверный пароль!</div>
+                <button class="btn" id="appPasswordBtn">Войти</button>
+            </div>
+
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
                 <h2 style="font-weight:700;font-size:20px;color:var(--text-primary);">📋 Заявки</h2>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -871,7 +993,6 @@
                 </div>
             </div>
 
-            <!-- Фильтры по типу заявок -->
             <div class="filter-row" style="margin-bottom:12px;">
                 <span style="color:var(--text-muted);font-weight:600;font-size:12px;">Тип:</span>
                 <button class="btn btn-outline btn-sm app-filter-btn active-filter" data-filter="all">📋 Все</button>
@@ -1017,7 +1138,6 @@
                 <button class="sub-nav-btn" data-subsection="weekly-lectures">📚 Лекции</button>
             </div>
 
-            <!-- Наборы -->
             <div id="weekly-recruitment" class="sub-section active">
                 <div class="weekly-inputs">
                     <div>
@@ -1043,7 +1163,6 @@
                 </div>
             </div>
 
-            <!-- Электронные заявки -->
             <div id="weekly-applications" class="sub-section">
                 <div class="weekly-inputs">
                     <div>
@@ -1069,7 +1188,6 @@
                 </div>
             </div>
 
-            <!-- Индивидуальные -->
             <div id="weekly-individual" class="sub-section">
                 <div class="weekly-inputs">
                     <div>
@@ -1095,7 +1213,6 @@
                 </div>
             </div>
 
-            <!-- Лекции -->
             <div id="weekly-lectures" class="sub-section">
                 <div class="weekly-inputs">
                     <div>
@@ -1137,6 +1254,21 @@
         </div>
     </div>
 
+    <!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ СОТРУДНИКА ========== -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="editModalTitle">✏️ Редактирование сотрудника</h2>
+                <button class="modal-close-btn" id="editModalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="editModalBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="editModalSave">💾 Сохранить</button>
+                <button class="btn btn-outline" id="editModalCancel">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ ПРЕДУПРЕЖДЕНИЙ ========== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
@@ -1159,6 +1291,7 @@
         const SUPABASE_URL = 'https://rubmmnihnvvqvbmhfljy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1Ym1tbmlobnZ2cXZibWhmbGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDIwNjMsImV4cCI6MjEwMzQxODA2M30.mWO0RYNEXYh1irXkek_Qs75hRbx-FcjmxC2k2iAMfPc';
         const ADMIN_PASSWORD = '54321';
+        let appUnlocked = false;
 
         // ================================================================
         // ЛОГИРОВАНИЕ
@@ -1189,7 +1322,7 @@
         });
 
         // ================================================================
-        // ТЕМА — ПЕРЕРАБОТАНА
+        // ТЕМА
         // ================================================================
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
@@ -1241,21 +1374,76 @@
         }
 
         // ================================================================
+        // ПАРОЛЬ НА РАЗДЕЛ "ЗАЯВКИ"
+        // ================================================================
+        const appPasswordOverlay = document.getElementById('appPasswordOverlay');
+        const appPasswordInput = document.getElementById('appPasswordInput');
+        const appPasswordBtn = document.getElementById('appPasswordBtn');
+        const appPasswordError = document.getElementById('appPasswordError');
+
+        function unlockApplications() {
+            appUnlocked = true;
+            appPasswordOverlay.classList.remove('show');
+            addLog('🔓 Раздел "Заявки" разблокирован');
+            loadApplications();
+        }
+
+        function checkAppPassword() {
+            const input = appPasswordInput.value.trim();
+            if (input === ADMIN_PASSWORD) {
+                unlockApplications();
+            } else {
+                appPasswordError.classList.add('show');
+                appPasswordInput.value = '';
+                appPasswordInput.focus();
+                addLog('❌ Неверный пароль для заявок');
+            }
+        }
+
+        appPasswordBtn.addEventListener('click', checkAppPassword);
+        appPasswordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') checkAppPassword();
+        });
+
+        // ================================================================
         // НАВИГАЦИЯ
         // ================================================================
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', function() {
+                const section = this.dataset.section;
+
+                // Если это заявки — проверяем пароль
+                if (section === 'applications' && !appUnlocked) {
+                    // Показываем оверлей
+                    appPasswordOverlay.classList.add('show');
+                    appPasswordInput.value = '';
+                    appPasswordInput.focus();
+                    appPasswordError.classList.remove('show');
+                    // Не переключаем вкладку, пока не введён пароль
+                    return;
+                }
+
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                const section = this.dataset.section;
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.getElementById(`section-${section}`).classList.add('active');
                 addLog(`📂 Переход: ${section}`);
 
-                if (section === 'applications') loadApplications();
+                if (section === 'applications' && appUnlocked) loadApplications();
                 if (section === 'cadres') loadCadres();
                 if (section === 'goswaves') { renderGosResults(); renderDistResults(); renderPublishResults(); }
             });
+        });
+
+        // Если клик на заявки, а они уже открыты — просто показываем оверлей
+        document.getElementById('navApplications').addEventListener('click', function(e) {
+            if (!appUnlocked) {
+                e.preventDefault();
+                appPasswordOverlay.classList.add('show');
+                appPasswordInput.value = '';
+                appPasswordInput.focus();
+                appPasswordError.classList.remove('show');
+            }
         });
 
         document.querySelectorAll('.sub-nav-btn').forEach(btn => {
@@ -1315,6 +1503,7 @@
         // СЕКЦИЯ 1: ЗАЯВКИ
         // ================================================================
         let appFilter = 'all';
+        let applicationsData = [];
 
         document.querySelectorAll('.app-filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -1327,6 +1516,7 @@
         });
 
         async function loadApplications() {
+            if (!appUnlocked) return;
             addLog('🔄 Загрузка заявок...');
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc&apikey=${SUPABASE_KEY}`, {
@@ -1339,9 +1529,8 @@
 
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-                const data = await response.json();
-                addLog(`✅ Загружено ${data.length} заявок`);
-                window.applicationsData = data;
+                applicationsData = await response.json();
+                addLog(`✅ Загружено ${applicationsData.length} заявок`);
                 renderApplications();
 
             } catch (error) {
@@ -1351,7 +1540,7 @@
         }
 
         function renderApplications() {
-            const data = window.applicationsData || [];
+            const data = applicationsData || [];
             let filtered = data;
             if (appFilter === 'discipline') {
                 filtered = data.filter(app => app.survey_type === 'discipline');
@@ -1404,7 +1593,7 @@
         }
 
         // ================================================================
-        // ПРОСМОТР ЗАЯВКИ В МОДАЛЬНОМ ОКНЕ
+        // ПРОСМОТР ЗАЯВКИ
         // ================================================================
         const RATING_NAMES = {
             discipline: {
@@ -1446,7 +1635,7 @@
         };
 
         function viewApplication(id) {
-            const app = window.applicationsData.find(a => a.id === id);
+            const app = applicationsData.find(a => a.id === id);
             if (!app) return;
 
             const type = app.survey_type || 'discipline';
@@ -1456,7 +1645,6 @@
 
             let html = '';
 
-            // Основная информация
             const mainFields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
             mainFields.forEach(key => {
                 if (app[key] && app[key].trim()) {
@@ -1469,7 +1657,6 @@
                 }
             });
 
-            // Рейтинги
             if (app.ratings) {
                 try {
                     const ratings = JSON.parse(app.ratings);
@@ -1486,7 +1673,6 @@
                 } catch (e) {}
             }
 
-            // Опыт
             if (app.experience) {
                 html += `
                     <div class="modal-field">
@@ -1504,7 +1690,6 @@
                 }
             }
 
-            // Деньги за экзамены
             if (app.exam_money) {
                 html += `
                     <div class="modal-field">
@@ -1514,7 +1699,6 @@
                 `;
             }
 
-            // Ситуационные вопросы
             const situationKeys = ['situation1', 'situation2', 'situation3', 'situation_colleague', 'individual', 'trainee', 'trainee_detail', 'hr_duties', 'qualities', 'about', 'motivation'];
             situationKeys.forEach(key => {
                 if (app[key] && app[key].trim()) {
@@ -1543,9 +1727,10 @@
         });
 
         // ================================================================
-        // ОСТАЛЬНЫЕ ФУНКЦИИ ЗАЯВОК
+        // ФУНКЦИИ ЗАЯВОК
         // ================================================================
         async function markAsRead(id) {
+            if (!appUnlocked) return;
             addLog(`📖 Отметка заявки #${id} как прочитанной`);
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
@@ -1574,6 +1759,7 @@
         }
 
         async function markAllAsRead() {
+            if (!appUnlocked) return;
             addLog('📖 Отметка всех заявок как прочитанных');
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?is_read=eq.false&apikey=${SUPABASE_KEY}`, {
@@ -1602,6 +1788,7 @@
         }
 
         async function deleteApplication(id) {
+            if (!appUnlocked) return;
             if (!confirm(`Удалить заявку #${id}?`)) return;
             addLog(`🗑️ Удаление заявки #${id}`);
             try {
@@ -1626,7 +1813,7 @@
         }
 
         // ================================================================
-        // СЕКЦИЯ 2: КАДРОВЫЙ УЧЁТ
+        // СЕКЦИЯ 2: КАДРОВЫЙ УЧЁТ с РЕДАКТИРОВАНИЕМ
         // ================================================================
         const POSITION_DEADLINES = {
             'Стажер АП': 3,
@@ -1635,6 +1822,8 @@
             'Секретарь-Ассистент': 10
         };
         const POSITION_ORDER = ['Стажер АП', 'Секретарь', 'Секретарь-Референт', 'Секретарь-Ассистент'];
+
+        let editingEmployee = null;
 
         async function loadCadres(filter = 'all') {
             addLog('🔄 Загрузка кадров...');
@@ -1694,7 +1883,10 @@
                         <td>${status.daysLeft}</td>
                         <td>${status.deadlineDate}</td>
                         <td>${vacationDisplay}</td>
-                        <td><button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.discord_id}')">Удалить</button></td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="editEmployee('${emp.discord_id}')">✏️</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteEmployee('${emp.discord_id}')">🗑️</button>
+                        </td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -1713,6 +1905,165 @@
             return { daysLeft, deadlineDate: formatDate(new Date(deadlineUTC)) };
         }
 
+        // ================================================================
+        // РЕДАКТИРОВАНИЕ СОТРУДНИКА
+        // ================================================================
+        async function editEmployee(discordId) {
+            addLog(`✏️ Редактирование сотрудника ${discordId}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const data = await response.json();
+                if (data.length === 0) {
+                    showToast('❌ Сотрудник не найден', 'error');
+                    return;
+                }
+                const emp = data[0];
+                editingEmployee = emp;
+
+                const positions = Object.keys(POSITION_DEADLINES);
+                const positionOptions = positions.map(p =>
+                    `<option value="${p}" ${p === emp.position ? 'selected' : ''}>${p}</option>`
+                ).join('');
+
+                const vacationList = (emp.vacations || []).join('; ');
+
+                document.getElementById('editModalBody').innerHTML = `
+                    <div class="edit-field">
+                        <label>Discord ID</label>
+                        <input type="text" id="editDiscordId" value="${emp.discord_id}" readonly style="opacity:0.6;">
+                    </div>
+                    <div class="edit-field">
+                        <label>Имя</label>
+                        <input type="text" id="editName" value="${emp.name}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Паспорт</label>
+                        <input type="text" id="editPassport" value="${emp.passport || ''}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Должность</label>
+                        <select id="editPosition">${positionOptions}</select>
+                    </div>
+                    <div class="edit-field">
+                        <label>Дата приёма (дд.мм.гггг)</label>
+                        <input type="text" id="editHireDate" value="${emp.hire_date || ''}" placeholder="01.01.2024">
+                    </div>
+                    <div class="edit-field">
+                        <label>Дата последнего повышения (дд.мм.гггг)</label>
+                        <input type="text" id="editLastPromotion" value="${emp.last_promotion_date || ''}" placeholder="01.01.2024">
+                    </div>
+                    <div class="edit-field">
+                        <label>Сдвиг отпуска (дней)</label>
+                        <input type="number" id="editVacationShift" value="${emp.vacation_shift || 0}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Отпуска (через ; )</label>
+                        <input type="text" id="editVacations" value="${vacationList}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Дедлайн (дней) — вычисляется автоматически по должности</label>
+                        <input type="text" id="editDeadlineDays" value="${emp.deadline_days || 3}" readonly style="opacity:0.6;">
+                    </div>
+                `;
+
+                // Обновляем дедлайн при смене должности
+                document.getElementById('editPosition').addEventListener('change', function() {
+                    const pos = this.value;
+                    const days = POSITION_DEADLINES[pos] || 3;
+                    document.getElementById('editDeadlineDays').value = days;
+                });
+
+                document.getElementById('editModal').classList.add('show');
+                addLog(`✏️ Открыто редактирование ${emp.name}`);
+
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка загрузки сотрудника', 'error');
+            }
+        }
+
+        document.getElementById('editModalSave').addEventListener('click', async function() {
+            if (!editingEmployee) return;
+
+            const password = prompt('Введите пароль для подтверждения изменений:');
+            if (password !== ADMIN_PASSWORD) {
+                showToast('❌ Неверный пароль!', 'error');
+                return;
+            }
+
+            const discordId = editingEmployee.discord_id;
+            const name = document.getElementById('editName').value.trim();
+            const passport = document.getElementById('editPassport').value.trim();
+            const position = document.getElementById('editPosition').value;
+            const hireDate = document.getElementById('editHireDate').value.trim();
+            const lastPromotion = document.getElementById('editLastPromotion').value.trim();
+            const vacationShift = parseInt(document.getElementById('editVacationShift').value) || 0;
+            const vacationsRaw = document.getElementById('editVacations').value.trim();
+            const vacations = vacationsRaw ? vacationsRaw.split(';').map(s => s.trim()).filter(Boolean) : [];
+            const deadlineDays = POSITION_DEADLINES[position] || 3;
+
+            if (!name) {
+                showToast('❌ Имя обязательно', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        passport,
+                        position,
+                        hire_date: hireDate || null,
+                        last_promotion_date: lastPromotion || null,
+                        vacation_shift: vacationShift,
+                        vacations,
+                        deadline_days: deadlineDays
+                    })
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Сотрудник ${name} обновлён`);
+                    document.getElementById('editModal').classList.remove('show');
+                    await loadCadres();
+                    showToast('✅ Сотрудник обновлён', 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    showToast('❌ Ошибка обновления', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка обновления', 'error');
+            }
+        });
+
+        document.getElementById('editModalClose').addEventListener('click', function() {
+            document.getElementById('editModal').classList.remove('show');
+            editingEmployee = null;
+        });
+
+        document.getElementById('editModalCancel').addEventListener('click', function() {
+            document.getElementById('editModal').classList.remove('show');
+            editingEmployee = null;
+        });
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+                editingEmployee = null;
+            }
+        });
+
+        // ================================================================
+        // ОСТАЛЬНЫЕ ФУНКЦИИ КАДРОВ
+        // ================================================================
         async function syncCadres() {
             addLog('🔄 Синхронизация кадров с Supabase...');
             await loadCadres();
@@ -2630,11 +2981,15 @@
         // ЗАПУСК
         // ================================================================
         addLog('🚀 Приложение загружено');
-        loadApplications();
         loadCadres();
 
-        // Автообновление заявок каждые 30 секунд
-        setInterval(loadApplications, 30000);
+        // Автообновление заявок каждые 30 секунд (если разблокировано)
+        setInterval(() => {
+            if (appUnlocked) loadApplications();
+        }, 30000);
+
+        // Если заявки уже разблокированы — загружаем
+        if (appUnlocked) loadApplications();
     </script>
 </body>
 </html>
