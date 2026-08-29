@@ -1120,7 +1120,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 4: ОТЧЁТЫ
+        СЕКЦИЯ 4: ОТЧЁТЫ (ИСПРАВЛЕННАЯ ВЕРСИЯ)
         ============================================================ -->
         <div id="section-weekly" class="section">
             <div class="sub-nav">
@@ -1130,14 +1130,15 @@
             </div>
 
             <div id="weekly-senior" class="sub-section active">
-                <div class="sub-nav" style="margin-bottom:12px;" id="seniorSubNav">
+                <!-- ВНУТРЕННЯЯ НАВИГАЦИЯ СТАРШЕГО СОСТАВА -->
+                <div class="sub-nav" style="margin-bottom:12px;">
                     <button class="sub-nav-btn active" data-subsection="senior-recruitment">📥 Наборы</button>
                     <button class="sub-nav-btn" data-subsection="senior-applications">📋 Электронные заявки</button>
                     <button class="sub-nav-btn" data-subsection="senior-individual">🎯 Индивидуальные</button>
                     <button class="sub-nav-btn" data-subsection="senior-lectures">📚 Лекции</button>
                 </div>
 
-                <!-- Наборы -->
+                <!-- НАБОРЫ -->
                 <div id="senior-recruitment" class="sub-section active">
                     <div class="weekly-inputs">
                         <div><label for="weeklyText">Текст отчётов:</label><textarea id="weeklyText" placeholder="Вставьте текст сообщений о наборах..."></textarea></div>
@@ -1154,7 +1155,7 @@
                     </div>
                 </div>
 
-                <!-- Электронные заявки -->
+                <!-- ЭЛЕКТРОННЫЕ ЗАЯВКИ -->
                 <div id="senior-applications" class="sub-section">
                     <div class="weekly-inputs">
                         <div><label for="appsText">Текст заявок:</label><textarea id="appsText" placeholder="Вставьте текст электронных заявок..."></textarea></div>
@@ -1171,7 +1172,7 @@
                     </div>
                 </div>
 
-                <!-- Индивидуальные -->
+                <!-- ИНДИВИДУАЛЬНЫЕ -->
                 <div id="senior-individual" class="sub-section">
                     <div class="weekly-inputs">
                         <div><label for="indivText">Текст сообщений:</label><textarea id="indivText" placeholder="Вставьте текст индивидуальных наборов..."></textarea></div>
@@ -1188,7 +1189,7 @@
                     </div>
                 </div>
 
-                <!-- Лекции -->
+                <!-- ЛЕКЦИИ -->
                 <div id="senior-lectures" class="sub-section">
                     <div class="weekly-inputs">
                         <div><label for="lecturesText">Текст сообщений:</label><textarea id="lecturesText" placeholder="Вставьте текст лекций..."></textarea></div>
@@ -1373,19 +1374,42 @@
             }
         });
 
-        // Все подвкладки
+        // ================================================================
+        // УНИВЕРСАЛЬНАЯ НАВИГАЦИЯ ПО ВКЛАДКАМ
+        // ================================================================
         document.querySelectorAll('.sub-nav-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Убираем активный класс у всех кнопок в этом контейнере
                 const parent = this.closest('.sub-nav');
-                if (parent) parent.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+                if (parent) {
+                    parent.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+                }
                 this.classList.add('active');
+
+                // Показываем соответствующую подсекцию
                 const subsection = this.dataset.subsection;
-                const section = this.closest('.section');
-                section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
-                const target = document.getElementById(subsection);
-                if (target) target.classList.add('active');
-                addLog(`📂 Подраздел: ${subsection}`);
-                if (subsection === 'gos-publication') renderPublishResults();
+                if (subsection) {
+                    // Ищем родительскую секцию (ближайший .section)
+                    const section = this.closest('.section');
+                    if (section) {
+                        // Скрываем все подсекции внутри этой секции
+                        section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+                        // Показываем нужную
+                        const target = document.getElementById(subsection);
+                        if (target) {
+                            target.classList.add('active');
+                            addLog(`📂 Подраздел: ${subsection}`);
+                        }
+                    }
+                }
+
+                // Специальная обработка для публикации
+                if (subsection === 'gos-publication') {
+                    renderPublishResults();
+                }
             });
         });
 
@@ -1950,7 +1974,7 @@
         }
 
         // ================================================================
-        // ГОСВОЛНЫ
+        // ГОСВОЛНЫ (полный код)
         // ================================================================
         const GOS_EVENTS_KEY = 'gosEvents';
         const DIST_EVENTS_KEY = 'distEvents';
@@ -2222,7 +2246,7 @@
             }
         }
 
-        // === РАСПРЕДЕЛЕНИЕ ===
+        // ---- РАСПРЕДЕЛЕНИЕ ----
         function parseDistMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
@@ -2327,7 +2351,7 @@
             }
         }
 
-        // === ПУБЛИКАЦИЯ ===
+        // ---- ПУБЛИКАЦИЯ ----
         function renderPublishResults() {
             const container = document.getElementById('publishResults');
             const events = loadGosEvents();
@@ -2493,7 +2517,7 @@
         }
 
         // ================================================================
-        // ОТЧЁТЫ (ВСЕ 4)
+        // ОТЧЁТЫ (ВСЕ 4 ФУНКЦИИ)
         // ================================================================
         const WEEKLY_RECRUITMENT_KEY = 'weeklyRecruitment';
         const WEEKLY_APPLICATIONS_KEY = 'weeklyApplications';
@@ -2617,7 +2641,7 @@
             addLog('🗑️ Отчёт по электронным заявкам сброшен');
         }
 
-        // ----- ИНДИВИДУАЛЬНЫЕ НАБОРЫ -----
+        // ----- ИНДИВИДУАЛЬНЫЕ -----
         function parseIndividualText(text) {
             const lines = text.split('\n').map(l => l.trim());
             const dateTimes = [];
