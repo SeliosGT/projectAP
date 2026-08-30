@@ -455,16 +455,16 @@
             width: 100%;
             border-collapse: collapse;
             min-width: 800px;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         th, td {
-            padding: 6px 10px;
+            padding: 12px 16px;
             text-align: left;
             border-right: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
-            white-space: nowrap;
             transition: background 0.2s ease;
+            font-size: 13px;
         }
 
         th:last-child, td:last-child { border-right: none; }
@@ -472,13 +472,14 @@
         th {
             background: var(--bg-secondary);
             font-weight: 700;
-            font-size: 10px;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             color: var(--text-muted);
             position: sticky;
             top: 0;
             z-index: 2;
+            padding: 14px 16px;
         }
 
         tbody tr {
@@ -601,7 +602,10 @@
             margin-top: 2px;
         }
 
-        /* ========== МОДАЛЬНЫЕ ОКНА ========== */
+        .stat-value.approved { color: var(--success); }
+        .stat-value.rejected { color: var(--danger); }
+        .stat-value.pending { color: var(--warning); }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -752,7 +756,6 @@
             cursor: pointer;
         }
 
-        /* ========== ПАРОЛЬНАЯ ЗАЩИТА ========== */
         .password-overlay {
             display: none;
             position: absolute;
@@ -813,7 +816,6 @@
             display: block;
         }
 
-        /* ========== ЛОГ ========== */
         .log-panel {
             display: none;
             margin-top: 16px;
@@ -909,7 +911,40 @@
         .error-message { color: var(--danger); font-weight: 600; margin: 6px 0; }
         .hidden { display: none !important; }
 
-        /* ========== АДАПТИВ ========== */
+        /* ========== СТАТУСЫ ЗАЯВОК ========== */
+        .status-badge {
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .status-badge.pending {
+            background: rgba(234,179,8,0.12);
+            color: var(--warning);
+            border: 1px solid rgba(234,179,8,0.15);
+        }
+
+        .status-badge.approved {
+            background: rgba(34,197,94,0.12);
+            color: var(--success);
+            border: 1px solid rgba(34,197,94,0.15);
+        }
+
+        .status-badge.rejected {
+            background: rgba(239,68,68,0.12);
+            color: var(--danger);
+            border: 1px solid rgba(239,68,68,0.15);
+        }
+
+        .status-badge .status-icon {
+            font-size: 12px;
+        }
+
         @media (max-width: 768px) {
             .app-container { padding: 16px; border-radius: 20px; }
             body { padding: 12px; }
@@ -920,7 +955,7 @@
             .orb-1, .orb-2 { display: none; }
             .stats-container { flex-direction: column; }
             .stat-card { min-width: auto; }
-            th, td { font-size: 10px; padding: 4px 6px; }
+            th, td { font-size: 11px; padding: 8px 10px; }
             .weekly-inputs { flex-direction: column; }
             .weekly-inputs > div { min-width: auto; }
             .modal { padding: 20px; }
@@ -933,11 +968,12 @@
             .nav-btn { font-size: 11px; padding: 6px 10px; }
             .theme-toggle, .log-toggle { font-size: 11px; padding: 4px 8px; }
             .nav-badge { font-size: 8px; min-width: 16px; height: 16px; }
+            th, td { font-size: 10px; padding: 6px 8px; }
         }
 
         @media (min-width: 1200px) {
-            table { font-size: 12px; }
-            th, td { padding: 5px 8px; }
+            table { font-size: 13px; }
+            th, td { padding: 14px 18px; }
         }
     </style>
 </head>
@@ -1029,7 +1065,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 2: ЗАЯВКИ
+        СЕКЦИЯ 2: ЗАЯВКИ (обновлённая)
         ============================================================ -->
         <div id="section-applications" class="section" style="position:relative;">
             <div class="password-overlay show" id="appPasswordOverlay">
@@ -1040,37 +1076,61 @@
                 <button class="btn" id="appPasswordBtn">Войти</button>
             </div>
 
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-                <h2 style="font-weight:700;font-size:20px;color:var(--text-primary);">📋 Заявки</h2>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+                <h2 style="font-weight:700;font-size:22px;color:var(--text-primary);">📋 Заявки</h2>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
                     <button class="btn btn-success btn-sm" onclick="markAllAsRead()">✅ Все прочитаны</button>
                     <button class="btn btn-refresh btn-sm" onclick="loadApplications()">🔄 Обновить</button>
                 </div>
             </div>
 
-            <div class="filter-row" style="margin-bottom:12px;">
-                <span style="color:var(--text-muted);font-weight:600;font-size:12px;">Тип:</span>
-                <button class="btn btn-outline btn-sm app-filter-btn active-filter" data-filter="all">📋 Все</button>
+            <div class="stats-container" id="appStats">
+                <div class="stat-card">
+                    <div class="stat-label">Всего</div>
+                    <div class="stat-value" id="appTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Одобрено</div>
+                    <div class="stat-value approved" id="appApproved">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Отклонено</div>
+                    <div class="stat-value rejected" id="appRejected">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Ожидают</div>
+                    <div class="stat-value pending" id="appPending">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Непрочитанные</div>
+                    <div class="stat-value" id="appUnread" style="color:var(--danger);">0</div>
+                </div>
+            </div>
+
+            <div class="filter-row" style="margin-bottom:8px;">
+                <span style="color:var(--text-muted);font-weight:600;font-size:12px;">📌 Тип:</span>
+                <button class="btn btn-outline btn-sm app-filter-btn active-filter" data-filter="all">Все</button>
                 <button class="btn btn-outline btn-sm app-filter-btn" data-filter="discipline">⚖️ Дисциплинарные</button>
                 <button class="btn btn-outline btn-sm app-filter-btn" data-filter="hr">👥 HR</button>
             </div>
-
-            <div class="stats-container" id="appStats">
-                <div class="stat-card"><div class="stat-label">Всего</div><div class="stat-value" id="appTotal">0</div></div>
-                <div class="stat-card"><div class="stat-label">Непрочитанные</div><div class="stat-value" id="appUnread" style="color:var(--danger);">0</div></div>
-                <div class="stat-card"><div class="stat-label">Прочитанные</div><div class="stat-value" id="appRead" style="color:var(--success);">0</div></div>
+            <div class="filter-row" style="margin-bottom:12px;">
+                <span style="color:var(--text-muted);font-weight:600;font-size:12px;">🏷️ Статус:</span>
+                <button class="btn btn-outline btn-sm status-filter-btn active-filter" data-status="all">Все</button>
+                <button class="btn btn-outline btn-sm status-filter-btn" data-status="pending">⏳ Ожидают</button>
+                <button class="btn btn-outline btn-sm status-filter-btn" data-status="approved">✅ Одобрено</button>
+                <button class="btn btn-outline btn-sm status-filter-btn" data-status="rejected">❌ Отклонено</button>
             </div>
 
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Тип</th>
-                            <th>Имя</th>
-                            <th>Дата</th>
-                            <th>Статус</th>
-                            <th>Действия</th>
+                            <th style="width:60px;">ID</th>
+                            <th style="min-width:100px;">Тип</th>
+                            <th style="min-width:140px;">Имя</th>
+                            <th style="min-width:150px;">Дата</th>
+                            <th style="min-width:120px;">Статус</th>
+                            <th style="min-width:280px;">Действия</th>
                         </tr>
                     </thead>
                     <tbody id="appTbody"></tbody>
@@ -1120,7 +1180,7 @@
         </div>
 
         <!-- ============================================================
-        СЕКЦИЯ 4: ОТЧЁТЫ (ИСПРАВЛЕННАЯ ВЕРСИЯ)
+        СЕКЦИЯ 4: ОТЧЁТЫ
         ============================================================ -->
         <div id="section-weekly" class="section">
             <div class="sub-nav">
@@ -1130,15 +1190,13 @@
             </div>
 
             <div id="weekly-senior" class="sub-section active">
-                <!-- ВНУТРЕННЯЯ НАВИГАЦИЯ СТАРШЕГО СОСТАВА -->
-                <div class="sub-nav" style="margin-bottom:12px;">
+                <div class="sub-nav" style="margin-bottom:12px;" id="seniorSubNav">
                     <button class="sub-nav-btn active" data-subsection="senior-recruitment">📥 Наборы</button>
                     <button class="sub-nav-btn" data-subsection="senior-applications">📋 Электронные заявки</button>
                     <button class="sub-nav-btn" data-subsection="senior-individual">🎯 Индивидуальные</button>
                     <button class="sub-nav-btn" data-subsection="senior-lectures">📚 Лекции</button>
                 </div>
 
-                <!-- НАБОРЫ -->
                 <div id="senior-recruitment" class="sub-section active">
                     <div class="weekly-inputs">
                         <div><label for="weeklyText">Текст отчётов:</label><textarea id="weeklyText" placeholder="Вставьте текст сообщений о наборах..."></textarea></div>
@@ -1155,7 +1213,6 @@
                     </div>
                 </div>
 
-                <!-- ЭЛЕКТРОННЫЕ ЗАЯВКИ -->
                 <div id="senior-applications" class="sub-section">
                     <div class="weekly-inputs">
                         <div><label for="appsText">Текст заявок:</label><textarea id="appsText" placeholder="Вставьте текст электронных заявок..."></textarea></div>
@@ -1172,7 +1229,6 @@
                     </div>
                 </div>
 
-                <!-- ИНДИВИДУАЛЬНЫЕ -->
                 <div id="senior-individual" class="sub-section">
                     <div class="weekly-inputs">
                         <div><label for="indivText">Текст сообщений:</label><textarea id="indivText" placeholder="Вставьте текст индивидуальных наборов..."></textarea></div>
@@ -1189,7 +1245,6 @@
                     </div>
                 </div>
 
-                <!-- ЛЕКЦИИ -->
                 <div id="senior-lectures" class="sub-section">
                     <div class="weekly-inputs">
                         <div><label for="lecturesText">Текст сообщений:</label><textarea id="lecturesText" placeholder="Вставьте текст лекций..."></textarea></div>
@@ -1269,6 +1324,7 @@
         // ЛОГ
         // ================================================================
         let logs = [];
+
         function addLog(message) {
             const time = new Date().toLocaleTimeString();
             const entry = `[${time}] ${message}`;
@@ -1278,11 +1334,13 @@
             content.scrollTop = content.scrollHeight;
             console.log(entry);
         }
+
         function clearLogs() {
             logs = [];
             document.getElementById('logContent').innerHTML = '<div class="log-entry" style="color:var(--text-muted);">Лог очищен</div>';
             addLog('🧹 Лог очищен');
         }
+
         document.getElementById('logToggle').addEventListener('click', function() {
             const panel = document.getElementById('logPanel');
             panel.classList.toggle('active');
@@ -1296,6 +1354,7 @@
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeLabel = document.getElementById('themeLabel');
+
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme');
             const newTheme = current === 'light' ? 'dark' : 'light';
@@ -1304,10 +1363,17 @@
             updateThemeUI(newTheme);
             addLog(`🎨 Тема: ${newTheme}`);
         }
+
         function updateThemeUI(theme) {
-            if (theme === 'light') { themeIcon.textContent = '☀️'; themeLabel.textContent = 'Светлая'; }
-            else { themeIcon.textContent = '🌙'; themeLabel.textContent = 'Тёмная'; }
+            if (theme === 'light') {
+                themeIcon.textContent = '☀️';
+                themeLabel.textContent = 'Светлая';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeLabel.textContent = 'Тёмная';
+            }
         }
+
         themeToggle.addEventListener('click', toggleTheme);
         const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -1327,13 +1393,23 @@
             addLog('🔓 Раздел "Заявки" разблокирован');
             loadApplications();
         }
+
         function checkAppPassword() {
             const input = appPasswordInput.value.trim();
-            if (input === ADMIN_PASSWORD) { unlockApplications(); }
-            else { appPasswordError.classList.add('show'); appPasswordInput.value = ''; appPasswordInput.focus(); addLog('❌ Неверный пароль для заявок'); }
+            if (input === ADMIN_PASSWORD) {
+                unlockApplications();
+            } else {
+                appPasswordError.classList.add('show');
+                appPasswordInput.value = '';
+                appPasswordInput.focus();
+                addLog('❌ Неверный пароль для заявок');
+            }
         }
+
         appPasswordBtn.addEventListener('click', checkAppPassword);
-        appPasswordInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAppPassword(); });
+        appPasswordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') checkAppPassword();
+        });
 
         // ================================================================
         // НАВИГАЦИЯ
@@ -1341,6 +1417,7 @@
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const section = this.dataset.section;
+
                 if (section === 'applications') {
                     if (!appUnlocked) {
                         appPasswordOverlay.classList.add('show');
@@ -1355,16 +1432,19 @@
                         return;
                     }
                 }
+
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.getElementById(`section-${section}`).classList.add('active');
                 addLog(`📂 Переход: ${section}`);
+
                 if (section === 'applications' && appUnlocked) loadApplications();
                 if (section === 'cadres') loadCadres();
                 if (section === 'goswaves') { renderGosResults(); renderDistResults(); renderPublishResults(); }
             });
         });
+
         document.getElementById('navApplications').addEventListener('click', function(e) {
             if (!appUnlocked) {
                 appPasswordOverlay.classList.add('show');
@@ -1374,42 +1454,21 @@
             }
         });
 
-        // ================================================================
-        // УНИВЕРСАЛЬНАЯ НАВИГАЦИЯ ПО ВКЛАДКАМ
-        // ================================================================
+        // НАВИГАЦИЯ ПО ПОДВКЛАДКАМ
         document.querySelectorAll('.sub-nav-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                // Убираем активный класс у всех кнопок в этом контейнере
+            btn.addEventListener('click', function() {
                 const parent = this.closest('.sub-nav');
                 if (parent) {
                     parent.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
                 }
                 this.classList.add('active');
-
-                // Показываем соответствующую подсекцию
                 const subsection = this.dataset.subsection;
-                if (subsection) {
-                    // Ищем родительскую секцию (ближайший .section)
-                    const section = this.closest('.section');
-                    if (section) {
-                        // Скрываем все подсекции внутри этой секции
-                        section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
-                        // Показываем нужную
-                        const target = document.getElementById(subsection);
-                        if (target) {
-                            target.classList.add('active');
-                            addLog(`📂 Подраздел: ${subsection}`);
-                        }
-                    }
-                }
-
-                // Специальная обработка для публикации
-                if (subsection === 'gos-publication') {
-                    renderPublishResults();
-                }
+                const section = this.closest('.section');
+                section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+                const target = document.getElementById(subsection);
+                if (target) target.classList.add('active');
+                addLog(`📂 Подраздел: ${subsection}`);
+                if (subsection === 'gos-publication') renderPublishResults();
             });
         });
 
@@ -1425,24 +1484,29 @@
             if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
             return new Date(Date.UTC(year, month, day));
         }
+
         function formatDate(date) {
             const d = date.getUTCDate();
             const m = date.getUTCMonth() + 1;
             const y = date.getUTCFullYear();
             return `${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}.${y}`;
         }
+
         function todayUTC() {
             const now = new Date();
             return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
         }
+
         function differenceInDays(startUTC, endUTC) {
             const MS_PER_DAY = 1000 * 60 * 60 * 24;
             return Math.floor((endUTC - startUTC) / MS_PER_DAY);
         }
+
         function showError(message, elementId) {
             const el = document.getElementById(elementId);
             if (el) { el.textContent = message; el.classList.remove('hidden'); }
         }
+
         function hideError(elementId) {
             const el = document.getElementById(elementId);
             if (el) { el.textContent = ''; el.classList.add('hidden'); }
@@ -1464,17 +1528,25 @@
             addLog('🔄 Загрузка кадров...');
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
-                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Accept': 'application/json' }
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
                 });
+
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
                 let data = await response.json();
                 addLog(`✅ Загружено ${data.length} сотрудников`);
+
                 data.sort((a, b) => {
                     const idxA = POSITION_ORDER.indexOf(a.position);
                     const idxB = POSITION_ORDER.indexOf(b.position);
                     if (idxA !== idxB) return idxA - idxB;
                     return parseDate(a.last_promotion_date) - parseDate(b.last_promotion_date);
                 });
+
                 if (filter === 'fired') {
                     data = data.filter(emp => calculateStatus(emp).daysLeft <= 0);
                 } else if (filter === 'warning1') {
@@ -1482,19 +1554,24 @@
                 } else if (filter !== 'all') {
                     data = data.filter(emp => emp.position === filter);
                 }
+
                 const tbody = document.getElementById('cadreTbody');
                 tbody.innerHTML = '';
+
                 if (data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);">Нет данных</td></tr>';
                     return;
                 }
+
                 data.forEach(emp => {
                     const status = calculateStatus(emp);
                     const tr = document.createElement('tr');
                     if (status.daysLeft <= 0) tr.classList.add('danger');
                     else if (status.daysLeft === 1) tr.classList.add('warning');
+
                     const vacations = emp.vacations || [];
                     const vacationDisplay = vacations.length > 0 ? vacations.join('; ') : '—';
+
                     tr.innerHTML = `
                         <td>${emp.name}</td>
                         <td>${emp.discord_id}</td>
@@ -1512,6 +1589,7 @@
                     `;
                     tbody.appendChild(tr);
                 });
+
             } catch (error) {
                 addLog(`❌ Ошибка загрузки кадров: ${error.message}`);
                 showToast('❌ Ошибка загрузки кадров', 'error');
@@ -1532,6 +1610,9 @@
             showToast('✅ Кадры синхронизированы', 'success');
         }
 
+        // ================================================================
+        // РЕДАКТИРОВАНИЕ СОТРУДНИКА
+        // ================================================================
         async function editEmployee(discordId) {
             addLog(`✏️ Редактирование сотрудника ${discordId}`);
             try {
@@ -1539,30 +1620,68 @@
                     headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
                 const data = await response.json();
-                if (data.length === 0) { showToast('❌ Сотрудник не найден', 'error'); return; }
+                if (data.length === 0) {
+                    showToast('❌ Сотрудник не найден', 'error');
+                    return;
+                }
                 const emp = data[0];
                 editingEmployee = emp;
+
                 const positions = Object.keys(POSITION_DEADLINES);
-                const positionOptions = positions.map(p => `<option value="${p}" ${p === emp.position ? 'selected' : ''}>${p}</option>`).join('');
+                const positionOptions = positions.map(p =>
+                    `<option value="${p}" ${p === emp.position ? 'selected' : ''}>${p}</option>`
+                ).join('');
+
                 const vacationList = (emp.vacations || []).join('; ');
+
                 document.getElementById('editModalBody').innerHTML = `
-                    <div class="edit-field"><label>Discord ID</label><input type="text" id="editDiscordId" value="${emp.discord_id}" readonly style="opacity:0.6;"></div>
-                    <div class="edit-field"><label>Имя</label><input type="text" id="editName" value="${emp.name}"></div>
-                    <div class="edit-field"><label>Паспорт</label><input type="text" id="editPassport" value="${emp.passport || ''}"></div>
-                    <div class="edit-field"><label>Должность</label><select id="editPosition">${positionOptions}</select></div>
-                    <div class="edit-field"><label>Дата приёма (дд.мм.гггг)</label><input type="text" id="editHireDate" value="${emp.hire_date || ''}" placeholder="01.01.2024"></div>
-                    <div class="edit-field"><label>Дата последнего повышения (дд.мм.гггг)</label><input type="text" id="editLastPromotion" value="${emp.last_promotion_date || ''}" placeholder="01.01.2024"></div>
-                    <div class="edit-field"><label>Сдвиг отпуска (дней)</label><input type="number" id="editVacationShift" value="${emp.vacation_shift || 0}"></div>
-                    <div class="edit-field"><label>Отпуска (через ; )</label><input type="text" id="editVacations" value="${vacationList}"></div>
-                    <div class="edit-field"><label>Дедлайн (дней) — вычисляется автоматически по должности</label><input type="text" id="editDeadlineDays" value="${emp.deadline_days || 3}" readonly style="opacity:0.6;"></div>
+                    <div class="edit-field">
+                        <label>Discord ID</label>
+                        <input type="text" id="editDiscordId" value="${emp.discord_id}" readonly style="opacity:0.6;">
+                    </div>
+                    <div class="edit-field">
+                        <label>Имя</label>
+                        <input type="text" id="editName" value="${emp.name}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Паспорт</label>
+                        <input type="text" id="editPassport" value="${emp.passport || ''}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Должность</label>
+                        <select id="editPosition">${positionOptions}</select>
+                    </div>
+                    <div class="edit-field">
+                        <label>Дата приёма (дд.мм.гггг)</label>
+                        <input type="text" id="editHireDate" value="${emp.hire_date || ''}" placeholder="01.01.2024">
+                    </div>
+                    <div class="edit-field">
+                        <label>Дата последнего повышения (дд.мм.гггг)</label>
+                        <input type="text" id="editLastPromotion" value="${emp.last_promotion_date || ''}" placeholder="01.01.2024">
+                    </div>
+                    <div class="edit-field">
+                        <label>Сдвиг отпуска (дней)</label>
+                        <input type="number" id="editVacationShift" value="${emp.vacation_shift || 0}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Отпуска (через ; )</label>
+                        <input type="text" id="editVacations" value="${vacationList}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Дедлайн (дней) — вычисляется автоматически по должности</label>
+                        <input type="text" id="editDeadlineDays" value="${emp.deadline_days || 3}" readonly style="opacity:0.6;">
+                    </div>
                 `;
+
                 document.getElementById('editPosition').addEventListener('change', function() {
                     const pos = this.value;
                     const days = POSITION_DEADLINES[pos] || 3;
                     document.getElementById('editDeadlineDays').value = days;
                 });
+
                 document.getElementById('editModal').classList.add('show');
                 addLog(`✏️ Открыто редактирование ${emp.name}`);
+
             } catch (error) {
                 addLog(`❌ Ошибка: ${error.message}`);
                 showToast('❌ Ошибка загрузки сотрудника', 'error');
@@ -1571,8 +1690,13 @@
 
         document.getElementById('editModalSave').addEventListener('click', async function() {
             if (!editingEmployee) return;
+
             const password = prompt('Введите пароль для подтверждения изменений:');
-            if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
+            if (password !== ADMIN_PASSWORD) {
+                showToast('❌ Неверный пароль!', 'error');
+                return;
+            }
+
             const discordId = editingEmployee.discord_id;
             const name = document.getElementById('editName').value.trim();
             const passport = document.getElementById('editPassport').value.trim();
@@ -1583,13 +1707,31 @@
             const vacationsRaw = document.getElementById('editVacations').value.trim();
             const vacations = vacationsRaw ? vacationsRaw.split(';').map(s => s.trim()).filter(Boolean) : [];
             const deadlineDays = POSITION_DEADLINES[position] || 3;
-            if (!name) { showToast('❌ Имя обязательно', 'error'); return; }
+
+            if (!name) {
+                showToast('❌ Имя обязательно', 'error');
+                return;
+            }
+
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
-                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, passport, position, hire_date: hireDate || null, last_promotion_date: lastPromotion || null, vacation_shift: vacationShift, vacations, deadline_days: deadlineDays })
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        passport,
+                        position,
+                        hire_date: hireDate || null,
+                        last_promotion_date: lastPromotion || null,
+                        vacation_shift: vacationShift,
+                        vacations,
+                        deadline_days: deadlineDays
+                    })
                 });
+
                 if (response.ok) {
                     addLog(`✅ Сотрудник ${name} обновлён`);
                     document.getElementById('editModal').classList.remove('show');
@@ -1605,19 +1747,40 @@
                 showToast('❌ Ошибка обновления', 'error');
             }
         });
-        document.getElementById('editModalClose').addEventListener('click', function() { document.getElementById('editModal').classList.remove('show'); editingEmployee = null; });
-        document.getElementById('editModalCancel').addEventListener('click', function() { document.getElementById('editModal').classList.remove('show'); editingEmployee = null; });
-        document.getElementById('editModal').addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('show'); editingEmployee = null; } });
 
+        document.getElementById('editModalClose').addEventListener('click', function() {
+            document.getElementById('editModal').classList.remove('show');
+            editingEmployee = null;
+        });
+
+        document.getElementById('editModalCancel').addEventListener('click', function() {
+            document.getElementById('editModal').classList.remove('show');
+            editingEmployee = null;
+        });
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+                editingEmployee = null;
+            }
+        });
+
+        // ================================================================
+        // ФУНКЦИИ КАДРОВ
+        // ================================================================
         async function deleteEmployee(discordId) {
             const password = prompt('Введите пароль для удаления сотрудника:');
             if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
+
             addLog(`🗑️ Удаление сотрудника ${discordId}`);
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
                     method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
                 });
+
                 if (response.ok) {
                     addLog(`✅ Сотрудник удалён`);
                     await loadCadres();
@@ -1634,18 +1797,21 @@
         function parseCadreMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
+
             let discordId = null, name = null;
             for (const line of lines) {
                 const match = line.match(/<@(\d+)>\s*\|\s*(.+)/);
                 if (match) { discordId = match[1]; name = match[2].trim(); break; }
             }
             if (!discordId || !name) return { type: 'error', message: 'Не найдена строка с упоминанием и именем' };
+
             const promotionLine = lines.find(l => l.toLowerCase().includes('повышен до должности'));
             if (promotionLine) {
                 const positionMatch = promotionLine.match(/повышен до должности\s*(.+?)\s*\.?\s*$/i);
                 if (!positionMatch) return { type: 'error', message: 'Не удалось извлечь должность' };
                 return { type: 'promotion', discordId, name, newPosition: positionMatch[1].trim() };
             }
+
             const hasNabor = lines.some(l => l.toLowerCase().includes('набор') || l.toLowerCase().includes('инд. набор'));
             const dateLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}/));
             if (hasNabor && dateLine) {
@@ -1656,6 +1822,7 @@
                 if (!hireDate) return { type: 'error', message: 'Некорректная дата приёма' };
                 return { type: 'hire', discordId, name, passport: passportLine.trim(), hireDateStr };
             }
+
             const vacationLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/));
             if (vacationLine) {
                 const dates = vacationLine.match(/(\d{2}\.\d{2}\.\d{4})\s*-\s*(\d{2}\.\d{2}\.\d{4})/);
@@ -1665,17 +1832,20 @@
                 const duration = differenceInDays(startDate.getTime(), endDate.getTime()) + 1;
                 return { type: 'vacation', discordId, name, vacationStart: dates[1], vacationEnd: dates[2], duration };
             }
+
             return { type: 'error', message: 'Не удалось определить тип сообщения' };
         }
 
         async function processCadreMessage(text) {
             const parsed = parseCadreMessage(text);
             if (parsed.type === 'error') return { success: false, message: parsed.message };
+
             try {
                 const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
                     headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
                 const existing = await checkRes.json();
+
                 if (parsed.type === 'hire') {
                     if (existing.length > 0) return { success: false, message: 'Сотрудник уже существует' };
                     const newEmp = {
@@ -1691,26 +1861,39 @@
                     };
                     const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?apikey=${SUPABASE_KEY}`, {
                         method: 'POST',
-                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify(newEmp)
                     });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     addLog(`➕ Добавлен сотрудник ${parsed.name}`);
                     return { success: true, message: `Сотрудник ${parsed.name} добавлен` };
                 }
+
                 if (parsed.type === 'promotion') {
                     if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
                     const emp = existing[0];
                     if (!POSITION_DEADLINES[parsed.newPosition]) return { success: false, message: `Неизвестная должность: ${parsed.newPosition}` };
                     const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
                         method: 'PATCH',
-                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ position: parsed.newPosition, last_promotion_date: formatDate(new Date()), deadline_days: POSITION_DEADLINES[parsed.newPosition], vacation_shift: 0 })
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            position: parsed.newPosition,
+                            last_promotion_date: formatDate(new Date()),
+                            deadline_days: POSITION_DEADLINES[parsed.newPosition],
+                            vacation_shift: 0
+                        })
                     });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     addLog(`⬆️ Повышен ${parsed.name} до ${parsed.newPosition}`);
                     return { success: true, message: `${parsed.name} повышен до ${parsed.newPosition}` };
                 }
+
                 if (parsed.type === 'vacation') {
                     if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
                     const emp = existing[0];
@@ -1718,14 +1901,22 @@
                     vacations.push(`${parsed.vacationStart} - ${parsed.vacationEnd}`);
                     const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
                         method: 'PATCH',
-                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ vacation_shift: (emp.vacation_shift || 0) + parsed.duration, vacations })
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            vacation_shift: (emp.vacation_shift || 0) + parsed.duration,
+                            vacations: vacations
+                        })
                     });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     addLog(`🏖️ Отпуск учтён для ${parsed.name} (${parsed.duration} дн.)`);
                     return { success: true, message: `Отпуск учтён (${parsed.duration} дн.)` };
                 }
+
                 return { success: false, message: 'Неизвестная ошибка' };
+
             } catch (error) {
                 addLog(`❌ Ошибка обработки: ${error.message}`);
                 return { success: false, message: error.message };
@@ -1733,11 +1924,13 @@
         }
 
         // ================================================================
-        // ЗАЯВКИ
+        // ЗАЯВКИ (ОБНОВЛЁННАЯ ВЕРСИЯ — ГЛАЗИК + ПОЛНЫЕ ВОПРОСЫ)
         // ================================================================
         let appFilter = 'all';
+        let appStatusFilter = 'all';
         let applicationsData = [];
 
+        // Фильтры по типу
         document.querySelectorAll('.app-filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.app-filter-btn').forEach(b => b.classList.remove('active-filter'));
@@ -1748,17 +1941,35 @@
             });
         });
 
+        // Фильтры по статусу
+        document.querySelectorAll('.status-filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.status-filter-btn').forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+                appStatusFilter = this.dataset.status;
+                addLog(`🔍 Фильтр статуса: ${appStatusFilter}`);
+                renderApplications();
+            });
+        });
+
         async function loadApplications() {
             if (!appUnlocked) return;
             addLog('🔄 Загрузка заявок...');
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc&apikey=${SUPABASE_KEY}`, {
-                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Accept': 'application/json' }
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
                 });
+
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
                 applicationsData = await response.json();
                 addLog(`✅ Загружено ${applicationsData.length} заявок`);
                 renderApplications();
+
             } catch (error) {
                 addLog(`❌ Ошибка загрузки заявок: ${error.message}`);
                 showToast('❌ Ошибка загрузки заявок', 'error');
@@ -1767,47 +1978,135 @@
 
         function renderApplications() {
             const data = applicationsData || [];
+
             let filtered = data;
-            if (appFilter === 'discipline') filtered = data.filter(app => app.survey_type === 'discipline');
-            else if (appFilter === 'hr') filtered = data.filter(app => app.survey_type === 'hr');
+            if (appFilter === 'discipline') {
+                filtered = data.filter(app => app.survey_type === 'discipline');
+            } else if (appFilter === 'hr') {
+                filtered = data.filter(app => app.survey_type === 'hr');
+            }
+
+            if (appStatusFilter === 'pending') {
+                filtered = filtered.filter(app => !app.status || app.status === 'pending');
+            } else if (appStatusFilter === 'approved') {
+                filtered = filtered.filter(app => app.status === 'approved');
+            } else if (appStatusFilter === 'rejected') {
+                filtered = filtered.filter(app => app.status === 'rejected');
+            }
+
             const tbody = document.getElementById('appTbody');
             tbody.innerHTML = '';
+
             let unread = 0;
+            let approved = 0;
+            let rejected = 0;
+            let pending = 0;
+
             filtered.forEach(app => {
                 const isRead = app.is_read || false;
                 if (!isRead) unread++;
+
+                const status = app.status || 'pending';
+                if (status === 'approved') approved++;
+                else if (status === 'rejected') rejected++;
+                else pending++;
+
                 const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
                 const date = new Date(app.created_at);
                 const formattedDate = date.toLocaleString('ru-RU', {
                     day: '2-digit', month: '2-digit', year: 'numeric',
                     hour: '2-digit', minute: '2-digit'
                 });
+
+                const statusLabels = {
+                    pending: '⏳ Ожидает',
+                    approved: '✅ Одобрено',
+                    rejected: '❌ Отклонено'
+                };
+
+                const statusClasses = {
+                    pending: 'pending',
+                    approved: 'approved',
+                    rejected: 'rejected'
+                };
+
                 const tr = document.createElement('tr');
                 tr.className = isRead ? '' : 'unread-application';
+
+                const statusButtons = status === 'pending' ? `
+                    <button class="btn btn-sm btn-success" onclick="setApplicationStatus(${app.id}, 'approved')" style="background:var(--success);color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">✅ Одобрить</button>
+                    <button class="btn btn-sm btn-danger" onclick="setApplicationStatus(${app.id}, 'rejected')" style="background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">❌ Отклонить</button>
+                ` : `
+                    <button class="btn btn-sm btn-outline" onclick="setApplicationStatus(${app.id}, 'pending')" style="background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-secondary);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">↩️ Сброс</button>
+                `;
+
                 tr.innerHTML = `
-                    <td>#${app.id}</td>
+                    <td style="font-weight:700;color:var(--text-muted);font-size:14px;">#${app.id}</td>
                     <td>${typeLabel}</td>
-                    <td><strong>${app.q1 || 'Не указано'}</strong></td>
-                    <td>${formattedDate}</td>
-                    <td>${isRead ? '✅ Прочитано' : '🔴 Не прочитано'}</td>
+                    <td><strong style="font-size:14px;">${app.q1 || 'Не указано'}</strong></td>
+                    <td style="font-size:13px;">${formattedDate}</td>
+                    <td><span class="status-badge ${statusClasses[status] || 'pending'}"><span class="status-icon">${status === 'approved' ? '✅' : status === 'rejected' ? '❌' : '⏳'}</span> ${statusLabels[status] || 'Ожидает'}</span></td>
                     <td>
-                        <button class="btn btn-sm btn-view" onclick="viewApplication(${app.id})">👁️</button>
-                        ${!isRead ? `<button class="btn btn-sm btn-success" onclick="markAsRead(${app.id})">✓</button>` : ''}
-                        <button class="btn btn-sm btn-danger" onclick="deleteApplication(${app.id})">🗑️</button>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                            <button class="btn btn-sm btn-view" onclick="viewApplication(${app.id})" style="background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-secondary);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">👁️</button>
+                            ${statusButtons}
+                            ${!isRead ? `<button class="btn btn-sm" onclick="markAsRead(${app.id})" style="background:var(--accent);color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">👁️</button>` : ''}
+                            <button class="btn btn-sm btn-danger" onclick="deleteApplication(${app.id})" style="background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">🗑️</button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+
             document.getElementById('appTotal').textContent = filtered.length;
+            document.getElementById('appApproved').textContent = approved;
+            document.getElementById('appRejected').textContent = rejected;
+            document.getElementById('appPending').textContent = pending;
             document.getElementById('appUnread').textContent = unread;
-            document.getElementById('appRead').textContent = filtered.length - unread;
+
             const badge = document.getElementById('appBadge');
-            if (unread > 0) { badge.style.display = 'flex'; badge.textContent = unread; }
-            else { badge.style.display = 'none'; }
+            if (unread > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = unread;
+            } else {
+                badge.style.display = 'none';
+            }
         }
 
         // ================================================================
-        // ПРОСМОТР ЗАЯВКИ
+        // УСТАНОВКА СТАТУСА ЗАЯВКИ
+        // ================================================================
+        async function setApplicationStatus(id, status) {
+            if (!appUnlocked) return;
+            addLog(`📌 Установка статуса "${status}" для заявки #${id}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ status: status })
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Статус заявки #${id} изменён на "${status}"`);
+                    await loadApplications();
+                    showToast(`✅ Статус заявки изменён`, 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при обновлении статуса', 'error');
+            }
+        }
+
+        // ================================================================
+        // ПРОСМОТР ЗАЯВКИ (ПОЛНЫЕ ВОПРОСЫ)
         // ================================================================
         const RATING_NAMES = {
             discipline: {
@@ -1825,42 +2124,39 @@
             }
         };
 
-        const QUESTION_LABELS = {
-            q1: '📝 Ваше Имя Фамилия (IC)',
-            q2: '👤 Ваше Имя (OOC)',
-            q3: '🎂 Ваш возраст (OOC)',
-            q4: '⏰ Ваш игровой онлайн (OOC)',
-            q5: '🌅 Ваш прайм-тайм',
-            q6: '🌍 Ваш часовой пояс',
-            experience: '💼 Опыт работы на похожих должностях',
-            experience_detail: '📋 Детали опыта',
-            exam_money: '💰 Допустимо ли брать деньги за экзамены?',
-            situation3: '🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (Дисциплинарный)',
-            situation_colleague: '🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (HR)',
-            situation1: '🏛️ Представим такую ситуацию: В мэрии никого нет, но при этом в штате есть сотрудники Аппарата Правительства, что вы будете делать?',
-            situation2: '😡 Вас оскорбили в Дискорде, что вы будете делать?',
-            about: '📋 Пару слов о себе',
-            motivation: '🎯 Ради чего Вы хотите стать Дисциплинарным инспектором / HR-менеджером?',
-            qualities: '💪 Как вы думаете, какими качествами должен обладать Дисциплинарный инспектор?',
-            trainee: '👨‍🎓 Готовы ли вы уделять время стажерам, которые требуют особого внимания?',
-            trainee_detail: '📖 Молодой стажер никак не может сдать первый экзамен на секретаря. Расскажите, как вы сможете ему помочь?',
-            individual: '📄 Как вы относитесь к индивидуальным наборам? (Раздача листовок, агитируя отдел АП)',
-            hr_duties: '📚 Как Вы думаете, чем занимается HR-менеджер?'
-        };
-
         function viewApplication(id) {
             const app = applicationsData.find(a => a.id === id);
             if (!app) return;
+
             const type = app.survey_type || 'discipline';
             const typeLabel = type === 'discipline' ? '⚖️ Дисциплинарный инспектор' : '👥 HR-менеджер';
+
             document.getElementById('viewModalTitle').textContent = `${typeLabel} — ${app.q1 || 'Без имени'}`;
+
             let html = '';
-            const mainFields = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
-            mainFields.forEach(key => {
-                if (app[key] && app[key].trim()) {
-                    html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS[key] || key}</span><span class="field-value">${app[key]}</span></div>`;
+
+            // Поля с полными вопросами
+            const mainFields = [
+                { key: 'q1', label: '📝 Ваше Имя Фамилия (IC)' },
+                { key: 'q2', label: '👤 Ваше Имя (OOC)' },
+                { key: 'q3', label: '🎂 Ваш возраст (OOC)' },
+                { key: 'q4', label: '⏰ Ваш игровой онлайн (OOC)' },
+                { key: 'q5', label: '🌅 Ваш прайм-тайм' },
+                { key: 'q6', label: '🌍 Ваш часовой пояс' }
+            ];
+
+            mainFields.forEach(field => {
+                if (app[field.key] && app[field.key].trim()) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">${field.label}</span>
+                            <span class="field-value">${app[field.key]}</span>
+                        </div>
+                    `;
                 }
             });
+
+            // Рейтинги
             if (app.ratings) {
                 try {
                     const ratings = JSON.parse(app.ratings);
@@ -1876,21 +2172,139 @@
                     }
                 } catch (e) {}
             }
+
+            // Опыт
             if (app.experience) {
-                html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS.experience}</span><span class="field-value">${app.experience === 'yes' ? '✅ Да' : '❌ Нет'}</span></div>`;
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">💼 Имеется ли у вас опыт работы на похожих должностях?</span>
+                        <span class="field-value">${app.experience === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
                 if (app.experience === 'yes' && app.experience_detail) {
-                    html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS.experience_detail}</span><span class="field-value">${app.experience_detail}</span></div>`;
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">📋 Где и кем вы работали?</span>
+                            <span class="field-value">${app.experience_detail}</span>
+                        </div>
+                    `;
                 }
             }
+
+            // Деньги за экзамены
             if (app.exam_money) {
-                html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS.exam_money}</span><span class="field-value">${app.exam_money === 'yes' ? '✅ Да' : '❌ Нет'}</span></div>`;
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">💰 Допустимо ли брать деньги за сдачу экзаменов (именно в Аппарате Правительства)?</span>
+                        <span class="field-value">${app.exam_money === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
             }
-            const situationKeys = ['situation1', 'situation2', 'situation3', 'situation_colleague', 'individual', 'trainee', 'trainee_detail', 'hr_duties', 'qualities', 'about', 'motivation'];
-            situationKeys.forEach(key => {
-                if (app[key] && app[key].trim()) {
-                    html += `<div class="modal-field"><span class="field-label">${QUESTION_LABELS[key] || key}</span><span class="field-value">${app[key]}</span></div>`;
+
+            // Ситуация с коллегой
+            if (app.situation3 && app.situation3.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (Дисциплинарный)</span>
+                        <span class="field-value">${app.situation3}</span>
+                    </div>
+                `;
+            }
+            if (app.situation_colleague && app.situation_colleague.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (HR)</span>
+                        <span class="field-value">${app.situation_colleague}</span>
+                    </div>
+                `;
+            }
+
+            // Ситуация 1
+            if (app.situation1 && app.situation1.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🏛️ Представим такую ситуацию: В мэрии никого нет, но при этом в штате есть сотрудники Аппарата Правительства, что вы будете делать?</span>
+                        <span class="field-value">${app.situation1}</span>
+                    </div>
+                `;
+            }
+
+            // Оскорбление
+            if (app.situation2 && app.situation2.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">😡 Вас оскорбили в Дискорде, что вы будете делать?</span>
+                        <span class="field-value">${app.situation2}</span>
+                    </div>
+                `;
+            }
+
+            // О себе
+            if (app.about && app.about.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">📋 Пару слов о себе</span>
+                        <span class="field-value">${app.about}</span>
+                    </div>
+                `;
+            }
+
+            // Мотивация
+            if (app.motivation && app.motivation.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🎯 Ради чего Вы хотите стать Дисциплинарным инспектором / HR-менеджером?</span>
+                        <span class="field-value">${app.motivation}</span>
+                    </div>
+                `;
+            }
+
+            // Качества
+            if (app.qualities && app.qualities.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">💪 Как вы думаете, какими качествами должен обладать Дисциплинарный инспектор?</span>
+                        <span class="field-value">${app.qualities}</span>
+                    </div>
+                `;
+            }
+
+            // HR вопросы
+            if (app.trainee && app.trainee.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">👨‍🎓 Готовы ли вы уделять время стажерам, которые требуют особого внимания?</span>
+                        <span class="field-value">${app.trainee === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
+                if (app.trainee === 'yes' && app.trainee_detail) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">📖 Молодой стажер никак не может сдать первый экзамен на секретаря. Расскажите, как вы сможете ему помочь?</span>
+                            <span class="field-value">${app.trainee_detail}</span>
+                        </div>
+                    `;
                 }
-            });
+            }
+
+            if (app.individual && app.individual.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">📄 Как вы относитесь к индивидуальным наборам? (Раздача листовок, агитируя отдел АП)</span>
+                        <span class="field-value">${app.individual}</span>
+                    </div>
+                `;
+            }
+
+            if (app.hr_duties && app.hr_duties.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">📚 Как Вы думаете, чем занимается HR-менеджер?</span>
+                        <span class="field-value">${app.hr_duties}</span>
+                    </div>
+                `;
+            }
+
             document.getElementById('viewModalBody').innerHTML = html;
             document.getElementById('viewModal').classList.add('show');
             addLog(`👁️ Просмотр заявки #${id}`);
@@ -1899,19 +2313,30 @@
         function closeViewModal() {
             document.getElementById('viewModal').classList.remove('show');
         }
+
         document.getElementById('viewModalClose').addEventListener('click', closeViewModal);
         document.getElementById('viewModalCloseBtn').addEventListener('click', closeViewModal);
-        document.getElementById('viewModal').addEventListener('click', function(e) { if (e.target === this) closeViewModal(); });
+        document.getElementById('viewModal').addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
 
+        // ================================================================
+        // ФУНКЦИИ ЗАЯВОК
+        // ================================================================
         async function markAsRead(id) {
             if (!appUnlocked) return;
-            addLog(`📖 Отметка заявки #${id} как прочитанной`);
+            addLog(`👁️ Отметка заявки #${id} как прочитанной`);
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
-                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
                     body: JSON.stringify({ is_read: true })
                 });
+
                 if (response.ok) {
                     addLog(`✅ Заявка #${id} отмечена как прочитанная`);
                     await loadApplications();
@@ -1929,13 +2354,18 @@
 
         async function markAllAsRead() {
             if (!appUnlocked) return;
-            addLog('📖 Отметка всех заявок как прочитанных');
+            addLog('👁️ Отметка всех заявок как прочитанных');
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?is_read=eq.false&apikey=${SUPABASE_KEY}`, {
                     method: 'PATCH',
-                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
                     body: JSON.stringify({ is_read: true })
                 });
+
                 if (response.ok) {
                     addLog('✅ Все заявки отмечены как прочитанные');
                     await loadApplications();
@@ -1958,8 +2388,11 @@
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
                     method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
                 });
+
                 if (response.ok) {
                     addLog(`✅ Заявка #${id} удалена`);
                     await loadApplications();
@@ -1974,7 +2407,7 @@
         }
 
         // ================================================================
-        // ГОСВОЛНЫ (полный код)
+        // ГОСВОЛНЫ (ПОЛНАЯ ВЕРСИЯ)
         // ================================================================
         const GOS_EVENTS_KEY = 'gosEvents';
         const DIST_EVENTS_KEY = 'distEvents';
@@ -2246,7 +2679,7 @@
             }
         }
 
-        // ---- РАСПРЕДЕЛЕНИЕ ----
+        // ===== РАСПРЕДЕЛЕНИЕ =====
         function parseDistMessage(text) {
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
@@ -2351,7 +2784,7 @@
             }
         }
 
-        // ---- ПУБЛИКАЦИЯ ----
+        // ===== ПУБЛИКАЦИЯ =====
         function renderPublishResults() {
             const container = document.getElementById('publishResults');
             const events = loadGosEvents();
@@ -2360,6 +2793,7 @@
                 container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет данных для публикации</div>';
                 return;
             }
+
             const grouped = {};
             events.forEach(event => {
                 const dateMatch = event.text.match(/\d{2}\.\d{2}\.\d{4}/);
@@ -2517,14 +2951,14 @@
         }
 
         // ================================================================
-        // ОТЧЁТЫ (ВСЕ 4 ФУНКЦИИ)
+        // ОТЧЁТЫ
         // ================================================================
         const WEEKLY_RECRUITMENT_KEY = 'weeklyRecruitment';
         const WEEKLY_APPLICATIONS_KEY = 'weeklyApplications';
         const WEEKLY_INDIVIDUAL_KEY = 'weeklyIndividual';
         const WEEKLY_LECTURES_KEY = 'weeklyLectures';
 
-        // ----- НАБОРЫ -----
+        // Наборы
         function processWeeklyRecruitment() {
             const text = document.getElementById('weeklyText').value;
             const linksText = document.getElementById('weeklyLinks').value;
@@ -2588,6 +3022,7 @@
             localStorage.setItem(WEEKLY_RECRUITMENT_KEY, JSON.stringify({ blocks, links }));
             addLog(`📊 Сформирован отчёт по наборам (${blocks.length} записей)`);
         }
+
         function resetWeeklyRecruitment() {
             document.getElementById('weeklyText').value = '';
             document.getElementById('weeklyLinks').value = '';
@@ -2597,7 +3032,7 @@
             addLog('🗑️ Отчёт по наборам сброшен');
         }
 
-        // ----- ЭЛЕКТРОННЫЕ ЗАЯВКИ -----
+        // Электронные заявки
         function parseApplicationsText(text) {
             const dateTimeRegex = /—\s*(\d{2}\.\d{2}\.\d{4})[,\s]\s*(\d{2}:\d{2})/g;
             const matches = [];
@@ -2607,6 +3042,7 @@
             }
             return matches;
         }
+
         function processWeeklyApplications() {
             const text = document.getElementById('appsText').value;
             const linksText = document.getElementById('appsLinks').value;
@@ -2632,6 +3068,7 @@
             localStorage.setItem(WEEKLY_APPLICATIONS_KEY, JSON.stringify({ dateTimes, links }));
             addLog(`📊 Сформирован отчёт по электронным заявкам (${dateTimes.length} записей)`);
         }
+
         function resetWeeklyApplications() {
             document.getElementById('appsText').value = '';
             document.getElementById('appsLinks').value = '';
@@ -2641,7 +3078,7 @@
             addLog('🗑️ Отчёт по электронным заявкам сброшен');
         }
 
-        // ----- ИНДИВИДУАЛЬНЫЕ -----
+        // Индивидуальные
         function parseIndividualText(text) {
             const lines = text.split('\n').map(l => l.trim());
             const dateTimes = [];
@@ -2673,6 +3110,7 @@
             }
             return dateTimes;
         }
+
         function processWeeklyIndividual() {
             const text = document.getElementById('indivText').value;
             const linksText = document.getElementById('indivLinks').value;
@@ -2699,6 +3137,7 @@
             localStorage.setItem(WEEKLY_INDIVIDUAL_KEY, JSON.stringify({ dateTimes, links }));
             addLog(`📊 Сформирован отчёт по индивидуальным наборам (${dateTimes.length} записей)`);
         }
+
         function resetWeeklyIndividual() {
             document.getElementById('indivText').value = '';
             document.getElementById('indivLinks').value = '';
@@ -2708,7 +3147,7 @@
             addLog('🗑️ Отчёт по индивидуальным наборам сброшен');
         }
 
-        // ----- ЛЕКЦИИ -----
+        // Лекции
         function parseLecturesText(text) {
             const lines = text.split('\n').map(l => l.trim());
             const dateTimes = [];
@@ -2740,6 +3179,7 @@
             }
             return dateTimes;
         }
+
         function processWeeklyLectures() {
             const text = document.getElementById('lecturesText').value;
             const linksText = document.getElementById('lecturesLinks').value;
@@ -2765,6 +3205,7 @@
             localStorage.setItem(WEEKLY_LECTURES_KEY, JSON.stringify({ dateTimes, links }));
             addLog(`📊 Сформирован отчёт по лекциям (${dateTimes.length} записей)`);
         }
+
         function resetWeeklyLectures() {
             document.getElementById('lecturesText').value = '';
             document.getElementById('lecturesLinks').value = '';
@@ -2898,7 +3339,7 @@
             });
         });
 
-        // === БИНДИНГ КНОПОК ГОСВОЛН ===
+        // === БИНДИНГ ГОСВОЛН ===
         document.getElementById('btnProcessGos').addEventListener('click', function() {
             const text = document.getElementById('gosInput').value.trim();
             if (!text) return showError('Введите сообщение', 'gosError');
@@ -2931,7 +3372,7 @@
         });
         document.getElementById('btnResetDist').addEventListener('click', resetDistData);
 
-        // === БИНДИНГ КНОПОК ОТЧЁТОВ ===
+        // === БИНДИНГ ОТЧЁТОВ ===
         document.getElementById('btnProcessWeekly').addEventListener('click', processWeeklyRecruitment);
         document.getElementById('btnResetWeekly').addEventListener('click', resetWeeklyRecruitment);
         document.getElementById('btnProcessApps').addEventListener('click', processWeeklyApplications);
