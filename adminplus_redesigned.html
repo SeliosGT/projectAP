@@ -1,0 +1,4005 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Админ панель | Аппарат Правительства</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           ПЕРЕМЕННЫЕ
+           ============================================================ */
+        :root {
+            --bg-body: #0a0f1a;
+            --bg-container: rgba(255,255,255,0.04);
+            --bg-secondary: rgba(255,255,255,0.03);
+            --bg-hover: rgba(255,255,255,0.06);
+            --bg-card: rgba(255,255,255,0.03);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: rgba(255,255,255,0.06);
+            --border-input: rgba(255,255,255,0.06);
+            --shadow: 0 25px 60px rgba(0,0,0,0.4);
+            --shadow-hover: 0 30px 80px rgba(0,0,0,0.5);
+            --input-bg: rgba(255,255,255,0.04);
+            --input-focus: rgba(129,140,248,0.15);
+            --radio-border: rgba(255,255,255,0.1);
+            --radio-bg: rgba(255,255,255,0.03);
+            --btn-back: rgba(255,255,255,0.04);
+            --btn-back-hover: rgba(255,255,255,0.08);
+            --accent: #818cf8;
+            --accent-hover: #6366f1;
+            --accent-light: rgba(129,140,248,0.12);
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #22c55e;
+            --success-hover: #16a34a;
+            --warning: #eab308;
+            --gradient-start: #818cf8;
+            --gradient-end: #a78bfa;
+            --orb-1: rgba(129,140,248,0.08);
+            --orb-2: rgba(167,139,250,0.06);
+            --glass-border: rgba(255,255,255,0.06);
+            --toast-bg: rgba(15,23,42,0.9);
+            --toast-success: rgba(34,197,94,0.15);
+            --toast-error: rgba(239,68,68,0.15);
+            --radius: 12px;
+            --transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --shadow-modal: 0 30px 80px rgba(0,0,0,0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0f4f9;
+            --bg-container: rgba(255,255,255,0.7);
+            --bg-secondary: rgba(255,255,255,0.5);
+            --bg-hover: rgba(0,0,0,0.04);
+            --bg-card: rgba(255,255,255,0.6);
+            --text-primary: #0b1a2e;
+            --text-secondary: #4a5e78;
+            --text-muted: #6b7f99;
+            --border-color: rgba(0,0,0,0.06);
+            --border-input: rgba(0,0,0,0.08);
+            --shadow: 0 25px 60px rgba(0,0,0,0.06);
+            --shadow-hover: 0 30px 80px rgba(0,0,0,0.1);
+            --input-bg: rgba(255,255,255,0.7);
+            --input-focus: rgba(99,102,241,0.12);
+            --btn-back: rgba(255,255,255,0.6);
+            --btn-back-hover: rgba(255,255,255,0.9);
+            --accent: #667eea;
+            --accent-hover: #5a6fd6;
+            --accent-light: rgba(102,126,234,0.1);
+            --glass-border: rgba(255,255,255,0.3);
+            --orb-1: rgba(99,102,241,0.06);
+            --orb-2: rgba(139,92,246,0.04);
+            --toast-bg: rgba(255,255,255,0.9);
+            --toast-success: #d1fae5;
+            --toast-error: #fee2e2;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --shadow-modal: 0 30px 80px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1a;
+            --bg-container: rgba(20,30,50,0.85);
+            --bg-secondary: rgba(255,255,255,0.03);
+            --bg-hover: rgba(255,255,255,0.06);
+            --bg-card: rgba(255,255,255,0.03);
+            --text-primary: #e8edf4;
+            --text-secondary: #9aafc8;
+            --text-muted: #6b8ba8;
+            --border-color: rgba(255,255,255,0.06);
+            --border-input: rgba(255,255,255,0.06);
+            --shadow: 0 25px 60px rgba(0,0,0,0.4);
+            --shadow-hover: 0 30px 80px rgba(0,0,0,0.5);
+            --input-bg: rgba(255,255,255,0.04);
+            --input-focus: rgba(129,140,248,0.15);
+            --radio-border: rgba(255,255,255,0.1);
+            --radio-bg: rgba(255,255,255,0.03);
+            --btn-back: rgba(255,255,255,0.04);
+            --btn-back-hover: rgba(255,255,255,0.08);
+            --accent: #818cf8;
+            --accent-hover: #6366f1;
+            --accent-light: rgba(129,140,248,0.12);
+            --glass-border: rgba(255,255,255,0.06);
+            --toast-bg: rgba(15,23,42,0.9);
+            --toast-success: rgba(34,197,94,0.15);
+            --toast-error: rgba(239,68,68,0.15);
+            --gradient-start: #818cf8;
+            --gradient-end: #a78bfa;
+            --shadow-modal: 0 30px 80px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            padding: 20px;
+            transition: background 0.5s ease, color 0.5s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(129,140,248,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(167,139,250,0.04) 0%, transparent 50%);
+            animation: bgFloat 30s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        [data-theme="light"] body::before {
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(102,126,234,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(118,75,162,0.04) 0%, transparent 50%);
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            25% { transform: translate(20px,-30px) rotate(2deg); }
+            50% { transform: translate(-10px,20px) rotate(-1deg); }
+            75% { transform: translate(30px,10px) rotate(3deg); }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+            animation: orbFloat 25s ease-in-out infinite;
+            transition: opacity 0.5s ease;
+        }
+        .orb-1 {
+            width: 400px; height: 400px;
+            background: var(--orb-1);
+            top: -150px; right: -150px;
+        }
+        .orb-2 {
+            width: 300px; height: 300px;
+            background: var(--orb-2);
+            bottom: -100px; left: -100px;
+            animation-delay: -10s;
+        }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(30px,-40px) scale(1.1); }
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg-container);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .app-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 28px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all var(--transition);
+            position: relative;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(129,140,248,0.3);
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--danger);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+            align-items: center;
+        }
+
+        .theme-toggle, .log-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle:hover, .log-toggle:hover {
+            background: var(--bg-hover);
+            transform: scale(1.02);
+        }
+
+        .section {
+            display: none;
+            animation: sectionFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .section.active { display: block; }
+
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .sub-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .sub-nav-btn {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+
+        .sub-nav-btn:hover {
+            background: var(--bg-hover);
+            transform: translateY(-1px);
+        }
+
+        .sub-nav-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .sub-section {
+            display: none;
+            animation: sectionFadeIn 0.4s ease;
+        }
+        .sub-section.active { display: block; }
+
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(129,140,248,0.25);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+        .btn-success:hover {
+            background: var(--success-hover);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: #0b1a2e;
+        }
+        .btn-warning:hover {
+            background: #ca8a04;
+            color: #fff;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 11px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .btn-outline:hover {
+            background: var(--bg-hover);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-outline.active-filter {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            padding: 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            transition: all var(--transition);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            transition: all var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            transition: background 0.3s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+            font-size: 13px;
+        }
+
+        th:last-child, td:last-child { border-right: none; }
+
+        th {
+            background: var(--bg-secondary);
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            padding: 14px 16px;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+        tbody tr:hover {
+            background: var(--bg-hover);
+        }
+
+        tr.danger {
+            border-left: 3px solid var(--danger);
+            background: rgba(239,68,68,0.1);
+        }
+        tr.danger:hover {
+            background: rgba(239,68,68,0.18);
+        }
+
+        tr.warning {
+            border-left: 3px solid var(--warning);
+            background: rgba(234,179,8,0.08);
+        }
+        tr.warning:hover {
+            background: rgba(234,179,8,0.16);
+        }
+
+        .unread-application {
+            border-left: 3px solid var(--accent);
+            background: var(--accent-light);
+        }
+
+        .filters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .result-list {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 16px;
+            max-height: 500px;
+            overflow-y: auto;
+            transition: background 0.3s ease;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+        }
+
+        .result-item:last-child { border-bottom: none; }
+        .result-number { color: var(--text-muted); font-weight: 700; min-width: 30px; }
+        .result-text { flex: 1; word-break: break-word; }
+
+        .final-result {
+            font-weight: 700;
+            color: var(--accent);
+            border-top: 2px solid var(--border-color);
+            margin-top: 8px;
+            padding-top: 8px;
+        }
+
+        .copy-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 2px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: var(--bg-hover);
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 10px 16px;
+            min-width: 120px;
+            flex: 1;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        .stat-value.approved { color: var(--success); }
+        .stat-value.rejected { color: var(--danger); }
+        .stat-value.pending { color: var(--warning); }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: var(--bg-container);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-modal);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-close-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+        }
+
+        .modal-close-btn:hover {
+            background: var(--bg-hover);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+
+        .modal-field .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .modal-field .field-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .modal-field .field-value .stars {
+            color: #f59e0b;
+            letter-spacing: 2px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .edit-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .edit-field label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .edit-field input, .edit-field select {
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            transition: all var(--transition);
+        }
+
+        .edit-field input:focus, .edit-field select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
+        .edit-field select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .password-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-container);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+            padding: 40px;
+            animation: sectionFadeIn 0.5s ease;
+        }
+
+        .password-overlay.show {
+            display: flex;
+        }
+
+        .password-overlay h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .password-overlay p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .password-overlay input {
+            padding: 12px 20px;
+            border: 2px solid var(--border-input);
+            border-radius: var(--radius);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 16px;
+            text-align: center;
+            width: 200px;
+            transition: all var(--transition);
+        }
+
+        .password-overlay input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
+        .password-overlay .password-error {
+            color: var(--danger);
+            font-size: 13px;
+            display: none;
+        }
+
+        .password-overlay .password-error.show {
+            display: block;
+        }
+
+        .log-panel {
+            display: none;
+            margin-top: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            transition: background 0.3s ease;
+        }
+
+        .log-panel.active { display: block; }
+        .log-panel .log-entry { padding: 2px 0; border-bottom: 1px solid var(--border-color); }
+
+        .collapse-header {
+            cursor: pointer;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 8px 14px;
+            margin: 4px 0;
+            font-weight: 600;
+            transition: all var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .collapse-header:hover { background: var(--bg-hover); }
+        .collapse-content { display: none; padding: 8px 14px; }
+        .collapse-content.active { display: block; }
+        .collapse-arrow { transition: transform 0.3s; }
+        .collapse-arrow.open { transform: rotate(90deg); }
+
+        .publish-block {
+            margin: 8px 0;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+        .publish-block.highlight-red {
+            background: rgba(239,68,68,0.12);
+            border-color: rgba(239,68,68,0.3);
+        }
+        .publish-block.highlight-green {
+            background: rgba(34,197,94,0.12);
+            border-color: rgba(34,197,94,0.3);
+        }
+
+        .publish-actions { display: flex; gap: 4px; margin-right: 10px; }
+        .publish-action-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 26px; height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all var(--transition);
+        }
+        .publish-action-btn:hover { transform: scale(1.1); }
+        .publish-action-btn.check-red { color: var(--danger); border-color: var(--danger); }
+        .publish-action-btn.check-red.active { background: var(--danger); color: #fff; }
+        .publish-action-btn.eye-green { color: var(--success); border-color: var(--success); }
+        .publish-action-btn.eye-green.active { background: var(--success); color: #fff; }
+
+        .publish-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .publish-line:last-child { border-bottom: none; }
+        .publish-line-text { flex: 1; word-break: break-word; }
+
+        .weekly-inputs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .weekly-inputs > div { flex: 1; min-width: 250px; }
+        .weekly-inputs label { display: block; font-weight: 600; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+
+        .error-message { color: var(--danger); font-weight: 600; margin: 6px 0; }
+        .hidden { display: none !important; }
+
+        /* ========== СТАТУСЫ ЗАЯВОК ========== */
+        .status-badge {
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .status-badge.pending {
+            background: rgba(234,179,8,0.12);
+            color: var(--warning);
+            border: 1px solid rgba(234,179,8,0.15);
+        }
+
+        .status-badge.approved {
+            background: rgba(34,197,94,0.12);
+            color: var(--success);
+            border: 1px solid rgba(34,197,94,0.15);
+        }
+
+        .status-badge.rejected {
+            background: rgba(239,68,68,0.12);
+            color: var(--danger);
+            border: 1px solid rgba(239,68,68,0.15);
+        }
+
+        .status-badge .status-icon {
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .app-container { padding: 16px; border-radius: 20px; }
+            body { padding: 12px; }
+            .nav { gap: 6px; }
+            .nav-btn { padding: 8px 14px; font-size: 12px; }
+            .nav-right { margin-left: 0; width: 100%; justify-content: flex-end; }
+            .sub-nav-btn { font-size: 11px; padding: 4px 12px; }
+            .orb-1, .orb-2 { display: none; }
+            .stats-container { flex-direction: column; }
+            .stat-card { min-width: auto; }
+            th, td { font-size: 11px; padding: 8px 10px; }
+            .weekly-inputs { flex-direction: column; }
+            .weekly-inputs > div { min-width: auto; }
+            .modal { padding: 20px; }
+            .password-overlay { padding: 20px; }
+            .password-overlay input { width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .app-container { padding: 12px; }
+            .nav-btn { font-size: 11px; padding: 6px 10px; }
+            .theme-toggle, .log-toggle { font-size: 11px; padding: 4px 8px; }
+            .nav-badge { font-size: 8px; min-width: 16px; height: 16px; }
+            th, td { font-size: 10px; padding: 6px 8px; }
+        }
+
+        @media (min-width: 1200px) {
+            table { font-size: 13px; }
+            th, td { padding: 14px 18px; }
+        }
+
+        /* ============================================================
+           PREMIUM REDESIGN — MODERN GOVERNMENT OFFICE UI
+           ============================================================ */
+        :root {
+            --bg-body: #070b12;
+            --bg-container: rgba(12, 18, 30, 0.88);
+            --bg-secondary: rgba(255,255,255,0.035);
+            --bg-hover: rgba(255,255,255,0.065);
+            --bg-card: rgba(255,255,255,0.042);
+            --text-primary: #f5f7fb;
+            --text-secondary: #9aa8bd;
+            --text-muted: #65748b;
+            --border-color: rgba(255,255,255,0.075);
+            --border-input: rgba(255,255,255,0.09);
+            --accent: #8b7cff;
+            --accent-hover: #a095ff;
+            --accent-light: rgba(139,124,255,0.13);
+            --gradient-start: #7867ff;
+            --gradient-end: #b49aff;
+            --radius: 16px;
+            --shadow: 0 28px 90px rgba(0,0,0,.48);
+            --shadow-hover: 0 32px 100px rgba(0,0,0,.60);
+            --transition: .28s cubic-bezier(.2,.8,.2,1);
+        }
+
+        html { background: #070b12; }
+
+        body {
+            padding: 28px;
+            background:
+                radial-gradient(circle at 8% 5%, rgba(117,100,255,.10), transparent 30%),
+                radial-gradient(circle at 92% 12%, rgba(77,168,255,.06), transparent 26%),
+                radial-gradient(circle at 50% 100%, rgba(139,92,246,.05), transparent 34%),
+                #070b12;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: .22;
+            background-image:
+                linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, black, transparent 85%);
+        }
+
+        .orb { opacity: .16; filter: blur(120px); }
+
+        .app-container {
+            max-width: 1540px;
+            padding: 22px;
+            border-radius: 30px;
+            background: linear-gradient(145deg, rgba(17,25,41,.92), rgba(8,13,23,.91));
+            border: 1px solid rgba(255,255,255,.075);
+            box-shadow: var(--shadow);
+        }
+
+        .app-container::before {
+            background: linear-gradient(120deg, rgba(255,255,255,.11), transparent 25%, transparent 72%, rgba(139,124,255,.10));
+            opacity: .75;
+        }
+
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 190px;
+            padding: 3px 8px 3px 2px;
+        }
+
+        .brand-symbol {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7162ff, #b59bff);
+            box-shadow: 0 10px 28px rgba(119,98,255,.28);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-symbol::after {
+            content: "";
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            top: -12px;
+            left: -15px;
+            transform: rotate(-30deg);
+            background: rgba(255,255,255,.25);
+        }
+
+        .brand-copy { display: flex; flex-direction: column; line-height: 1; }
+        .brand-copy strong { font-size: 12px; letter-spacing: 2px; }
+        .brand-copy span { margin-top: 5px; font-size: 9px; color: var(--text-muted); letter-spacing: 1.4px; font-weight: 800; }
+        .nav-separator { width: 1px; height: 34px; background: var(--border-color); margin: 0 4px; }
+
+        .nav {
+            gap: 8px;
+            margin-bottom: 22px;
+            padding: 7px;
+            border: 1px solid rgba(255,255,255,.055);
+            border-radius: 20px;
+            background: rgba(255,255,255,.022);
+        }
+
+        .nav-btn {
+            padding: 11px 16px;
+            border-radius: 13px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #91a0b5;
+            font-size: 13px;
+            letter-spacing: -.1px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,.045);
+            color: #e7ebf3;
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            color: #fff;
+            border-color: rgba(139,124,255,.24);
+            background: linear-gradient(135deg, rgba(139,124,255,.19), rgba(139,124,255,.07));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 8px 26px rgba(0,0,0,.16);
+        }
+
+        .nav-right { gap: 7px; }
+        .theme-toggle, .log-toggle {
+            border-radius: 13px;
+            padding: 10px 12px;
+            background: rgba(255,255,255,.025);
+            border-color: rgba(255,255,255,.07);
+        }
+
+        .section { animation: sectionFadeIn .34s cubic-bezier(.2,.8,.2,1); }
+        .section > h2, .section h2 { letter-spacing: -.6px; }
+
+        .sub-nav {
+            gap: 6px;
+            padding: 5px;
+            margin-bottom: 18px;
+            width: fit-content;
+            max-width: 100%;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,.06);
+            background: rgba(255,255,255,.025);
+        }
+
+        .sub-nav-btn {
+            padding: 9px 13px;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            background: transparent;
+            color: #8795aa;
+            font-size: 12px;
+        }
+
+        .sub-nav-btn:hover { background: rgba(255,255,255,.045); color: #e7ebf3; transform: none; }
+        .sub-nav-btn.active {
+            background: linear-gradient(135deg, rgba(139,124,255,.20), rgba(139,124,255,.07));
+            border-color: rgba(139,124,255,.22);
+            color: #fff;
+            box-shadow: 0 7px 22px rgba(0,0,0,.14);
+        }
+
+        .btn {
+            min-height: 38px;
+            padding: 9px 15px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7868ff, #9587ff);
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow: 0 8px 22px rgba(111,91,255,.16), inset 0 1px 0 rgba(255,255,255,.16);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #887aff, #a69aff);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(111,91,255,.23), inset 0 1px 0 rgba(255,255,255,.18);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #d94d68, #ef667e);
+            box-shadow: 0 8px 22px rgba(217,77,104,.14);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #1aa779, #34c995);
+            box-shadow: 0 8px 22px rgba(26,167,121,.13);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #c98a24, #e2ad49);
+            color: #17110a;
+        }
+
+        .btn-outline {
+            background: rgba(255,255,255,.025);
+            border: 1px solid rgba(255,255,255,.075);
+            color: #9aa8bd;
+        }
+        .btn-outline:hover { background: rgba(255,255,255,.06); color: #fff; }
+
+        textarea, input[type="text"], input[type="number"], .edit-field input, .edit-field select {
+            border-radius: 13px;
+            border-color: rgba(255,255,255,.08);
+            background: rgba(0,0,0,.15);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+        }
+
+        textarea { min-height: 125px; padding: 14px; line-height: 1.55; }
+        textarea:focus, input:focus, .edit-field input:focus, .edit-field select:focus {
+            border-color: rgba(139,124,255,.55);
+            box-shadow: 0 0 0 4px rgba(139,124,255,.09), 0 8px 30px rgba(0,0,0,.12);
+        }
+
+        .filters-container {
+            padding: 13px 14px;
+            margin: 16px 0;
+            border-radius: 17px;
+            border: 1px solid rgba(255,255,255,.055);
+            background: rgba(255,255,255,.018);
+        }
+
+        .filter-row { gap: 7px; }
+        .filter-row > span { letter-spacing: .2px; }
+
+        .stat-card {
+            min-height: 86px;
+            padding: 15px 17px;
+            border-radius: 17px;
+            border-color: rgba(255,255,255,.065);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.052), rgba(255,255,255,.018));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+        }
+
+        .stat-card:hover {
+            border-color: rgba(139,124,255,.18);
+            transform: translateY(-2px);
+            transition: var(--transition);
+        }
+
+        .stat-value { font-size: 27px; letter-spacing: -1px; }
+
+        .table-wrapper {
+            border-radius: 19px;
+            border-color: rgba(255,255,255,.06);
+            background: transparent;
+            overflow: visible;
+            margin-top: 18px;
+        }
+
+        /* Заявки превращаются из тесной таблицы в большие информационные карточки. */
+        #section-applications .table-wrapper {
+            border: 0;
+            margin-top: 20px;
+        }
+
+        #section-applications table,
+        #section-applications tbody {
+            display: block;
+            min-width: 0;
+            width: 100%;
+        }
+
+        #section-applications thead { display: none; }
+
+        #section-applications tr.application-card-row {
+            display: block;
+            margin: 0 0 14px;
+            border: 0;
+            background: transparent;
+        }
+
+        #section-applications tr.application-card-row > td {
+            display: block;
+            padding: 0;
+            border: 0;
+        }
+
+        .application-card {
+            position: relative;
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 18px;
+            min-height: 150px;
+            padding: 22px 22px 22px 20px;
+            border-radius: 21px;
+            border: 1px solid rgba(255,255,255,.075);
+            background:
+                radial-gradient(circle at 0% 0%, rgba(139,124,255,.10), transparent 32%),
+                linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+            box-shadow: 0 15px 45px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.045);
+            overflow: hidden;
+            transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .application-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 18px;
+            bottom: 18px;
+            width: 3px;
+            border-radius: 99px;
+            background: linear-gradient(#7464ff, #b39bff);
+            opacity: .65;
+        }
+
+        .application-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(139,124,255,.22);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .application-card-row.unread-application .application-card {
+            border-color: rgba(139,124,255,.22);
+            background:
+                radial-gradient(circle at 0% 0%, rgba(139,124,255,.15), transparent 34%),
+                linear-gradient(145deg, rgba(139,124,255,.065), rgba(255,255,255,.018));
+        }
+
+        .application-card-row.unread-application .application-card::before {
+            opacity: 1;
+            box-shadow: 0 0 18px rgba(139,124,255,.6);
+        }
+
+        .application-card-main {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .application-card-id {
+            flex: 0 0 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: rgba(255,255,255,.045);
+            border: 1px solid rgba(255,255,255,.07);
+            color: #8f9cb0;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .3px;
+        }
+
+        .application-card-content { min-width: 0; }
+        .application-card-topline {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 9px;
+        }
+
+        .application-type {
+            color: #b3a9ff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            text-transform: uppercase;
+        }
+
+        .application-date {
+            color: #637187;
+            font-size: 11px;
+        }
+
+        .application-card h3 {
+            margin: 0 0 13px;
+            font-size: 20px;
+            line-height: 1.25;
+            letter-spacing: -.5px;
+            color: #f4f6fa;
+            word-break: break-word;
+        }
+
+        .application-card-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 9px;
+            font-size: 10px;
+            border-width: 1px;
+        }
+
+        .unread-chip, .read-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 9px;
+            border: 1px solid rgba(255,255,255,.055);
+            color: #7f8da2;
+            background: rgba(255,255,255,.025);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .unread-chip { color: #b7adff; border-color: rgba(139,124,255,.15); background: rgba(139,124,255,.07); }
+        .unread-chip i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #8b7cff;
+            box-shadow: 0 0 10px #8b7cff;
+        }
+
+        .application-actions {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 7px;
+            min-width: 150px;
+            padding-left: 18px;
+            border-left: 1px solid rgba(255,255,255,.06);
+        }
+
+        .app-action {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 9px;
+            width: 100%;
+            min-height: 35px;
+            padding: 7px 11px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.065);
+            color: #9aa7ba;
+            background: rgba(255,255,255,.025);
+            cursor: pointer;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .app-action span {
+            width: 22px;
+            height: 22px;
+            display: grid;
+            place-items: center;
+            border-radius: 7px;
+            background: rgba(255,255,255,.05);
+            color: #c5ccda;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .app-action:hover {
+            transform: translateX(-2px);
+            color: #fff;
+            background: rgba(255,255,255,.06);
+            border-color: rgba(255,255,255,.13);
+        }
+
+        .app-action.view:hover { border-color: rgba(139,124,255,.3); }
+        .app-action.approve { color: #6edbb6; }
+        .app-action.approve span { color: #55d2a8; background: rgba(34,197,94,.10); }
+        .app-action.approve:hover { border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.07); }
+        .app-action.reject { color: #f08a9b; }
+        .app-action.reject span { color: #f06f85; background: rgba(239,68,68,.10); }
+        .app-action.reject:hover { border-color: rgba(239,68,68,.3); background: rgba(239,68,68,.07); }
+        .app-action.read { color: #aaa0ff; }
+        .app-action.read span { color: #988bff; background: rgba(139,124,255,.10); }
+        .app-action.delete { color: #d47f8d; }
+        .app-action.delete span { color: #ef7186; background: rgba(239,68,68,.08); }
+        .app-action.reset { color: #b6c0d0; }
+
+        .log-panel {
+            border-radius: 17px;
+            padding: 14px;
+            border-color: rgba(255,255,255,.06);
+            background: rgba(4,8,15,.55);
+        }
+
+        .result-list {
+            border-radius: 17px;
+            border-color: rgba(255,255,255,.06);
+            background: rgba(255,255,255,.018);
+        }
+
+        .modal-overlay { background: rgba(2,5,10,.72); backdrop-filter: blur(14px); }
+        .modal {
+            border-radius: 24px;
+            border-color: rgba(255,255,255,.08);
+            background: linear-gradient(145deg, rgba(18,26,42,.96), rgba(8,13,23,.97));
+            box-shadow: 0 40px 120px rgba(0,0,0,.58);
+        }
+
+        /* Делаем таблицы остальных разделов более "продуктовыми". */
+        .table-wrapper table { border-spacing: 0; }
+        .table-wrapper th {
+            background: rgba(255,255,255,.028);
+            color: #718096;
+            border-color: rgba(255,255,255,.05);
+        }
+        .table-wrapper td { border-color: rgba(255,255,255,.045); }
+        .table-wrapper tbody tr:hover { background: rgba(139,124,255,.035); }
+
+        @media (max-width: 900px) {
+            body { padding: 14px; }
+            .app-container { padding: 14px; border-radius: 22px; }
+            .brand-mark { min-width: auto; }
+            .brand-copy { display: none; }
+            .nav-separator { display: none; }
+            .nav { border-radius: 17px; }
+            .nav-right { margin-left: auto; width: auto; }
+            .application-card { flex-direction: column; }
+            .application-actions {
+                flex-direction: row;
+                flex-wrap: wrap;
+                min-width: 0;
+                padding: 14px 0 0;
+                border-left: 0;
+                border-top: 1px solid rgba(255,255,255,.06);
+            }
+            .app-action { width: auto; flex: 1 1 135px; justify-content: center; }
+        }
+
+        @media (max-width: 560px) {
+            body { padding: 8px; }
+            .app-container { padding: 10px; border-radius: 18px; }
+            .nav { padding: 5px; }
+            .nav-btn { flex: 1 1 calc(50% - 6px); font-size: 11px; padding: 9px 8px; }
+            .nav-right { width: 100%; justify-content: stretch; }
+            .theme-toggle, .log-toggle { flex: 1; justify-content: center; }
+            .sub-nav { width: 100%; overflow-x: auto; }
+            .sub-nav-btn { white-space: nowrap; }
+            .application-card { padding: 17px; border-radius: 17px; }
+            .application-card-main { gap: 12px; }
+            .application-card-id { flex-basis: 43px; height: 43px; border-radius: 12px; }
+            .application-card h3 { font-size: 17px; }
+            .application-actions { gap: 6px; }
+            .app-action { flex-basis: calc(50% - 4px); font-size: 10px; }
+            .filter-row { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+            .filter-row .btn { white-space: nowrap; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="app-container">
+        <!-- ========== НАВИГАЦИЯ ========== -->
+        <div class="nav">
+            <div class="brand-mark" aria-label="Аппарат Правительства">
+                <div class="brand-symbol">A</div>
+                <div class="brand-copy">
+                    <strong>АППАРАТ</strong>
+                    <span>ПРАВИТЕЛЬСТВА</span>
+                </div>
+            </div>
+            <div class="nav-separator"></div>
+            <button class="nav-btn active" data-section="cadres">👥 Кадровый учёт</button>
+            <button class="nav-btn" data-section="applications" id="navApplications">
+                📋 Заявки
+                <span class="nav-badge" id="appBadge" style="display:none;">0</span>
+            </button>
+            <button class="nav-btn" data-section="goswaves">📡 Госволны</button>
+            <button class="nav-btn" data-section="weekly">📊 Отчёты</button>
+
+            <div class="nav-right">
+                <button class="log-toggle" id="logToggle">📝 Лог</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeLabel">Тёмная</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== ЛОГ-ПАНЕЛЬ ========== -->
+        <div class="log-panel" id="logPanel">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-weight:700;color:var(--text-primary);">📝 Лог действий</span>
+                <button class="btn btn-sm btn-outline" onclick="clearLogs()">Очистить</button>
+            </div>
+            <div id="logContent"></div>
+        </div>
+
+        <!-- ============================================================
+        СЕКЦИЯ 1: КАДРОВЫЙ УЧЁТ
+        ============================================================ -->
+        <div id="section-cadres" class="section active">
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+                <button class="btn" id="btnToggleAdd">➕ Добавить запись</button>
+                <button class="btn btn-warning" id="btnAutoWarning">⚠️ Предупреждение</button>
+                <button class="btn btn-danger" id="btnResetCadres">🗑️ Сброс</button>
+                <button class="btn btn-success btn-sm" onclick="syncCadres()">🔄 Синхронизировать</button>
+            </div>
+
+            <div id="addField" class="hidden">
+                <textarea id="cadreInput" placeholder="Вставьте сообщение о наборе, повышении или отпуске..."></textarea>
+                <button class="btn" id="btnAddRecord">Обработать</button>
+                <div id="cadreError" class="error-message hidden"></div>
+            </div>
+
+            <div class="filters-container">
+                <div class="filter-row">
+                    <span style="color:var(--text-muted);font-weight:600;font-size:12px;">Фильтры:</span>
+                    <button class="btn btn-outline btn-sm filter-btn active-filter" data-filter="all">Все</button>
+                    <button class="btn btn-outline btn-sm filter-btn" data-filter="fired">Увольнение (≤0 дн.)</button>
+                    <button class="btn btn-outline btn-sm filter-btn" data-filter="warning1">Предупреждение (1 дн.)</button>
+                </div>
+                <div class="filter-row">
+                    <span style="color:var(--text-muted);font-weight:600;font-size:12px;">Должности:</span>
+                    <button class="btn btn-outline btn-sm filter-btn" data-filter="Стажер АП">Стажер АП</button>
+                    <button class="btn btn-outline btn-sm filter-btn" data-filter="Секретарь">Секретарь</button>
+                    <button class="btn btn-outline btn-sm filter-btn" data-filter="Секретарь-Референт">Секретарь-Референт</button>
+                    <button class="btn btn-outline btn-sm filter-btn" data-filter="Секретарь-Ассистент">Секретарь-Ассистент</button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Discord</th>
+                            <th>Паспорт</th>
+                            <th>Должность</th>
+                            <th>Принят</th>
+                            <th>Повышен</th>
+                            <th>Дней</th>
+                            <th>Дедлайн</th>
+                            <th>Отпуск</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cadreTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        СЕКЦИЯ 2: ЗАЯВКИ (обновлённая)
+        ============================================================ -->
+        <div id="section-applications" class="section" style="position:relative;">
+            <div class="password-overlay show" id="appPasswordOverlay">
+                <h3>🔐 Доступ к заявкам</h3>
+                <p>Введите пароль для доступа к разделу</p>
+                <input type="password" id="appPasswordInput" placeholder="Введите пароль" autofocus>
+                <div class="password-error" id="appPasswordError">❌ Неверный пароль!</div>
+                <button class="btn" id="appPasswordBtn">Войти</button>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+                <h2 style="font-weight:700;font-size:22px;color:var(--text-primary);">📋 Заявки</h2>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-success btn-sm" onclick="markAllAsRead()">✅ Все прочитаны</button>
+                    <button class="btn btn-refresh btn-sm" onclick="loadApplications()">🔄 Обновить</button>
+                </div>
+            </div>
+
+            <div class="stats-container" id="appStats">
+                <div class="stat-card">
+                    <div class="stat-label">Всего</div>
+                    <div class="stat-value" id="appTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Одобрено</div>
+                    <div class="stat-value approved" id="appApproved">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Отклонено</div>
+                    <div class="stat-value rejected" id="appRejected">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Ожидают</div>
+                    <div class="stat-value pending" id="appPending">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Непрочитанные</div>
+                    <div class="stat-value" id="appUnread" style="color:var(--danger);">0</div>
+                </div>
+            </div>
+
+            <div class="filter-row" style="margin-bottom:8px;">
+                <span style="color:var(--text-muted);font-weight:600;font-size:12px;">📌 Тип:</span>
+                <button class="btn btn-outline btn-sm app-filter-btn active-filter" data-filter="all">Все</button>
+                <button class="btn btn-outline btn-sm app-filter-btn" data-filter="discipline">⚖️ Дисциплинарные</button>
+                <button class="btn btn-outline btn-sm app-filter-btn" data-filter="hr">👥 HR</button>
+            </div>
+            <div class="filter-row" style="margin-bottom:12px;">
+                <span style="color:var(--text-muted);font-weight:600;font-size:12px;">🏷️ Статус:</span>
+                <button class="btn btn-outline btn-sm status-filter-btn active-filter" data-status="all">Все</button>
+                <button class="btn btn-outline btn-sm status-filter-btn" data-status="pending">⏳ Ожидают</button>
+                <button class="btn btn-outline btn-sm status-filter-btn" data-status="approved">✅ Одобрено</button>
+                <button class="btn btn-outline btn-sm status-filter-btn" data-status="rejected">❌ Отклонено</button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:60px;">ID</th>
+                            <th style="min-width:100px;">Тип</th>
+                            <th style="min-width:140px;">Имя</th>
+                            <th style="min-width:150px;">Дата</th>
+                            <th style="min-width:120px;">Статус</th>
+                            <th style="min-width:280px;">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        СЕКЦИЯ 3: ГОСВОЛНЫ
+        ============================================================ -->
+        <div id="section-goswaves" class="section">
+            <div class="sub-nav">
+                <button class="sub-nav-btn active" data-subsection="gos-schedule">📅 Расписание</button>
+                <button class="sub-nav-btn" data-subsection="gos-distribution">📋 Распределение</button>
+                <button class="sub-nav-btn" data-subsection="gos-publication">📢 Публикация</button>
+            </div>
+
+            <div id="gos-schedule" class="sub-section active">
+                <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+                    <textarea id="gosInput" placeholder="Вставьте сообщение о гос. волнах..." style="flex:1;min-height:80px;"></textarea>
+                    <button class="btn" id="btnProcessGos">Обработать</button>
+                    <button class="btn btn-danger" id="btnResetGos">Сброс</button>
+                </div>
+                <div id="gosError" class="error-message hidden"></div>
+                <div id="gosResults" class="result-list">
+                    <div style="color:var(--text-muted);text-align:center;">Пока нет обработанных сообщений</div>
+                </div>
+            </div>
+
+            <div id="gos-distribution" class="sub-section">
+                <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+                    <textarea id="distInput" placeholder="Вставьте сообщение для распределения..." style="flex:1;min-height:80px;"></textarea>
+                    <button class="btn" id="btnProcessDist">Обработать</button>
+                    <button class="btn btn-danger" id="btnResetDist">Сброс</button>
+                </div>
+                <div id="distError" class="error-message hidden"></div>
+                <div id="distResults" class="result-list">
+                    <div style="color:var(--text-muted);text-align:center;">Пока нет обработанных сообщений</div>
+                </div>
+            </div>
+
+            <div id="gos-publication" class="sub-section">
+                <div id="publishResults" class="result-list">
+                    <div style="color:var(--text-muted);text-align:center;">Пока нет данных для публикации</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        СЕКЦИЯ 4: ОТЧЁТЫ
+        ============================================================ -->
+        <div id="section-weekly" class="section">
+            <div class="sub-nav">
+                <button class="sub-nav-btn active" data-subsection="weekly-senior">📊 Старший состав</button>
+                <button class="sub-nav-btn" data-subsection="weekly-hr">👥 HR-менеджер</button>
+                <button class="sub-nav-btn" data-subsection="weekly-discipline">⚖️ Дисциплинарный</button>
+            </div>
+
+            <div id="weekly-senior" class="sub-section active">
+                <div class="sub-nav" style="margin-bottom:12px;" id="seniorSubNav">
+                    <button class="sub-nav-btn active" data-subsection="senior-recruitment">📥 Наборы</button>
+                    <button class="sub-nav-btn" data-subsection="senior-applications">📋 Электронные заявки</button>
+                    <button class="sub-nav-btn" data-subsection="senior-individual">🎯 Индивидуальные</button>
+                    <button class="sub-nav-btn" data-subsection="senior-lectures">📚 Лекции</button>
+                </div>
+
+                <div id="senior-recruitment" class="sub-section active">
+                    <div class="weekly-inputs">
+                        <div><label for="weeklyText">Текст отчётов:</label><textarea id="weeklyText" placeholder="Вставьте текст сообщений о наборах..."></textarea></div>
+                        <div><label for="weeklyLinks">Ссылки (по одной на строку):</label><textarea id="weeklyLinks" placeholder="Вставьте ссылки..."></textarea></div>
+                    </div>
+                    <div style="display:flex;gap:10px;margin-bottom:10px;">
+                        <button class="btn" id="btnProcessWeekly">Сформировать</button>
+                        <button class="btn btn-danger" id="btnResetWeekly">Сброс</button>
+                    </div>
+                    <div id="weeklyError" class="error-message hidden"></div>
+                    <div class="stats-container" id="weeklyStats"></div>
+                    <div class="table-wrapper">
+                        <table><thead><tr><th>Дата и время</th><th>Кол-во принятых</th><th>Ссылки</th></tr></thead><tbody id="weeklyTbody"></tbody></table>
+                    </div>
+                </div>
+
+                <div id="senior-applications" class="sub-section">
+                    <div class="weekly-inputs">
+                        <div><label for="appsText">Текст заявок:</label><textarea id="appsText" placeholder="Вставьте текст электронных заявок..."></textarea></div>
+                        <div><label for="appsLinks">Ссылки:</label><textarea id="appsLinks" placeholder="Вставьте ссылки..."></textarea></div>
+                    </div>
+                    <div style="display:flex;gap:10px;margin-bottom:10px;">
+                        <button class="btn" id="btnProcessApps">Сформировать</button>
+                        <button class="btn btn-danger" id="btnResetApps">Сброс</button>
+                    </div>
+                    <div id="appsError" class="error-message hidden"></div>
+                    <div class="stats-container" id="appsStats"></div>
+                    <div class="table-wrapper">
+                        <table><thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead><tbody id="appsTbody"></tbody></table>
+                    </div>
+                </div>
+
+                <div id="senior-individual" class="sub-section">
+                    <div class="weekly-inputs">
+                        <div><label for="indivText">Текст сообщений:</label><textarea id="indivText" placeholder="Вставьте текст индивидуальных наборов..."></textarea></div>
+                        <div><label for="indivLinks">Ссылки:</label><textarea id="indivLinks" placeholder="Вставьте ссылки..."></textarea></div>
+                    </div>
+                    <div style="display:flex;gap:10px;margin-bottom:10px;">
+                        <button class="btn" id="btnProcessIndiv">Сформировать</button>
+                        <button class="btn btn-danger" id="btnResetIndiv">Сброс</button>
+                    </div>
+                    <div id="indivError" class="error-message hidden"></div>
+                    <div class="stats-container" id="indivStats"></div>
+                    <div class="table-wrapper">
+                        <table><thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead><tbody id="indivTbody"></tbody></table>
+                    </div>
+                </div>
+
+                <div id="senior-lectures" class="sub-section">
+                    <div class="weekly-inputs">
+                        <div><label for="lecturesText">Текст сообщений:</label><textarea id="lecturesText" placeholder="Вставьте текст лекций..."></textarea></div>
+                        <div><label for="lecturesLinks">Ссылки:</label><textarea id="lecturesLinks" placeholder="Вставьте ссылки..."></textarea></div>
+                    </div>
+                    <div style="display:flex;gap:10px;margin-bottom:10px;">
+                        <button class="btn" id="btnProcessLectures">Сформировать</button>
+                        <button class="btn btn-danger" id="btnResetLectures">Сброс</button>
+                    </div>
+                    <div id="lecturesError" class="error-message hidden"></div>
+                    <div class="stats-container" id="lecturesStats"></div>
+                    <div class="table-wrapper">
+                        <table><thead><tr><th>Дата и время</th><th>Ссылка</th></tr></thead><tbody id="lecturesTbody"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="weekly-hr" class="sub-section">
+                <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+                    <div style="font-size:48px;margin-bottom:16px;">👥</div>
+                    <h3 style="color:var(--text-primary);font-size:20px;margin-bottom:8px;">Раздел для HR-менеджера</h3>
+                    <p style="font-size:14px;">Функционал будет добавлен позже</p>
+                </div>
+            </div>
+
+            <div id="weekly-discipline" class="sub-section">
+                <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+                    <div style="font-size:48px;margin-bottom:16px;">⚖️</div>
+                    <h3 style="color:var(--text-primary);font-size:20px;margin-bottom:8px;">Раздел для Дисциплинарного инспектора</h3>
+                    <p style="font-size:14px;">Функционал будет добавлен позже</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛЬНЫЕ ОКНА ========== -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal">
+            <div class="modal-header"><h2 id="viewModalTitle">📄 Просмотр заявки</h2><button class="modal-close-btn" id="viewModalClose">&times;</button></div>
+            <div class="modal-body" id="viewModalBody"></div>
+            <div class="modal-footer"><button class="btn btn-outline" id="viewModalCloseBtn">Закрыть</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header"><h2 id="editModalTitle">✏️ Редактирование сотрудника</h2><button class="modal-close-btn" id="editModalClose">&times;</button></div>
+            <div class="modal-body" id="editModalBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="editModalSave">💾 Сохранить</button>
+                <button class="btn btn-outline" id="editModalCancel">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header"><h2>⚠️ Автоматическое предупреждение</h2><button class="modal-close-btn" id="modalClose">&times;</button></div>
+            <pre id="modalText" style="background:var(--input-bg);padding:16px;border-radius:var(--radius);white-space:pre-wrap;word-break:break-word;font-size:13px;max-height:300px;overflow-y:auto;border:1px solid var(--border-color);color:var(--text-primary);"></pre>
+            <div class="modal-footer">
+                <button class="btn" id="modalCopy">📋 Копировать</button>
+                <button class="btn btn-outline" id="modalCloseBtn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // КОНФИГУРАЦИЯ
+        // ================================================================
+        const SUPABASE_URL = 'https://rubmmnihnvvqvbmhfljy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1Ym1tbmlobnZ2cXZibWhmbGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDIwNjMsImV4cCI6MjEwMzQxODA2M30.mWO0RYNEXYh1irXkek_Qs75hRbx-FcjmxC2k2iAMfPc';
+        const ADMIN_PASSWORD = '54321';
+        let appUnlocked = false;
+
+        // ================================================================
+        // ЛОГ
+        // ================================================================
+        let logs = [];
+
+        function addLog(message) {
+            const time = new Date().toLocaleTimeString();
+            const entry = `[${time}] ${message}`;
+            logs.push(entry);
+            const content = document.getElementById('logContent');
+            content.innerHTML = logs.map(l => `<div class="log-entry">${l}</div>`).join('');
+            content.scrollTop = content.scrollHeight;
+            console.log(entry);
+        }
+
+        function clearLogs() {
+            logs = [];
+            document.getElementById('logContent').innerHTML = '<div class="log-entry" style="color:var(--text-muted);">Лог очищен</div>';
+            addLog('🧹 Лог очищен');
+        }
+
+        document.getElementById('logToggle').addEventListener('click', function() {
+            const panel = document.getElementById('logPanel');
+            panel.classList.toggle('active');
+            this.textContent = panel.classList.contains('active') ? '📝 Скрыть лог' : '📝 Лог';
+            if (panel.classList.contains('active')) addLog('👁️ Лог открыт');
+        });
+
+        // ================================================================
+        // ТЕМА
+        // ================================================================
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeLabel = document.getElementById('themeLabel');
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeUI(newTheme);
+            addLog(`🎨 Тема: ${newTheme}`);
+        }
+
+        function updateThemeUI(theme) {
+            if (theme === 'light') {
+                themeIcon.textContent = '☀️';
+                themeLabel.textContent = 'Светлая';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeLabel.textContent = 'Тёмная';
+            }
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeUI(savedTheme);
+
+        // ================================================================
+        // ПАРОЛЬ НА ЗАЯВКИ
+        // ================================================================
+        const appPasswordOverlay = document.getElementById('appPasswordOverlay');
+        const appPasswordInput = document.getElementById('appPasswordInput');
+        const appPasswordBtn = document.getElementById('appPasswordBtn');
+        const appPasswordError = document.getElementById('appPasswordError');
+
+        function unlockApplications() {
+            appUnlocked = true;
+            appPasswordOverlay.classList.remove('show');
+            addLog('🔓 Раздел "Заявки" разблокирован');
+            loadApplications();
+        }
+
+        function checkAppPassword() {
+            const input = appPasswordInput.value.trim();
+            if (input === ADMIN_PASSWORD) {
+                unlockApplications();
+            } else {
+                appPasswordError.classList.add('show');
+                appPasswordInput.value = '';
+                appPasswordInput.focus();
+                addLog('❌ Неверный пароль для заявок');
+            }
+        }
+
+        appPasswordBtn.addEventListener('click', checkAppPassword);
+        appPasswordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') checkAppPassword();
+        });
+
+        // ================================================================
+        // НАВИГАЦИЯ
+        // ================================================================
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const section = this.dataset.section;
+
+                if (section === 'applications') {
+                    if (!appUnlocked) {
+                        appPasswordOverlay.classList.add('show');
+                        appPasswordInput.value = '';
+                        appPasswordInput.focus();
+                        appPasswordError.classList.remove('show');
+                        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                        document.getElementById(`section-${section}`).classList.add('active');
+                        addLog('🔐 Запрос пароля для заявок');
+                        return;
+                    }
+                }
+
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+                addLog(`📂 Переход: ${section}`);
+
+                if (section === 'applications' && appUnlocked) loadApplications();
+                if (section === 'cadres') loadCadres();
+                if (section === 'goswaves') { renderGosResults(); renderDistResults(); renderPublishResults(); }
+            });
+        });
+
+        document.getElementById('navApplications').addEventListener('click', function(e) {
+            if (!appUnlocked) {
+                appPasswordOverlay.classList.add('show');
+                appPasswordInput.value = '';
+                appPasswordInput.focus();
+                appPasswordError.classList.remove('show');
+            }
+        });
+
+        // НАВИГАЦИЯ ПО ПОДВКЛАДКАМ
+        // ВАЖНО: вложенные панели (например, "Наборы / Лекции") не должны
+        // скрывать соседние уровни навигации. Каждая кнопка управляет только
+        // прямыми .sub-section внутри своего контейнера.
+        document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const parent = this.closest('.sub-nav');
+                const subsection = this.dataset.subsection;
+                const target = document.getElementById(subsection);
+
+                if (parent) {
+                    parent.querySelectorAll(':scope > .sub-nav-btn').forEach(b => b.classList.remove('active'));
+                }
+                this.classList.add('active');
+
+                if (target) {
+                    const contentParent = target.parentElement;
+                    if (contentParent) {
+                        contentParent.querySelectorAll(':scope > .sub-section').forEach(s => {
+                            s.classList.remove('active');
+                        });
+                    }
+                    target.classList.add('active');
+                }
+
+                addLog(`📂 Подраздел: ${subsection}`);
+                if (subsection === 'gos-publication') renderPublishResults();
+            });
+        });
+
+        // ================================================================
+        // УТИЛИТЫ
+        // ================================================================
+        function parseDate(str) {
+            const parts = str.trim().split('.');
+            if (parts.length !== 3) return null;
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parseInt(parts[2], 10);
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+            return new Date(Date.UTC(year, month, day));
+        }
+
+        function formatDate(date) {
+            const d = date.getUTCDate();
+            const m = date.getUTCMonth() + 1;
+            const y = date.getUTCFullYear();
+            return `${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}.${y}`;
+        }
+
+        function todayUTC() {
+            const now = new Date();
+            return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+        }
+
+        function differenceInDays(startUTC, endUTC) {
+            const MS_PER_DAY = 1000 * 60 * 60 * 24;
+            return Math.floor((endUTC - startUTC) / MS_PER_DAY);
+        }
+
+        function showError(message, elementId) {
+            const el = document.getElementById(elementId);
+            if (el) { el.textContent = message; el.classList.remove('hidden'); }
+        }
+
+        function hideError(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) { el.textContent = ''; el.classList.add('hidden'); }
+        }
+
+        // ================================================================
+        // КАДРОВЫЙ УЧЁТ
+        // ================================================================
+        const POSITION_DEADLINES = {
+            'Стажер АП': 3,
+            'Секретарь': 7,
+            'Секретарь-Референт': 10,
+            'Секретарь-Ассистент': 10
+        };
+        const POSITION_ORDER = ['Стажер АП', 'Секретарь', 'Секретарь-Референт', 'Секретарь-Ассистент'];
+        let editingEmployee = null;
+
+        async function loadCadres(filter = 'all') {
+            addLog('🔄 Загрузка кадров...');
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                let data = await response.json();
+                addLog(`✅ Загружено ${data.length} сотрудников`);
+
+                data.sort((a, b) => {
+                    const idxA = POSITION_ORDER.indexOf(a.position);
+                    const idxB = POSITION_ORDER.indexOf(b.position);
+                    if (idxA !== idxB) return idxA - idxB;
+                    return parseDate(a.last_promotion_date) - parseDate(b.last_promotion_date);
+                });
+
+                if (filter === 'fired') {
+                    data = data.filter(emp => calculateStatus(emp).daysLeft <= 0);
+                } else if (filter === 'warning1') {
+                    data = data.filter(emp => calculateStatus(emp).daysLeft === 1);
+                } else if (filter !== 'all') {
+                    data = data.filter(emp => emp.position === filter);
+                }
+
+                const tbody = document.getElementById('cadreTbody');
+                tbody.innerHTML = '';
+
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);">Нет данных</td></tr>';
+                    return;
+                }
+
+                data.forEach(emp => {
+                    const status = calculateStatus(emp);
+                    const tr = document.createElement('tr');
+                    if (status.daysLeft <= 0) tr.classList.add('danger');
+                    else if (status.daysLeft === 1) tr.classList.add('warning');
+
+                    const vacations = emp.vacations || [];
+                    const vacationDisplay = vacations.length > 0 ? vacations.join('; ') : '—';
+
+                    tr.innerHTML = `
+                        <td>${emp.name}</td>
+                        <td>${emp.discord_id}</td>
+                        <td>${emp.passport || '—'}</td>
+                        <td>${emp.position}</td>
+                        <td>${emp.hire_date || '—'}</td>
+                        <td>${emp.last_promotion_date || '—'}</td>
+                        <td>${status.daysLeft}</td>
+                        <td>${status.deadlineDate}</td>
+                        <td>${vacationDisplay}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="editEmployee('${emp.discord_id}')">✏️</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteEmployee('${emp.discord_id}')">🗑️</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                addLog(`❌ Ошибка загрузки кадров: ${error.message}`);
+                showToast('❌ Ошибка загрузки кадров', 'error');
+            }
+        }
+
+        function calculateStatus(emp) {
+            const today = todayUTC();
+            const lastPromotionUTC = parseDate(emp.last_promotion_date).getTime();
+            const deadlineUTC = lastPromotionUTC + (emp.deadline_days + emp.vacation_shift) * 24 * 60 * 60 * 1000;
+            const daysLeft = differenceInDays(today, deadlineUTC);
+            return { daysLeft, deadlineDate: formatDate(new Date(deadlineUTC)) };
+        }
+
+        async function syncCadres() {
+            addLog('🔄 Синхронизация кадров с Supabase...');
+            await loadCadres();
+            showToast('✅ Кадры синхронизированы', 'success');
+        }
+
+        // ================================================================
+        // РЕДАКТИРОВАНИЕ СОТРУДНИКА
+        // ================================================================
+        async function editEmployee(discordId) {
+            addLog(`✏️ Редактирование сотрудника ${discordId}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const data = await response.json();
+                if (data.length === 0) {
+                    showToast('❌ Сотрудник не найден', 'error');
+                    return;
+                }
+                const emp = data[0];
+                editingEmployee = emp;
+
+                const positions = Object.keys(POSITION_DEADLINES);
+                const positionOptions = positions.map(p =>
+                    `<option value="${p}" ${p === emp.position ? 'selected' : ''}>${p}</option>`
+                ).join('');
+
+                const vacationList = (emp.vacations || []).join('; ');
+
+                document.getElementById('editModalBody').innerHTML = `
+                    <div class="edit-field">
+                        <label>Discord ID</label>
+                        <input type="text" id="editDiscordId" value="${emp.discord_id}" readonly style="opacity:0.6;">
+                    </div>
+                    <div class="edit-field">
+                        <label>Имя</label>
+                        <input type="text" id="editName" value="${emp.name}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Паспорт</label>
+                        <input type="text" id="editPassport" value="${emp.passport || ''}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Должность</label>
+                        <select id="editPosition">${positionOptions}</select>
+                    </div>
+                    <div class="edit-field">
+                        <label>Дата приёма (дд.мм.гггг)</label>
+                        <input type="text" id="editHireDate" value="${emp.hire_date || ''}" placeholder="01.01.2024">
+                    </div>
+                    <div class="edit-field">
+                        <label>Дата последнего повышения (дд.мм.гггг)</label>
+                        <input type="text" id="editLastPromotion" value="${emp.last_promotion_date || ''}" placeholder="01.01.2024">
+                    </div>
+                    <div class="edit-field">
+                        <label>Сдвиг отпуска (дней)</label>
+                        <input type="number" id="editVacationShift" value="${emp.vacation_shift || 0}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Отпуска (через ; )</label>
+                        <input type="text" id="editVacations" value="${vacationList}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Дедлайн (дней) — вычисляется автоматически по должности</label>
+                        <input type="text" id="editDeadlineDays" value="${emp.deadline_days || 3}" readonly style="opacity:0.6;">
+                    </div>
+                `;
+
+                document.getElementById('editPosition').addEventListener('change', function() {
+                    const pos = this.value;
+                    const days = POSITION_DEADLINES[pos] || 3;
+                    document.getElementById('editDeadlineDays').value = days;
+                });
+
+                document.getElementById('editModal').classList.add('show');
+                addLog(`✏️ Открыто редактирование ${emp.name}`);
+
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка загрузки сотрудника', 'error');
+            }
+        }
+
+        document.getElementById('editModalSave').addEventListener('click', async function() {
+            if (!editingEmployee) return;
+
+            const password = prompt('Введите пароль для подтверждения изменений:');
+            if (password !== ADMIN_PASSWORD) {
+                showToast('❌ Неверный пароль!', 'error');
+                return;
+            }
+
+            const discordId = editingEmployee.discord_id;
+            const name = document.getElementById('editName').value.trim();
+            const passport = document.getElementById('editPassport').value.trim();
+            const position = document.getElementById('editPosition').value;
+            const hireDate = document.getElementById('editHireDate').value.trim();
+            const lastPromotion = document.getElementById('editLastPromotion').value.trim();
+            const vacationShift = parseInt(document.getElementById('editVacationShift').value) || 0;
+            const vacationsRaw = document.getElementById('editVacations').value.trim();
+            const vacations = vacationsRaw ? vacationsRaw.split(';').map(s => s.trim()).filter(Boolean) : [];
+            const deadlineDays = POSITION_DEADLINES[position] || 3;
+
+            if (!name) {
+                showToast('❌ Имя обязательно', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        passport,
+                        position,
+                        hire_date: hireDate || null,
+                        last_promotion_date: lastPromotion || null,
+                        vacation_shift: vacationShift,
+                        vacations,
+                        deadline_days: deadlineDays
+                    })
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Сотрудник ${name} обновлён`);
+                    document.getElementById('editModal').classList.remove('show');
+                    await loadCadres();
+                    showToast('✅ Сотрудник обновлён', 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    showToast('❌ Ошибка обновления', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка обновления', 'error');
+            }
+        });
+
+        document.getElementById('editModalClose').addEventListener('click', function() {
+            document.getElementById('editModal').classList.remove('show');
+            editingEmployee = null;
+        });
+
+        document.getElementById('editModalCancel').addEventListener('click', function() {
+            document.getElementById('editModal').classList.remove('show');
+            editingEmployee = null;
+        });
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+                editingEmployee = null;
+            }
+        });
+
+        // ================================================================
+        // ФУНКЦИИ КАДРОВ
+        // ================================================================
+        async function deleteEmployee(discordId) {
+            const password = prompt('Введите пароль для удаления сотрудника:');
+            if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
+
+            addLog(`🗑️ Удаление сотрудника ${discordId}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${discordId}&apikey=${SUPABASE_KEY}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Сотрудник удалён`);
+                    await loadCadres();
+                    showToast('✅ Сотрудник удалён', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при удалении', 'error');
+            }
+        }
+
+        function parseCadreMessage(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
+
+            let discordId = null, name = null;
+            for (const line of lines) {
+                const match = line.match(/<@(\d+)>\s*\|\s*(.+)/);
+                if (match) { discordId = match[1]; name = match[2].trim(); break; }
+            }
+            if (!discordId || !name) return { type: 'error', message: 'Не найдена строка с упоминанием и именем' };
+
+            const promotionLine = lines.find(l => l.toLowerCase().includes('повышен до должности'));
+            if (promotionLine) {
+                const positionMatch = promotionLine.match(/повышен до должности\s*(.+?)\s*\.?\s*$/i);
+                if (!positionMatch) return { type: 'error', message: 'Не удалось извлечь должность' };
+                return { type: 'promotion', discordId, name, newPosition: positionMatch[1].trim() };
+            }
+
+            const hasNabor = lines.some(l => l.toLowerCase().includes('набор') || l.toLowerCase().includes('инд. набор'));
+            const dateLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}/));
+            if (hasNabor && dateLine) {
+                const passportLine = lines.find(l => !l.includes('<') && !l.includes('|') && !l.includes('.') && /^\d+$/.test(l.trim()));
+                if (!passportLine) return { type: 'error', message: 'Не найден номер паспорта' };
+                const hireDateStr = dateLine.match(/\d{2}\.\d{2}\.\d{4}/)[0];
+                const hireDate = parseDate(hireDateStr);
+                if (!hireDate) return { type: 'error', message: 'Некорректная дата приёма' };
+                return { type: 'hire', discordId, name, passport: passportLine.trim(), hireDateStr };
+            }
+
+            const vacationLine = lines.find(l => l.match(/\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/));
+            if (vacationLine) {
+                const dates = vacationLine.match(/(\d{2}\.\d{2}\.\d{4})\s*-\s*(\d{2}\.\d{2}\.\d{4})/);
+                if (!dates) return { type: 'error', message: 'Не удалось извлечь даты отпуска' };
+                const startDate = parseDate(dates[1]);
+                const endDate = parseDate(dates[2]);
+                const duration = differenceInDays(startDate.getTime(), endDate.getTime()) + 1;
+                return { type: 'vacation', discordId, name, vacationStart: dates[1], vacationEnd: dates[2], duration };
+            }
+
+            return { type: 'error', message: 'Не удалось определить тип сообщения' };
+        }
+
+        async function processCadreMessage(text) {
+            const parsed = parseCadreMessage(text);
+            if (parsed.type === 'error') return { success: false, message: parsed.message };
+
+            try {
+                const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const existing = await checkRes.json();
+
+                if (parsed.type === 'hire') {
+                    if (existing.length > 0) return { success: false, message: 'Сотрудник уже существует' };
+                    const newEmp = {
+                        discord_id: parsed.discordId,
+                        name: parsed.name,
+                        passport: parsed.passport,
+                        position: 'Стажер АП',
+                        hire_date: parsed.hireDateStr,
+                        last_promotion_date: parsed.hireDateStr,
+                        deadline_days: POSITION_DEADLINES['Стажер АП'],
+                        vacation_shift: 0,
+                        vacations: []
+                    };
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?apikey=${SUPABASE_KEY}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(newEmp)
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    addLog(`➕ Добавлен сотрудник ${parsed.name}`);
+                    return { success: true, message: `Сотрудник ${parsed.name} добавлен` };
+                }
+
+                if (parsed.type === 'promotion') {
+                    if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
+                    const emp = existing[0];
+                    if (!POSITION_DEADLINES[parsed.newPosition]) return { success: false, message: `Неизвестная должность: ${parsed.newPosition}` };
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            position: parsed.newPosition,
+                            last_promotion_date: formatDate(new Date()),
+                            deadline_days: POSITION_DEADLINES[parsed.newPosition],
+                            vacation_shift: 0
+                        })
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    addLog(`⬆️ Повышен ${parsed.name} до ${parsed.newPosition}`);
+                    return { success: true, message: `${parsed.name} повышен до ${parsed.newPosition}` };
+                }
+
+                if (parsed.type === 'vacation') {
+                    if (existing.length === 0) return { success: false, message: 'Сотрудник не найден' };
+                    const emp = existing[0];
+                    const vacations = emp.vacations || [];
+                    vacations.push(`${parsed.vacationStart} - ${parsed.vacationEnd}`);
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/employees?discord_id=eq.${parsed.discordId}&apikey=${SUPABASE_KEY}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            vacation_shift: (emp.vacation_shift || 0) + parsed.duration,
+                            vacations: vacations
+                        })
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    addLog(`🏖️ Отпуск учтён для ${parsed.name} (${parsed.duration} дн.)`);
+                    return { success: true, message: `Отпуск учтён (${parsed.duration} дн.)` };
+                }
+
+                return { success: false, message: 'Неизвестная ошибка' };
+
+            } catch (error) {
+                addLog(`❌ Ошибка обработки: ${error.message}`);
+                return { success: false, message: error.message };
+            }
+        }
+
+        // ================================================================
+        // ЗАЯВКИ (ОБНОВЛЁННАЯ ВЕРСИЯ — ГЛАЗИК + ПОЛНЫЕ ВОПРОСЫ)
+        // ================================================================
+        let appFilter = 'all';
+        let appStatusFilter = 'all';
+        let applicationsData = [];
+
+        // Фильтры по типу
+        document.querySelectorAll('.app-filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.app-filter-btn').forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+                appFilter = this.dataset.filter;
+                addLog(`🔍 Фильтр заявок: ${appFilter}`);
+                renderApplications();
+            });
+        });
+
+        // Фильтры по статусу
+        document.querySelectorAll('.status-filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.status-filter-btn').forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+                appStatusFilter = this.dataset.status;
+                addLog(`🔍 Фильтр статуса: ${appStatusFilter}`);
+                renderApplications();
+            });
+        });
+
+        async function loadApplications() {
+            if (!appUnlocked) return;
+            addLog('🔄 Загрузка заявок...');
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?select=*&order=created_at.desc&apikey=${SUPABASE_KEY}`, {
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                applicationsData = await response.json();
+                addLog(`✅ Загружено ${applicationsData.length} заявок`);
+                renderApplications();
+
+            } catch (error) {
+                addLog(`❌ Ошибка загрузки заявок: ${error.message}`);
+                showToast('❌ Ошибка загрузки заявок', 'error');
+            }
+        }
+
+        function renderApplications() {
+            const data = applicationsData || [];
+
+            let filtered = data;
+            if (appFilter === 'discipline') {
+                filtered = data.filter(app => app.survey_type === 'discipline');
+            } else if (appFilter === 'hr') {
+                filtered = data.filter(app => app.survey_type === 'hr');
+            }
+
+            if (appStatusFilter === 'pending') {
+                filtered = filtered.filter(app => !app.status || app.status === 'pending');
+            } else if (appStatusFilter === 'approved') {
+                filtered = filtered.filter(app => app.status === 'approved');
+            } else if (appStatusFilter === 'rejected') {
+                filtered = filtered.filter(app => app.status === 'rejected');
+            }
+
+            const tbody = document.getElementById('appTbody');
+            tbody.innerHTML = '';
+
+            let unread = 0;
+            let approved = 0;
+            let rejected = 0;
+            let pending = 0;
+
+            filtered.forEach(app => {
+                const isRead = app.is_read || false;
+                if (!isRead) unread++;
+
+                const status = app.status || 'pending';
+                if (status === 'approved') approved++;
+                else if (status === 'rejected') rejected++;
+                else pending++;
+
+                const typeLabel = app.survey_type === 'discipline' ? '⚖️ Дисциплинарный' : '👥 HR';
+                const date = new Date(app.created_at);
+                const formattedDate = date.toLocaleString('ru-RU', {
+                    day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+
+                const statusLabels = {
+                    pending: '⏳ Ожидает',
+                    approved: '✅ Одобрено',
+                    rejected: '❌ Отклонено'
+                };
+
+                const statusClasses = {
+                    pending: 'pending',
+                    approved: 'approved',
+                    rejected: 'rejected'
+                };
+
+                const tr = document.createElement('tr');
+                tr.className = `application-card-row ${isRead ? '' : 'unread-application'}`;
+
+                const statusButtons = status === 'pending' ? `
+                    <button class="app-action approve" onclick="setApplicationStatus(${app.id}, 'approved')" title="Одобрить заявку">
+                        <span>✓</span><b>Одобрить</b>
+                    </button>
+                    <button class="app-action reject" onclick="setApplicationStatus(${app.id}, 'rejected')" title="Отклонить заявку">
+                        <span>×</span><b>Отклонить</b>
+                    </button>
+                ` : `
+                    <button class="app-action reset" onclick="setApplicationStatus(${app.id}, 'pending')" title="Вернуть заявку в ожидание">
+                        <span>↶</span><b>Сбросить статус</b>
+                    </button>
+                `;
+
+                tr.innerHTML = `
+                    <td colspan="6">
+                        <article class="application-card">
+                            <div class="application-card-main">
+                                <div class="application-card-id">#${app.id}</div>
+                                <div class="application-card-content">
+                                    <div class="application-card-topline">
+                                        <span class="application-type">${typeLabel}</span>
+                                        <span class="application-date">◷ ${formattedDate}</span>
+                                    </div>
+                                    <h3>${app.q1 || 'Не указано'}</h3>
+                                    <div class="application-card-meta">
+                                        <span class="status-badge ${statusClasses[status] || 'pending'}">
+                                            <span class="status-icon">${status === 'approved' ? '✓' : status === 'rejected' ? '×' : '◷'}</span>
+                                            ${statusLabels[status] || 'Ожидает'}
+                                        </span>
+                                        ${!isRead ? '<span class="unread-chip"><i></i> Новая заявка</span>' : '<span class="read-chip">Просмотрена</span>'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="application-actions">
+                                <button class="app-action view" onclick="viewApplication(${app.id})" title="Открыть полную заявку">
+                                    <span>⌁</span><b>Открыть</b>
+                                </button>
+                                ${statusButtons}
+                                ${!isRead ? `
+                                    <button class="app-action read" onclick="markAsRead(${app.id})" title="Отметить заявку как прочитанную">
+                                        <span>◉</span><b>Прочитано</b>
+                                    </button>` : ''}
+                                <button class="app-action delete" onclick="deleteApplication(${app.id})" title="Удалить заявку">
+                                    <span>⌫</span><b>Удалить</b>
+                                </button>
+                            </div>
+                        </article>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('appTotal').textContent = filtered.length;
+            document.getElementById('appApproved').textContent = approved;
+            document.getElementById('appRejected').textContent = rejected;
+            document.getElementById('appPending').textContent = pending;
+            document.getElementById('appUnread').textContent = unread;
+
+            const badge = document.getElementById('appBadge');
+            if (unread > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = unread;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // ================================================================
+        // УСТАНОВКА СТАТУСА ЗАЯВКИ
+        // ================================================================
+        async function setApplicationStatus(id, status) {
+            if (!appUnlocked) return;
+            addLog(`📌 Установка статуса "${status}" для заявки #${id}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ status: status })
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Статус заявки #${id} изменён на "${status}"`);
+                    await loadApplications();
+                    showToast(`✅ Статус заявки изменён`, 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при обновлении статуса', 'error');
+            }
+        }
+
+        // ================================================================
+        // ПРОСМОТР ЗАЯВКИ (ПОЛНЫЕ ВОПРОСЫ)
+        // ================================================================
+        const RATING_NAMES = {
+            discipline: {
+                r1: 'Адекватность', r2: 'Стрессоустойчивость', r3: 'Знание правил сервера',
+                r4: 'Любовь к своей работе', r5: 'Целеустремленность',
+                r6: 'Конституция', r7: 'Уголовный кодекс', r8: 'Этический кодекс',
+                r9: 'Устав Goverment', r10: 'Устав Секретариата', r11: 'Трудовой Кодекс'
+            },
+            hr: {
+                r1: 'Адекватность', r2: 'Стрессоустойчивость', r3: 'Знание правил сервера',
+                r4: 'Любовь к своей работе', r5: 'Целеустремленность',
+                r6: 'Конституция', r7: 'Уголовный кодекс', r8: 'Этический кодекс',
+                r9: 'Устав Goverment', r10: 'Устав Секретариата', r11: 'Трудовой Кодекс',
+                r12: 'Информация о лицензиях'
+            }
+        };
+
+        function viewApplication(id) {
+            const app = applicationsData.find(a => a.id === id);
+            if (!app) return;
+
+            const type = app.survey_type || 'discipline';
+            const typeLabel = type === 'discipline' ? '⚖️ Дисциплинарный инспектор' : '👥 HR-менеджер';
+
+            document.getElementById('viewModalTitle').textContent = `${typeLabel} — ${app.q1 || 'Без имени'}`;
+
+            let html = '';
+
+            // Поля с полными вопросами
+            const mainFields = [
+                { key: 'q1', label: '📝 Ваше Имя Фамилия (IC)' },
+                { key: 'q2', label: '👤 Ваше Имя (OOC)' },
+                { key: 'q3', label: '🎂 Ваш возраст (OOC)' },
+                { key: 'q4', label: '⏰ Ваш игровой онлайн (OOC)' },
+                { key: 'q5', label: '🌅 Ваш прайм-тайм' },
+                { key: 'q6', label: '🌍 Ваш часовой пояс' }
+            ];
+
+            mainFields.forEach(field => {
+                if (app[field.key] && app[field.key].trim()) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">${field.label}</span>
+                            <span class="field-value">${app[field.key]}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            // Рейтинги
+            if (app.ratings) {
+                try {
+                    const ratings = JSON.parse(app.ratings);
+                    const names = RATING_NAMES[type] || {};
+                    const entries = Object.entries(ratings).filter(([k]) => names[k]);
+                    if (entries.length > 0) {
+                        html += `<div class="modal-field"><span class="field-label">⭐ Рейтинги</span>`;
+                        entries.forEach(([key, val]) => {
+                            const stars = '★'.repeat(val) + '☆'.repeat(5 - val);
+                            html += `<span class="field-value"><span style="color:var(--text-muted);font-size:12px;">${names[key]}:</span> <span class="stars">${stars}</span> (${val}/5)</span>`;
+                        });
+                        html += `</div>`;
+                    }
+                } catch (e) {}
+            }
+
+            // Опыт
+            if (app.experience) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">💼 Имеется ли у вас опыт работы на похожих должностях?</span>
+                        <span class="field-value">${app.experience === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
+                if (app.experience === 'yes' && app.experience_detail) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">📋 Где и кем вы работали?</span>
+                            <span class="field-value">${app.experience_detail}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            // Деньги за экзамены
+            if (app.exam_money) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">💰 Допустимо ли брать деньги за сдачу экзаменов (именно в Аппарате Правительства)?</span>
+                        <span class="field-value">${app.exam_money === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
+            }
+
+            // Ситуация с коллегой
+            if (app.situation3 && app.situation3.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (Дисциплинарный)</span>
+                        <span class="field-value">${app.situation3}</span>
+                    </div>
+                `;
+            }
+            if (app.situation_colleague && app.situation_colleague.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🤝 Вы заметили, что Ваш коллега берёт деньги за повышение сотрудников, что Вы будете делать? (HR)</span>
+                        <span class="field-value">${app.situation_colleague}</span>
+                    </div>
+                `;
+            }
+
+            // Ситуация 1
+            if (app.situation1 && app.situation1.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🏛️ Представим такую ситуацию: В мэрии никого нет, но при этом в штате есть сотрудники Аппарата Правительства, что вы будете делать?</span>
+                        <span class="field-value">${app.situation1}</span>
+                    </div>
+                `;
+            }
+
+            // Оскорбление
+            if (app.situation2 && app.situation2.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">😡 Вас оскорбили в Дискорде, что вы будете делать?</span>
+                        <span class="field-value">${app.situation2}</span>
+                    </div>
+                `;
+            }
+
+            // О себе
+            if (app.about && app.about.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">📋 Пару слов о себе</span>
+                        <span class="field-value">${app.about}</span>
+                    </div>
+                `;
+            }
+
+            // Мотивация
+            if (app.motivation && app.motivation.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">🎯 Ради чего Вы хотите стать Дисциплинарным инспектором / HR-менеджером?</span>
+                        <span class="field-value">${app.motivation}</span>
+                    </div>
+                `;
+            }
+
+            // Качества
+            if (app.qualities && app.qualities.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">💪 Как вы думаете, какими качествами должен обладать Дисциплинарный инспектор?</span>
+                        <span class="field-value">${app.qualities}</span>
+                    </div>
+                `;
+            }
+
+            // HR вопросы
+            if (app.trainee && app.trainee.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">👨‍🎓 Готовы ли вы уделять время стажерам, которые требуют особого внимания?</span>
+                        <span class="field-value">${app.trainee === 'yes' ? '✅ Да' : '❌ Нет'}</span>
+                    </div>
+                `;
+                if (app.trainee === 'yes' && app.trainee_detail) {
+                    html += `
+                        <div class="modal-field">
+                            <span class="field-label">📖 Молодой стажер никак не может сдать первый экзамен на секретаря. Расскажите, как вы сможете ему помочь?</span>
+                            <span class="field-value">${app.trainee_detail}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            if (app.individual && app.individual.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">📄 Как вы относитесь к индивидуальным наборам? (Раздача листовок, агитируя отдел АП)</span>
+                        <span class="field-value">${app.individual}</span>
+                    </div>
+                `;
+            }
+
+            if (app.hr_duties && app.hr_duties.trim()) {
+                html += `
+                    <div class="modal-field">
+                        <span class="field-label">📚 Как Вы думаете, чем занимается HR-менеджер?</span>
+                        <span class="field-value">${app.hr_duties}</span>
+                    </div>
+                `;
+            }
+
+            document.getElementById('viewModalBody').innerHTML = html;
+            document.getElementById('viewModal').classList.add('show');
+            addLog(`👁️ Просмотр заявки #${id}`);
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.remove('show');
+        }
+
+        document.getElementById('viewModalClose').addEventListener('click', closeViewModal);
+        document.getElementById('viewModalCloseBtn').addEventListener('click', closeViewModal);
+        document.getElementById('viewModal').addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        // ================================================================
+        // ФУНКЦИИ ЗАЯВОК
+        // ================================================================
+        async function markAsRead(id) {
+            if (!appUnlocked) return;
+            addLog(`👁️ Отметка заявки #${id} как прочитанной`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ is_read: true })
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Заявка #${id} отмечена как прочитанная`);
+                    await loadApplications();
+                    showToast('✅ Заявка отмечена как прочитанная', 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при обновлении', 'error');
+            }
+        }
+
+        async function markAllAsRead() {
+            if (!appUnlocked) return;
+            addLog('👁️ Отметка всех заявок как прочитанных');
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?is_read=eq.false&apikey=${SUPABASE_KEY}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ is_read: true })
+                });
+
+                if (response.ok) {
+                    addLog('✅ Все заявки отмечены как прочитанные');
+                    await loadApplications();
+                    showToast('✅ Все заявки отмечены как прочитанные', 'success');
+                } else {
+                    const errorText = await response.text();
+                    addLog(`❌ Ошибка: ${response.status} - ${errorText}`);
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при обновлении', 'error');
+            }
+        }
+
+        async function deleteApplication(id) {
+            if (!appUnlocked) return;
+            if (!confirm(`Удалить заявку #${id}?`)) return;
+            addLog(`🗑️ Удаление заявки #${id}`);
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${id}&apikey=${SUPABASE_KEY}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    addLog(`✅ Заявка #${id} удалена`);
+                    await loadApplications();
+                    showToast('✅ Заявка удалена', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+                showToast('❌ Ошибка при удалении', 'error');
+            }
+        }
+
+        // ================================================================
+        // ГОСВОЛНЫ (ПОЛНАЯ ВЕРСИЯ)
+        // ================================================================
+        const GOS_EVENTS_KEY = 'gosEvents';
+        const DIST_EVENTS_KEY = 'distEvents';
+
+        function loadGosEvents() { return JSON.parse(localStorage.getItem(GOS_EVENTS_KEY) || '[]'); }
+        function saveGosEvents(events) { localStorage.setItem(GOS_EVENTS_KEY, JSON.stringify(events)); }
+        function loadDistEvents() { return JSON.parse(localStorage.getItem(DIST_EVENTS_KEY) || '[]'); }
+        function saveDistEvents(events) { localStorage.setItem(DIST_EVENTS_KEY, JSON.stringify(events)); }
+
+        const AP_LINKS = {
+            recruit: [
+                'https://discord.com/channels/713076956748316702/1501696693211500644/1501696743035637803',
+                'https://discord.com/channels/713076956748316702/1501696693211500644/1501696756889550919',
+                'https://discord.com/channels/713076956748316702/1501696693211500644/1501696771276013609'
+            ],
+            lecture: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696897369378936'
+        };
+        const AP_USSS_LINKS = {
+            recruit_start: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696802733428757',
+            recruit_middle: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696817329340416',
+            recruit_end: 'https://discord.com/channels/713076956748316702/1501696693211500644/1501696831900483594',
+            lecture: AP_LINKS.lecture
+        };
+        const USSS_LINKS = {
+            recruit: [
+                'https://discord.com/channels/713076956748316702/1501686647518003221/1501696425237418135',
+                'https://discord.com/channels/713076956748316702/1501686647518003221/1501696439535800492'
+            ],
+            electronic: 'https://discord.com/channels/713076956748316702/1501686647518003221/1501696457269313637'
+        };
+        const GOS_FINAL_LINE = 'МК | Мини-МП «Картинг» | [20:50](https://discord.com/channels/713076956748316702/1501697235476287539/1501697283585085642)';
+
+        function parseGosMessage(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
+            let events = [];
+            let date = null;
+            const apHeader = lines.find(l => l.includes('Гос. волны АП') && !l.includes('USSS'));
+            const usssHeader = lines.find(l => l.includes('Гос. волны USSS') && !l.includes('АП'));
+            const apUsssHeader = lines.find(l => l.includes('Гос. волны') && (l.includes('АП/USSS') || l.includes('AP/USSS')));
+
+            if (apHeader) {
+                const m = apHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/);
+                if (m) date = m[1];
+                let codeLines = [];
+                const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+                if (codeBlockMatch) {
+                    codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                } else {
+                    const headerSet = new Set([apHeader].filter(Boolean));
+                    codeLines = lines.filter(l => !headerSet.has(l));
+                }
+                for (const line of codeLines) {
+                    if (!line.includes('|')) continue;
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length < 4) continue;
+                    const description = parts[0];
+                    let typeField = parts[1].toUpperCase();
+                    const dateFromLine = parts[2];
+                    const timesStr = parts[3];
+                    const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                    if (times.length === 0) continue;
+                    let formattedTimes = '';
+                    if (typeField === 'АП') {
+                        const isLecture = description.toLowerCase().includes('лекция');
+                        if (isLecture) {
+                            formattedTimes = times.map(t => `[${t}](${AP_LINKS.lecture})`).join(' - ');
+                        } else {
+                            const links = AP_LINKS.recruit;
+                            formattedTimes = times.map((t, idx) => {
+                                let link;
+                                if (idx === 0) link = links[0];
+                                else if (idx === 1 && times.length === 2) link = links[2];
+                                else if (idx === 1 && times.length >= 3) link = links[1];
+                                else if (idx === 2) link = links[2];
+                                else link = links[links.length - 1];
+                                return `[${t}](${link})`;
+                            }).join(' - ');
+                        }
+                    } else if (typeField === 'АП/USSS' || typeField === 'AP/USSS') {
+                        const isLecture = description.toLowerCase().includes('лекция');
+                        if (isLecture) {
+                            formattedTimes = times.map(t => `[${t}](${AP_USSS_LINKS.lecture})`).join(' - ');
+                        } else {
+                            formattedTimes = times.map((t, idx) => {
+                                let link;
+                                if (times.length === 2) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else if (times.length === 3) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === 1) link = AP_USSS_LINKS.recruit_middle;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === times.length - 1) link = AP_USSS_LINKS.recruit_end;
+                                    else link = AP_USSS_LINKS.recruit_middle;
+                                }
+                                return `[${t}](${link})`;
+                            }).join(' - ');
+                        }
+                    } else {
+                        continue;
+                    }
+                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${formattedTimes}`;
+                    events.push({ text: eventText, datetimeStr: `${dateFromLine} ${times[0]}`, type: typeField });
+                }
+                if (events.length > 0) return { type: 'ap', events, date };
+                return { type: 'error', message: 'Не найдены события' };
+            }
+
+            if (apUsssHeader) {
+                const m = apUsssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/);
+                if (m) date = m[1];
+                let codeLines = [];
+                const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+                if (codeBlockMatch) {
+                    codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                } else {
+                    const headerSet = new Set([apUsssHeader].filter(Boolean));
+                    codeLines = lines.filter(l => !headerSet.has(l));
+                }
+                for (const line of codeLines) {
+                    if (!line.includes('|')) continue;
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length < 4) continue;
+                    const description = parts[0];
+                    let typeField = parts[1].toUpperCase();
+                    const dateFromLine = parts[2];
+                    const timesStr = parts[3];
+                    const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                    if (times.length === 0) continue;
+                    let formattedTimes = '';
+                    if (typeField === 'АП' || typeField === 'АП/USSS' || typeField === 'AP/USSS') {
+                        const isLecture = description.toLowerCase().includes('лекция');
+                        if (isLecture) {
+                            formattedTimes = times.map(t => `[${t}](${AP_USSS_LINKS.lecture})`).join(' - ');
+                        } else {
+                            formattedTimes = times.map((t, idx) => {
+                                let link;
+                                if (times.length === 2) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else if (times.length === 3) {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === 1) link = AP_USSS_LINKS.recruit_middle;
+                                    else link = AP_USSS_LINKS.recruit_end;
+                                } else {
+                                    if (idx === 0) link = AP_USSS_LINKS.recruit_start;
+                                    else if (idx === times.length - 1) link = AP_USSS_LINKS.recruit_end;
+                                    else link = AP_USSS_LINKS.recruit_middle;
+                                }
+                                return `[${t}](${link})`;
+                            }).join(' - ');
+                        }
+                    } else {
+                        continue;
+                    }
+                    const eventText = `${description} | ${typeField} | ${dateFromLine} | ${formattedTimes}`;
+                    events.push({ text: eventText, datetimeStr: `${dateFromLine} ${times[0]}`, type: typeField });
+                }
+                if (events.length > 0) return { type: 'apUsss', events, date };
+                return { type: 'error', message: 'Не найдены события' };
+            }
+
+            if (usssHeader) {
+                const m = usssHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/);
+                if (m) date = m[1];
+                let codeLines = [];
+                const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+                if (codeBlockMatch) {
+                    codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                } else {
+                    const headerSet = new Set([usssHeader].filter(Boolean));
+                    codeLines = lines.filter(l => !headerSet.has(l));
+                }
+                for (const line of codeLines) {
+                    if (!line.includes('|')) continue;
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length < 2) continue;
+                    const timePart = parts[0];
+                    const typePart = parts[1].toLowerCase();
+                    const times = timePart.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                    if (times.length === 0) continue;
+                    let eventText = '';
+                    if (typePart.includes('набор')) {
+                        const formattedTimes = times.map((t, idx) => {
+                            const link = idx === 0 ? USSS_LINKS.recruit[0] : USSS_LINKS.recruit[1];
+                            return `[${t}](${link})`;
+                        }).join(' - ');
+                        eventText = `USSS | Набор | ${formattedTimes}`;
+                    } else if (typePart.includes('электрон')) {
+                        const formattedTimes = times.map(t => `[${t}](${USSS_LINKS.electronic})`).join(' - ');
+                        eventText = `USSS | Электронка | ${formattedTimes}`;
+                    } else {
+                        continue;
+                    }
+                    events.push({ text: eventText, datetimeStr: `${date} ${times[0]}`, type: 'usss' });
+                }
+                if (events.length > 0) return { type: 'usss', events, date };
+                return { type: 'error', message: 'Не найдены события' };
+            }
+
+            return { type: 'error', message: 'Не удалось определить тип сообщения' };
+        }
+
+        function processGosMessage(text) {
+            const parsed = parseGosMessage(text);
+            if (parsed.type === 'error') return { success: false, message: parsed.message };
+            let events = loadGosEvents();
+            events = events.concat(parsed.events);
+            events.sort((a, b) => {
+                const da = a.datetimeStr.split(' ').join('');
+                const db = b.datetimeStr.split(' ').join('');
+                return da.localeCompare(db);
+            });
+            saveGosEvents(events);
+            renderGosResults();
+            renderPublishResults();
+            return { success: true, message: `Добавлено ${parsed.events.length} строк` };
+        }
+
+        function renderGosResults() {
+            const container = document.getElementById('gosResults');
+            const events = loadGosEvents();
+            container.innerHTML = '';
+            if (events.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет обработанных сообщений</div>';
+                return;
+            }
+            events.forEach((event, index) => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.innerHTML = `
+                    <span class="result-number">${index + 1}.</span>
+                    <span class="result-text">${event.text}</span>
+                    <button class="copy-btn" data-text="${event.text.replace(/"/g, '&quot;')}">Копировать</button>
+                `;
+                item.querySelector('.copy-btn').addEventListener('click', function() {
+                    navigator.clipboard.writeText(this.dataset.text).then(() => {
+                        this.textContent = '✓';
+                        setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
+                    });
+                });
+                container.appendChild(item);
+            });
+            const finalItem = document.createElement('div');
+            finalItem.className = 'result-item final-result';
+            finalItem.innerHTML = `
+                <span class="result-number">★</span>
+                <span class="result-text">${GOS_FINAL_LINE}</span>
+                <button class="copy-btn">Копировать</button>
+            `;
+            finalItem.querySelector('.copy-btn').addEventListener('click', function() {
+                navigator.clipboard.writeText(GOS_FINAL_LINE).then(() => {
+                    this.textContent = '✓';
+                    setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
+                });
+            });
+            container.appendChild(finalItem);
+        }
+
+        function resetGosData() {
+            if (confirm('Очистить все обработанные сообщения?')) {
+                localStorage.removeItem(GOS_EVENTS_KEY);
+                renderGosResults();
+                renderPublishResults();
+                addLog('🗑️ Госволны сброшены');
+            }
+        }
+
+        // ===== РАСПРЕДЕЛЕНИЕ =====
+        function parseDistMessage(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) return { type: 'error', message: 'Пустое сообщение' };
+            let date = null;
+            const apHeader = lines.find(l => l.includes('Гос. волны АП') || l.includes('Гос. волны USSS'));
+            if (apHeader) { const m = apHeader.match(/на\s+(\d{2}\.\d{2}\.\d{4})/); if (m) date = m[1]; }
+            let codeLines = [];
+            const codeBlockMatch = text.match(/```([\s\S]*?)```/);
+            if (codeBlockMatch) {
+                codeLines = codeBlockMatch[1].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            } else {
+                const headerSet = new Set([apHeader].filter(Boolean));
+                codeLines = lines.filter(l => !headerSet.has(l));
+            }
+            if (!date) {
+                for (const line of codeLines) {
+                    if (line.includes('|')) {
+                        const parts = line.split('|').map(p => p.trim());
+                        if (parts.length >= 3) {
+                            const m = parts[2].match(/\d{2}\.\d{2}\.\d{4}/);
+                            if (m) { date = m[0]; break; }
+                        }
+                    }
+                }
+            }
+            if (!date) return { type: 'error', message: 'Не удалось извлечь дату' };
+            const tasks = [];
+            for (const line of codeLines) {
+                if (!line.includes('|')) continue;
+                const parts = line.split('|').map(p => p.trim());
+                if (parts.length < 4) continue;
+                const description = parts[0];
+                const type = parts[1].toUpperCase();
+                const dateFromLine = parts[2];
+                const timesStr = parts[3];
+                const times = timesStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+                if (times.length === 0) continue;
+                const taskText = `${description} | ${type} | ${dateFromLine} | ${times.join(' - ')}`;
+                tasks.push({ text: taskText, datetimeStr: `${dateFromLine} ${times[0]}` });
+            }
+            if (tasks.length === 0) return { type: 'error', message: 'Не найдены события' };
+            tasks.sort((a, b) => a.datetimeStr.localeCompare(b.datetimeStr));
+            return { type: 'success', tasks, date };
+        }
+
+        function processDistMessage(text) {
+            const parsed = parseDistMessage(text);
+            if (parsed.type === 'error') return { success: false, message: parsed.message };
+            let distData = loadDistEvents();
+            distData.push({ date: parsed.date, tasks: parsed.tasks.map(t => t.text) });
+            saveDistEvents(distData);
+            renderDistResults();
+            return { success: true, message: `Добавлено ${parsed.tasks.length} задач` };
+        }
+
+        function renderDistResults() {
+            const container = document.getElementById('distResults');
+            const distData = loadDistEvents();
+            container.innerHTML = '';
+            if (distData.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет обработанных сообщений</div>';
+                return;
+            }
+            distData.forEach(entry => {
+                const headerText = `# Список задач на ${entry.date}\n||<@&717037322268311553> ||`;
+                const headerItem = document.createElement('div');
+                headerItem.className = 'result-item';
+                headerItem.style.borderLeft = '3px solid var(--accent)';
+                headerItem.innerHTML = `
+                    <span class="result-number">📋</span>
+                    <span class="result-text">${headerText.replace(/\n/g, '<br>')}</span>
+                    <button class="copy-btn">Копировать</button>
+                `;
+                headerItem.querySelector('.copy-btn').addEventListener('click', function() {
+                    navigator.clipboard.writeText(headerText).then(() => { this.textContent = '✓'; setTimeout(() => { this.textContent = 'Копировать'; }, 1000); });
+                });
+                container.appendChild(headerItem);
+                entry.tasks.forEach(taskText => {
+                    const taskItem = document.createElement('div');
+                    taskItem.className = 'result-item';
+                    taskItem.innerHTML = `
+                        <span class="result-number"></span>
+                        <span class="result-text">* ${taskText}</span>
+                        <button class="copy-btn">Копировать</button>
+                    `;
+                    taskItem.querySelector('.copy-btn').addEventListener('click', function() {
+                        navigator.clipboard.writeText(`* ${taskText}`).then(() => { this.textContent = '✓'; setTimeout(() => { this.textContent = 'Копировать'; }, 1000); });
+                    });
+                    container.appendChild(taskItem);
+                });
+                const spacer = document.createElement('div');
+                spacer.style.height = '10px';
+                container.appendChild(spacer);
+            });
+        }
+
+        function resetDistData() {
+            if (confirm('Очистить все задачи распределения?')) {
+                localStorage.removeItem(DIST_EVENTS_KEY);
+                renderDistResults();
+                addLog('🗑️ Распределение сброшено');
+            }
+        }
+
+        // ===== ПУБЛИКАЦИЯ =====
+        function renderPublishResults() {
+            const container = document.getElementById('publishResults');
+            const events = loadGosEvents();
+            container.innerHTML = '';
+            if (events.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted);text-align:center;">Пока нет данных для публикации</div>';
+                return;
+            }
+
+            const grouped = {};
+            events.forEach(event => {
+                const dateMatch = event.text.match(/\d{2}\.\d{2}\.\d{4}/);
+                if (dateMatch) {
+                    const date = dateMatch[0];
+                    if (!grouped[date]) grouped[date] = [];
+                    grouped[date].push(event);
+                }
+            });
+
+            const templates = {
+                '1501696743035637803': (endTime) => [
+                    `В холле Мэрии ЛС до ${endTime} будет проводиться собеседование в Аппарат Правительства.`,
+                    `Вам необходимо проживать в штате не менее 2-х лет.`,
+                    `С уважением, Правительство Штата.`
+                ],
+                '1501696756889550919': (endTime) => [
+                    `Напоминаем, в холле Мэрии ЛС до ${endTime} проводится собеседование в Аппарат Правительства.`,
+                    `Вам необходимо проживать в штате не менее 2-х лет.`,
+                    `С уважением, Правительство Штата.`
+                ],
+                '1501696771276013609': () => [
+                    `Собеседование в Аппарат Правительства окончено.`,
+                    `Если Вы не успели посетить собеседование, оставьте электронную заявку на портале штата.`,
+                    `С уважением, Правительство Штата.`
+                ],
+                '1501696802733428757': (endTime) => [
+                    `Граждане штата! В данный момент проходит собеседование в ряды Аппарат Правительства и в USSS.`,
+                    `Необходимо проживание в штате от 2 лет, не иметь судимостей, так же быть старше 21 года.`,
+                    `Собеседование проходит на территории Мэрии ЛС до ${endTime}. С уважением, Правительство Штата.`
+                ],
+                '1501696817329340416': (endTime) => [
+                    `Граждане штата! Напоминаем, что продолжается собеседование в ряды Аппарат Правительства и в USSS.`,
+                    `Необходимо проживать 2 года в штате, не иметь судимостей, так же быть старше 21 года.`,
+                    `Собеседование проходит на территории Мэрии ЛС до ${endTime}. С уважением, Правительство Штата.`
+                ],
+                '1501696831900483594': () => [
+                    `Уважаемые жители штата! Собеседование на службу в ряды Аппарат Правительства и в USSS окончено.`,
+                    `Если вы не успели посетить собеседование - оставьте электронную заявку на портале штата.`,
+                    `В разделе "Приемная для граждан". С уважением, Правительство Штата.`
+                ],
+                '1501696897369378936': (lectureTime) => {
+                    const [h, m] = lectureTime.split(':').map(Number);
+                    const d = new Date(2000,0,1,h,m+10);
+                    const newTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+                    return [
+                        `В ${newTime} в холле Мэрии ЛС будет проводиться лекция для новоприбывших жителей нашего Штата.`,
+                        `Тема лекции - "Работа в Аппарате Правительства".`,
+                        `С уважением, Правительство Штата.`
+                    ];
+                }
+            };
+
+            Object.keys(grouped).sort().forEach(date => {
+                const dateHeader = document.createElement('div');
+                dateHeader.style.cssText = 'font-weight:700;color:var(--accent);padding:10px 0 5px;font-size:16px;';
+                dateHeader.textContent = date;
+                container.appendChild(dateHeader);
+
+                grouped[date].forEach(event => {
+                    const linkMatches = event.text.match(/\[(\d{2}:\d{2})\]\((https:\/\/discord\.com\/channels\/[\d\/]+)\)/g);
+                    if (!linkMatches) return;
+                    const links = linkMatches.map(l => {
+                        const m = l.match(/\[(\d{2}:\d{2})\]\((https:\/\/discord\.com\/channels\/[\d\/]+)\)/);
+                        return { time: m[1], url: m[2] };
+                    });
+                    const lastTime = links.length > 0 ? links[links.length-1].time : '00:00';
+                    const firstTime = links.length > 0 ? links[0].time : '00:00';
+
+                    const description = event.text.split('|')[0].trim();
+                    const header = document.createElement('div');
+                    header.className = 'collapse-header';
+                    const timesStr = links.map(l => l.time).join(' - ');
+                    header.innerHTML = `<span>${date} ${description} ${timesStr}</span><span class="collapse-arrow">▶</span>`;
+
+                    const content = document.createElement('div');
+                    content.className = 'collapse-content';
+
+                    links.forEach((link, idx) => {
+                        const linkId = link.url.split('/').pop();
+                        const template = templates[linkId];
+                        if (!template) return;
+                        let lines = [];
+                        if (linkId === '1501696897369378936') lines = template(firstTime);
+                        else if (linkId === '1501696771276013609' || linkId === '1501696831900483594') lines = template();
+                        else lines = template(lastTime);
+
+                        const block = document.createElement('div');
+                        block.className = 'publish-block';
+
+                        const actionsDiv = document.createElement('div');
+                        actionsDiv.style.cssText = 'display:flex;gap:4px;margin-bottom:6px;';
+                        const checkBtn = document.createElement('button');
+                        checkBtn.className = 'publish-action-btn check-red';
+                        checkBtn.innerHTML = '✓';
+                        const eyeBtn = document.createElement('button');
+                        eyeBtn.className = 'publish-action-btn eye-green';
+                        eyeBtn.innerHTML = '👁';
+                        actionsDiv.appendChild(checkBtn);
+                        actionsDiv.appendChild(eyeBtn);
+
+                        const title = document.createElement('span');
+                        title.style.cssText = 'font-weight:600;color:var(--text-muted);';
+                        title.textContent = `Сообщение ${idx+1}`;
+                        const headerRow = document.createElement('div');
+                        headerRow.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:8px;';
+                        headerRow.appendChild(actionsDiv);
+                        headerRow.appendChild(title);
+                        block.appendChild(headerRow);
+
+                        lines.forEach(line => {
+                            const lineDiv = document.createElement('div');
+                            lineDiv.className = 'publish-line';
+                            lineDiv.innerHTML = `
+                                <span class="publish-line-text">${line}</span>
+                                <button class="copy-btn">Копировать</button>
+                            `;
+                            lineDiv.querySelector('.copy-btn').addEventListener('click', function() {
+                                navigator.clipboard.writeText(line).then(() => {
+                                    this.textContent = '✓';
+                                    setTimeout(() => { this.textContent = 'Копировать'; }, 1000);
+                                });
+                            });
+                            block.appendChild(lineDiv);
+                        });
+
+                        checkBtn.addEventListener('click', () => {
+                            checkBtn.classList.toggle('active');
+                            block.classList.toggle('highlight-red');
+                            if (checkBtn.classList.contains('active')) {
+                                eyeBtn.classList.remove('active');
+                                block.classList.remove('highlight-green');
+                            }
+                        });
+                        eyeBtn.addEventListener('click', () => {
+                            eyeBtn.classList.toggle('active');
+                            block.classList.toggle('highlight-green');
+                            if (eyeBtn.classList.contains('active')) {
+                                checkBtn.classList.remove('active');
+                                block.classList.remove('highlight-red');
+                            }
+                        });
+
+                        content.appendChild(block);
+                    });
+
+                    header.addEventListener('click', () => {
+                        content.classList.toggle('active');
+                        header.querySelector('.collapse-arrow').classList.toggle('open');
+                    });
+                    container.appendChild(header);
+                    container.appendChild(content);
+                });
+            });
+        }
+
+        // ================================================================
+        // ОТЧЁТЫ
+        // ================================================================
+        const WEEKLY_RECRUITMENT_KEY = 'weeklyRecruitment';
+        const WEEKLY_APPLICATIONS_KEY = 'weeklyApplications';
+        const WEEKLY_INDIVIDUAL_KEY = 'weeklyIndividual';
+        const WEEKLY_LECTURES_KEY = 'weeklyLectures';
+
+        // Наборы
+        function processWeeklyRecruitment() {
+            const text = document.getElementById('weeklyText').value;
+            const linksText = document.getElementById('weeklyLinks').value;
+            hideError('weeklyError');
+            const blocks = [];
+            const lines = text.split('\n').map(l => l.trim());
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('📝 Отчет по наборам 📝')) {
+                    let dateTime = null, count = 0;
+                    i++;
+                    while (i < lines.length && !lines[i].includes('📝 Отчет по наборам 📝')) {
+                        const line = lines[i];
+                        if (line.startsWith('Дата и время проведения набора')) {
+                            const after = line.replace('Дата и время проведения набора', '').trim();
+                            if (after) {
+                                const dtMatch = after.match(/\d{2}\.\d{2}\.\d{4}\s*(?:\||\s)\s*\d{2}:\d{2}/);
+                                if (dtMatch) dateTime = dtMatch[0].replace(/\s*\|\s*/, ' ');
+                                else dateTime = after;
+                            } else if (i + 1 < lines.length) {
+                                const nextLine = lines[i + 1];
+                                const dtMatch = nextLine.match(/\d{2}\.\d{2}\.\d{4}\s*(?:\||\s)\s*\d{2}:\d{2}/);
+                                if (dtMatch) dateTime = dtMatch[0].replace(/\s*\|\s*/, ' ');
+                                else dateTime = nextLine;
+                                i++;
+                            }
+                        } else if (line.startsWith('Кол-во принятых людей')) {
+                            const after = line.replace('Кол-во принятых людей', '').trim();
+                            if (after) { const num = parseInt(after, 10); if (!isNaN(num)) count = num; }
+                            else if (i + 1 < lines.length) {
+                                const nextLine = lines[i + 1];
+                                const num = parseInt(nextLine, 10);
+                                if (!isNaN(num)) count = num;
+                                i++;
+                            }
+                        }
+                        i++;
+                    }
+                    if (dateTime) blocks.push({ dateTime, count });
+                } else { i++; }
+            }
+            if (blocks.length === 0) {
+                showError('Не найдено ни одного отчёта по наборам.', 'weeklyError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('weeklyTbody');
+            tbody.innerHTML = '';
+            blocks.forEach((block, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${block.dateTime}</td><td>${block.count}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            const totalPeople = blocks.reduce((sum, b) => sum + b.count, 0);
+            document.getElementById('weeklyStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество наборов</div><div class="stat-value">${blocks.length}</div></div>
+                <div class="stat-card"><div class="stat-label">Принято людей</div><div class="stat-value">${totalPeople}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_RECRUITMENT_KEY, JSON.stringify({ blocks, links }));
+            addLog(`📊 Сформирован отчёт по наборам (${blocks.length} записей)`);
+        }
+
+        function resetWeeklyRecruitment() {
+            document.getElementById('weeklyText').value = '';
+            document.getElementById('weeklyLinks').value = '';
+            document.getElementById('weeklyTbody').innerHTML = '';
+            document.getElementById('weeklyStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_RECRUITMENT_KEY);
+            addLog('🗑️ Отчёт по наборам сброшен');
+        }
+
+        // Электронные заявки
+        function parseApplicationsText(text) {
+            const dateTimeRegex = /—\s*(\d{2}\.\d{2}\.\d{4})[,\s]\s*(\d{2}:\d{2})/g;
+            const matches = [];
+            let match;
+            while ((match = dateTimeRegex.exec(text)) !== null) {
+                matches.push(`${match[1]} ${match[2]}`);
+            }
+            return matches;
+        }
+
+        function processWeeklyApplications() {
+            const text = document.getElementById('appsText').value;
+            const linksText = document.getElementById('appsLinks').value;
+            hideError('appsError');
+            const dateTimes = parseApplicationsText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени заявки.', 'appsError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('appsTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('appsStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Обработано заявок</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_APPLICATIONS_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по электронным заявкам (${dateTimes.length} записей)`);
+        }
+
+        function resetWeeklyApplications() {
+            document.getElementById('appsText').value = '';
+            document.getElementById('appsLinks').value = '';
+            document.getElementById('appsTbody').innerHTML = '';
+            document.getElementById('appsStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_APPLICATIONS_KEY);
+            addLog('🗑️ Отчёт по электронным заявкам сброшен');
+        }
+
+        // Индивидуальные
+        function parseIndividualText(text) {
+            const lines = text.split('\n').map(l => l.trim());
+            const dateTimes = [];
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('Дата и время проведения набора')) {
+                    i++;
+                    if (i < lines.length) {
+                        const value = lines[i].trim();
+                        let formatted = value;
+                        const hmDate = value.match(/^(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{2})$/);
+                        if (hmDate) {
+                            const [time, date] = [hmDate[1], hmDate[2]];
+                            const [day, month, yearShort] = date.split('.').map(Number);
+                            const year = 2000 + yearShort;
+                            formatted = `${String(day).padStart(2,'0')}.${String(month).padStart(2,'0')}.${year} ${time}`;
+                        } else {
+                            const dtMatch = value.match(/(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})/);
+                            if (dtMatch) formatted = `${dtMatch[1]} ${dtMatch[2]}`;
+                            else {
+                                const dtMatch2 = value.match(/(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{4})/);
+                                if (dtMatch2) formatted = `${dtMatch2[2]} ${dtMatch2[1]}`;
+                            }
+                        }
+                        dateTimes.push(formatted);
+                    }
+                }
+                i++;
+            }
+            return dateTimes;
+        }
+
+        function processWeeklyIndividual() {
+            const text = document.getElementById('indivText').value;
+            const linksText = document.getElementById('indivLinks').value;
+            hideError('indivError');
+            const dateTimes = parseIndividualText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени.', 'indivError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('indivTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('indivStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество инд. наборов</div><div class="stat-value">${dateTimes.length}</div></div>
+                <div class="stat-card"><div class="stat-label">Принято людей</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_INDIVIDUAL_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по индивидуальным наборам (${dateTimes.length} записей)`);
+        }
+
+        function resetWeeklyIndividual() {
+            document.getElementById('indivText').value = '';
+            document.getElementById('indivLinks').value = '';
+            document.getElementById('indivTbody').innerHTML = '';
+            document.getElementById('indivStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_INDIVIDUAL_KEY);
+            addLog('🗑️ Отчёт по индивидуальным наборам сброшен');
+        }
+
+        // Лекции
+        function parseLecturesText(text) {
+            const lines = text.split('\n').map(l => l.trim());
+            const dateTimes = [];
+            let i = 0;
+            while (i < lines.length) {
+                if (lines[i].includes('Дата и время проведения лекции')) {
+                    i++;
+                    if (i < lines.length) {
+                        const value = lines[i].trim();
+                        let formatted = value;
+                        const hmDate = value.match(/^(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{2})$/);
+                        if (hmDate) {
+                            const [time, date] = [hmDate[1], hmDate[2]];
+                            const [day, month, yearShort] = date.split('.').map(Number);
+                            const year = 2000 + yearShort;
+                            formatted = `${String(day).padStart(2,'0')}.${String(month).padStart(2,'0')}.${year} ${time}`;
+                        } else {
+                            const dtMatch = value.match(/(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})/);
+                            if (dtMatch) formatted = `${dtMatch[1]} ${dtMatch[2]}`;
+                            else {
+                                const dtMatch2 = value.match(/(\d{2}:\d{2})\s+(\d{2}\.\d{2}\.\d{4})/);
+                                if (dtMatch2) formatted = `${dtMatch2[2]} ${dtMatch2[1]}`;
+                            }
+                        }
+                        dateTimes.push(formatted);
+                    }
+                }
+                i++;
+            }
+            return dateTimes;
+        }
+
+        function processWeeklyLectures() {
+            const text = document.getElementById('lecturesText').value;
+            const linksText = document.getElementById('lecturesLinks').value;
+            hideError('lecturesError');
+            const dateTimes = parseLecturesText(text);
+            if (dateTimes.length === 0) {
+                showError('Не найдено ни одной даты и времени лекции.', 'lecturesError');
+                return;
+            }
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const tbody = document.getElementById('lecturesTbody');
+            tbody.innerHTML = '';
+            dateTimes.forEach((dt, idx) => {
+                const tr = document.createElement('tr');
+                const link = idx < links.length ? links[idx] : '';
+                const linkHtml = link ? `<a href="${link}" target="_blank" style="color:var(--accent);">Ссылка</a>` : '—';
+                tr.innerHTML = `<td>${dt}</td><td>${linkHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('lecturesStats').innerHTML = `
+                <div class="stat-card"><div class="stat-label">Количество лекций</div><div class="stat-value">${dateTimes.length}</div></div>
+            `;
+            localStorage.setItem(WEEKLY_LECTURES_KEY, JSON.stringify({ dateTimes, links }));
+            addLog(`📊 Сформирован отчёт по лекциям (${dateTimes.length} записей)`);
+        }
+
+        function resetWeeklyLectures() {
+            document.getElementById('lecturesText').value = '';
+            document.getElementById('lecturesLinks').value = '';
+            document.getElementById('lecturesTbody').innerHTML = '';
+            document.getElementById('lecturesStats').innerHTML = '';
+            localStorage.removeItem(WEEKLY_LECTURES_KEY);
+            addLog('🗑️ Отчёт по лекциям сброшен');
+        }
+
+        // ================================================================
+        // TOAST
+        // ================================================================
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(129,140,248,0.15)';
+            const textColor = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#818cf8';
+            const borderColor = type === 'success' ? 'rgba(34,197,94,0.2)' : type === 'error' ? 'rgba(239,68,68,0.2)' : 'rgba(129,140,248,0.2)';
+            toast.style.cssText = `
+                position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+                padding: 14px 24px; border-radius: 12px; font-weight: 600;
+                background: ${bgColor}; color: ${textColor};
+                border: 1px solid ${borderColor};
+                backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                animation: slideUp 0.3s ease; max-width: 400px;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // ================================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ================================================================
+        document.getElementById('btnToggleAdd').addEventListener('click', function() {
+            const field = document.getElementById('addField');
+            field.classList.toggle('hidden');
+            if (!field.classList.contains('hidden')) document.getElementById('cadreInput').focus();
+            addLog(field.classList.contains('hidden') ? '📝 Поле добавления скрыто' : '📝 Поле добавления открыто');
+        });
+
+        document.getElementById('btnAddRecord').addEventListener('click', async function() {
+            const text = document.getElementById('cadreInput').value.trim();
+            if (!text) return showError('Введите сообщение', 'cadreError');
+            const result = await processCadreMessage(text);
+            if (result.success) {
+                document.getElementById('cadreInput').value = '';
+                hideError('cadreError');
+                await loadCadres();
+                showToast(result.message, 'success');
+                addLog(`✅ ${result.message}`);
+            } else {
+                showError(result.message, 'cadreError');
+                showToast(result.message, 'error');
+            }
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+                loadCadres(this.dataset.filter);
+                addLog(`🔍 Фильтр: ${this.dataset.filter}`);
+            });
+        });
+
+        document.getElementById('btnResetCadres').addEventListener('click', async function() {
+            if (!confirm('Удалить ВСЕХ сотрудников?')) return;
+            const password = prompt('Введите пароль:');
+            if (password !== ADMIN_PASSWORD) { showToast('❌ Неверный пароль!', 'error'); return; }
+            try {
+                const employees = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=id&apikey=${SUPABASE_KEY}`, {
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                }).then(r => r.json());
+                for (const emp of employees) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/employees?id=eq.${emp.id}&apikey=${SUPABASE_KEY}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    });
+                }
+                addLog(`🗑️ Удалено ${employees.length} сотрудников`);
+                await loadCadres();
+                showToast(`✅ Удалено ${employees.length} сотрудников`, 'success');
+            } catch (error) {
+                addLog(`❌ Ошибка сброса: ${error.message}`);
+                showToast('❌ Ошибка сброса', 'error');
+            }
+        });
+
+        document.getElementById('btnAutoWarning').addEventListener('click', async function() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/employees?select=*&apikey=${SUPABASE_KEY}`, {
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const employees = await response.json();
+                const warningEmployees = employees.filter(emp => calculateStatus(emp).daysLeft === 1);
+                if (warningEmployees.length === 0) {
+                    showToast('⚠️ Нет сотрудников с 1 днём до дедлайна', 'info');
+                    return;
+                }
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const todayStr = formatDate(today);
+                const tomorrowStr = formatDate(tomorrow);
+                const mentions = warningEmployees.map(emp => `<@${emp.discord_id}>`).join(', ');
+                const message = `‼️  ${mentions}, напоминаю Вам, что сегодня, ${todayStr}, у Вас последний день для продвижения по ранговой лестнице. Уже завтра, ${tomorrowStr}, Вы можете быть уволены по соответствующим причинам. Хорошего Вам дня. ‼️`;
+                document.getElementById('modalText').textContent = message;
+                document.getElementById('modalOverlay').classList.add('show');
+                addLog(`⚠️ Предупреждение для ${warningEmployees.length} сотрудников`);
+            } catch (error) {
+                addLog(`❌ Ошибка: ${error.message}`);
+            }
+        });
+
+        document.getElementById('modalClose').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('show');
+        });
+        document.getElementById('modalCloseBtn').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('show');
+        });
+        document.getElementById('modalCopy').addEventListener('click', function() {
+            const text = document.getElementById('modalText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                this.textContent = '✅ Скопировано!';
+                setTimeout(() => this.textContent = '📋 Копировать', 2000);
+            });
+        });
+
+        // === БИНДИНГ ГОСВОЛН ===
+        document.getElementById('btnProcessGos').addEventListener('click', function() {
+            const text = document.getElementById('gosInput').value.trim();
+            if (!text) return showError('Введите сообщение', 'gosError');
+            const result = processGosMessage(text);
+            if (result.success) {
+                document.getElementById('gosInput').value = '';
+                hideError('gosError');
+                showToast(result.message, 'success');
+                addLog(`✅ ${result.message}`);
+            } else {
+                showError(result.message, 'gosError');
+                showToast(result.message, 'error');
+            }
+        });
+        document.getElementById('btnResetGos').addEventListener('click', resetGosData);
+
+        document.getElementById('btnProcessDist').addEventListener('click', function() {
+            const text = document.getElementById('distInput').value.trim();
+            if (!text) return showError('Введите сообщение', 'distError');
+            const result = processDistMessage(text);
+            if (result.success) {
+                document.getElementById('distInput').value = '';
+                hideError('distError');
+                showToast(result.message, 'success');
+                addLog(`✅ ${result.message}`);
+            } else {
+                showError(result.message, 'distError');
+                showToast(result.message, 'error');
+            }
+        });
+        document.getElementById('btnResetDist').addEventListener('click', resetDistData);
+
+        // === БИНДИНГ ОТЧЁТОВ ===
+        document.getElementById('btnProcessWeekly').addEventListener('click', processWeeklyRecruitment);
+        document.getElementById('btnResetWeekly').addEventListener('click', resetWeeklyRecruitment);
+        document.getElementById('btnProcessApps').addEventListener('click', processWeeklyApplications);
+        document.getElementById('btnResetApps').addEventListener('click', resetWeeklyApplications);
+        document.getElementById('btnProcessIndiv').addEventListener('click', processWeeklyIndividual);
+        document.getElementById('btnResetIndiv').addEventListener('click', resetWeeklyIndividual);
+        document.getElementById('btnProcessLectures').addEventListener('click', processWeeklyLectures);
+        document.getElementById('btnResetLectures').addEventListener('click', resetWeeklyLectures);
+
+        // ================================================================
+        // ЗАПУСК
+        // ================================================================
+        addLog('🚀 Приложение загружено');
+        loadCadres();
+
+        setInterval(() => {
+            if (appUnlocked) loadApplications();
+        }, 30000);
+
+        if (appUnlocked) loadApplications();
+    </script>
+</body>
+</html>
